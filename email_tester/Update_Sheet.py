@@ -17,8 +17,10 @@ class ICS_Monitor :
 
     def update_result(self,curr_sheet,result):
         curr_sheet.insert_row([""], 4)
-        if (curr_sheet.row_count >= self.cfg_sheet.max_row):
-            curr_sheet.delete_row(self.cfg_sheet.max_row)
+
+        if (curr_sheet.row_count >= int(self.cfg_sheet.max_row)):
+            curr_sheet.resize(self.cfg_sheet.max_row)
+
         cell_list = curr_sheet.range("A4:D4")
         cell_list[0].value = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cell_list[1].value = round(result.delay)
@@ -32,6 +34,7 @@ class ICS_Monitor :
 
         EmailTester = ICS_Email_Tester.ICS_Email_Tester()
         curr_sheet = self.SS.worksheet(self.cfg_sheet.pop)
+
         result = EmailTester.pop_tester(self.cfg_email)
         result = EmailTester.add_condition(result)
 
