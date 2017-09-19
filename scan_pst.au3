@@ -47,6 +47,7 @@ Next
 ChangePower_ToNormal()
 
 FileClose($hLog)
+SplashOff()
 
 ; Function and Closing
 
@@ -110,7 +111,7 @@ Func IniFile_WriteDefault()
 EndFunc
 
 
-Func _WinWaitActivate($title,$text="",$timeout=1000)
+Func _WinWaitActivate($title,$text="",$timeout=250)
 	WinWait($title,$text,$timeout)
 	If Not WinActive($title,$text) Then WinActivate($title,$text)
 	Return WinWaitActive($title,$text,$timeout)
@@ -122,14 +123,16 @@ EndFunc
 
 Func ChangePower_ToNormal()
 	RunWait($Power_Cfg & " /setactive " & $Power_Balance)
+
 EndFunc
 
 Func ScanPST_Clear()
    local $hWnd ;
    If WinExists("Microsoft Outlook Inbox Repair Tool") Then
 	  $hWnd = _WinWaitActivate("Microsoft Outlook Inbox Repair Tool")
-	  WinClose($hWnd)
+	  WinWaitClose($hWnd)
    EndIf
+
 EndFunc
 
 Func Outlook_Close()
@@ -156,7 +159,7 @@ Func ScanPST_Run(ByRef $pst_file)
 
    ; Make sure if the window is closed
    local $hWnd
-   _FileWriteLog($hLog,"Running ScanPST")
+   _FileWriteLog($hLog,"Running ScanPST " & $ScanPST_PATH)
    ShellExecute($ScanPST_PATH)
 
    $hWnd = _WinWaitActivate($WIN_TITLE)
@@ -173,13 +176,18 @@ Func ScanPST_Run(ByRef $pst_file)
 
 	  $hWnd = _WinWaitActivate($WIN_TITLE)
 
-	  If @error Then
+	  If $hWnd = 0 Then
 		 $is_run = false
 		 _FileWriteLog($hLog,"ERROR: Exit Because Error Waiting Scanning Process")
-		 ExitLoop
+		 ContinueLoop
 	  EndIf
 
 	  $text_process = WinGetText ( $hWnd , "" )
+	  If @error Then
+		 $is_run = false
+		 _FileWriteLog($hLog,"ERROR: Exit Because Error Waiting Scanning Process")
+		 ContinueLoop
+	  EndIf
 	  SplashTextOn("Waiting Scanning Process", _
 	  "This is phase one scanning process of file" &  @CRLF & _
 	  $pst_file &  @CRLF & _
@@ -190,11 +198,10 @@ Func ScanPST_Run(ByRef $pst_file)
 	  If Not StringInStr ( $text_process , "Phase") Then
 		 $is_run = false
 		 _FileWriteLog($hLog,"Error: Exit Because No Phase ")
-		 ExitLoop
+		 ContinueLoop
 	  EndIf
 	  Sleep(5000)
    WEnd
-   SplashOff()
 
    sleep(1000)
 
@@ -203,7 +210,7 @@ Func ScanPST_Run(ByRef $pst_file)
    local $is_error = 0
    local $is_done = 0
    _FileWriteLog($hLog," Phase Repair")
-   If Not @error Then
+   If $hWnd <>0 Then
 	  $text_process = WinGetText($WIN_TITLE, "" )
 	  If StringInStr($text_process, _
 	  "been canceled") Then
@@ -267,7 +274,7 @@ Func ScanPST_Run(ByRef $pst_file)
 
    $hWnd = _WinWaitActivate($WIN_TITLE)
    $need_repair = 0
-   If Not @error Then
+   If $hWnd<>0 Then
 	  If StringInStr($text_process, _
 	  "To repair these errors") Then
 		 $need_repair = 1
@@ -280,7 +287,7 @@ Func ScanPST_Run(ByRef $pst_file)
 
    If $need_repair = 1 Then
 	  $hWnd = _WinWaitActivate($WIN_TITLE)
-	  If Not @error Then
+	  If $hWnd<>0 Then
 		 Send("!R")
 	  Else
 		 _FileWriteLog($hLog,"ERROR: No Repair Dialog")
@@ -294,7 +301,7 @@ Func ScanPST_Run(ByRef $pst_file)
 	  "The backup file") Then
 	  _FileWriteLog($hLog,"REPAIR: Overwrite previous backup file")
 	  $hWnd = _WinWaitActivate($WIN_TITLE)
-	  If Not @error Then
+	  If $hWnd<>0 Then
 		 Send("!Y")
 	  Else
 		 Return 0
@@ -304,15 +311,21 @@ Func ScanPST_Run(ByRef $pst_file)
 
    _FileWriteLog($hLog,"Waiting Repairing Process")
    Sleep(1000)
+   $is_run = true
    While $is_run
 
 	  $hWnd = _WinWaitActivate($WIN_TITLE)
 
-	  If @error Then
+	  If $hWnd = 0  Then
 		 _FileWriteLog($hLog,"ERROR: In Waiting Repair Process")
-		 Return 0;
+		 ContinueLoop
 	  EndIf
 	  $text_process = WinGetText ( $hWnd , "" )
+
+	  If $hWnd = 0  Then
+		 _FileWriteLog($hLog,"ERROR: In Waiting Repair Process")
+		 ContinueLoop
+	  EndIf
 	  SplashTextOn("Waiting Repairing  Process", _
 	  "This is phase one scanning process " &  @CRLF & _
 	  $pst_file &  @CRLF & _
@@ -321,12 +334,22 @@ Func ScanPST_Run(ByRef $pst_file)
 
 	  If Not StringInStr ( $text_process , "Repair complete") Then
 		 $is_run = 0
-		 ExitLoop
+		 _FileWriteLog($hLog,"Repairing complete")
+		 Send("{Enter}")
+		 ContinueLoop
 	  EndIf
 	  Sleep(5000)
    WEnd
 
-   _FileWriteLog($hLog,"Repairing complete")
+   $hWnd = _WinWaitActivate($WIN_TITLE)
+
+   If $hWnd<>0 Then
+	  Send("{Enter}")
+   EndIf
+
+   _FileWriteLog($hLog,"Process Complete")
+   SplashOff()
+
 
 EndFunc
 
