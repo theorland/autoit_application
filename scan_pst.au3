@@ -127,17 +127,8 @@ Func ChangePower_ToNormal()
 EndFunc
 
 Func ScanPST_Clear()
-   local $hWnd ;
-   If WinExists("Microsoft Outlook Inbox Repair Tool") Then
-	  $hWnd = _WinWaitActivate("Microsoft Outlook Inbox Repair Tool")
-	  WinWaitClose($hWnd)
-   EndIf
-
-EndFunc
-
-Func Outlook_Close()
-	Local $process_name = "outlook.exe"
-  SplashTextOn("Fixing Progress", _
+   Local $process_name = "scanpst.exe"
+  SplashTextOn("Scanning Process", _
   "Now Closing '"  & $process_name & "'" , _
 	 -1 ,-1, $DLG_NOTITLE  + $DLG_TEXTVCENTER , -1, -1, "" , 20, $FW_HEAVY  )
   ProcessClose ( $process_name )
@@ -146,7 +137,24 @@ Func Outlook_Close()
 	 ShellExecuteWait("taskkill.exe", '/F /IM "' & $process_name & '"')
   EndIf
 
-  SplashTextOn("Fixing Progress", _
+  SplashTextOn("Scanning Process", _
+  'Closing "' & $process_name & '" Completed' , _
+	 -1 ,-1, $DLG_NOTITLE  + $DLG_TEXTVCENTER , -1, -1, "" , 20, $FW_HEAVY  )
+
+EndFunc
+
+Func Outlook_Close()
+  Local $process_name = "outlook.exe"
+  SplashTextOn("Scanning Process", _
+  "Now Closing '"  & $process_name & "'" , _
+	 -1 ,-1, $DLG_NOTITLE  + $DLG_TEXTVCENTER , -1, -1, "" , 20, $FW_HEAVY  )
+  ProcessClose ( $process_name )
+  Sleep($DELAY_FORCE)
+  If ProcessExists($process_name) Then
+	 ShellExecuteWait("taskkill.exe", '/F /IM "' & $process_name & '"')
+  EndIf
+
+  SplashTextOn("Scanning Process", _
   'Closing "' & $process_name & '" Completed' , _
 	 -1 ,-1, $DLG_NOTITLE  + $DLG_TEXTVCENTER , -1, -1, "" , 20, $FW_HEAVY  )
 
@@ -179,14 +187,14 @@ Func ScanPST_Run(ByRef $pst_file)
 	  If $hWnd = 0 Then
 		 $is_run = false
 		 _FileWriteLog($hLog,"ERROR: Exit Because Error Waiting Scanning Process")
-		 ContinueLoop
+		 ExitLoop
 	  EndIf
 
 	  $text_process = WinGetText ( $hWnd , "" )
 	  If @error Then
 		 $is_run = false
 		 _FileWriteLog($hLog,"ERROR: Exit Because Error Waiting Scanning Process")
-		 ContinueLoop
+		 ExitLoop
 	  EndIf
 	  SplashTextOn("Waiting Scanning Process", _
 	  "This is phase one scanning process of file" &  @CRLF & _
@@ -198,7 +206,7 @@ Func ScanPST_Run(ByRef $pst_file)
 	  If Not StringInStr ( $text_process , "Phase") Then
 		 $is_run = false
 		 _FileWriteLog($hLog,"Error: Exit Because No Phase ")
-		 ContinueLoop
+		 ExitLoop
 	  EndIf
 	  Sleep(5000)
    WEnd
@@ -318,34 +326,31 @@ Func ScanPST_Run(ByRef $pst_file)
 
 	  If $hWnd = 0  Then
 		 _FileWriteLog($hLog,"ERROR: In Waiting Repair Process")
-		 ContinueLoop
+		 $is_run = False
+		 ExitLoop
 	  EndIf
 	  $text_process = WinGetText ( $hWnd , "" )
 
 	  If $hWnd = 0  Then
 		 _FileWriteLog($hLog,"ERROR: In Waiting Repair Process")
-		 ContinueLoop
+		 $is_run = False
+		 ExitLoop
 	  EndIf
 	  SplashTextOn("Waiting Repairing  Process", _
-	  "This is phase one scanning process " &  @CRLF & _
+	  "This is phase two repairing process" &  @CRLF & _
 	  $pst_file &  @CRLF & _
 	  " Please be Patient " _
-	  , -1 ,-1, $DLG_NOTITLE  + $DLG_TEXTVCENTER , -1, -1, "" , 20, $FW_HEAVY )
+	  , -1 ,-1, $DLG_NOTITLE  +    $DLG_TEXTVCENTER , -1, -1, "" , 20, $FW_HEAVY )
 
-	  If Not StringInStr ( $text_process , "Repair complete") Then
-		 $is_run = 0
+	  If StringInStr ( $text_process , "Repair complete") Then
+		 $is_run = False
 		 _FileWriteLog($hLog,"Repairing complete")
 		 Send("{Enter}")
-		 ContinueLoop
+		 Send("{Space}")
+		 ExitLoop
 	  EndIf
 	  Sleep(5000)
    WEnd
-
-   $hWnd = _WinWaitActivate($WIN_TITLE)
-
-   If $hWnd<>0 Then
-	  Send("{Enter}")
-   EndIf
 
    _FileWriteLog($hLog,"Process Complete")
    SplashOff()
