@@ -50,12 +50,12 @@ class ICS_Email_Tester:
                         M.user(Config.username)
                         M.pass_(Config.password)
 
-                        print(str(datetime.datetime.now())+": POP SSL " + Config.host + ":" + str(Config.port) \
+                        print(str(datetime.datetime.now())+": POP SSL " + Config.host + ":" + str(Config.port_ssl) \
                               + " --> " + M.getwelcome())
                         stat = M.stat()[0]
                         M.quit()
                 except:
-                        print(str(datetime.datetime.now())+": POP SSL Error" + Config.host + ":" + str(Config.port))
+                        print(str(datetime.datetime.now())+": POP SSL Error" + Config.host + ":" + str(Config.port_ssl))
                         stat = -1
 
                 tmp_end = datetime.datetime.now()

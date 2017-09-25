@@ -2,6 +2,7 @@ import gspread
 import ICS_Config
 import ICS_Email_Tester
 import datetime
+from ICS_RDP_Tester import ICS_RDP_Tester
 
 import pyspeedtest
 
@@ -14,6 +15,7 @@ class ICS_Monitor :
 
         self.SS = client.open_by_key(self.cfg_sheet.id)
         self.cfg_email = AppConfig.email_load()
+        self.cfg_rdp = AppConfig.remote_load()
 
     def update_result(self,curr_sheet,result):
         curr_sheet.insert_row([""], 4)
@@ -41,9 +43,17 @@ class ICS_Monitor :
         self.update_result(curr_sheet,result)
 
         curr_sheet = self.SS.worksheet(self.cfg_sheet.pop_ssl)
-        result = EmailTester.pop_tester(self.cfg_email)
+        result = EmailTester.pop_ssl_tester(self.cfg_email)
         result = EmailTester.add_condition(result)
 
         self.update_result(curr_sheet, result)
+
+    def test_remote(self):
+        tester = ICS_RDP_Tester(self.cfg_rdp)
+        curr_sheet = self.SS.worksheet(self.cfg_sheet.rdp)
+        result = tester.run_test()
+
+        self.update_result(curr_sheet,result)
+
 
 
