@@ -159,7 +159,7 @@ Func Outlook_Close()
   SplashTextOn("Scanning Process", _
   'Closing "' & $process_name & '" Completed' , _
 	 -1 ,-1, $DLG_NOTITLE  + $DLG_TEXTVCENTER , -1, -1, "" , 20, $FW_HEAVY  )
-  EndFunc
+EndFunc
 
 Func GetTextScanPST()
    Local $timeout = 1000, $text = "", $title = $WIN_TITLE
