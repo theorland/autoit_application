@@ -27,7 +27,7 @@ Global $Backup_Server = $DEFAULT_BACKUP_SERVER
 Global $Backup_Name = $DEFAULT_BACKUP_EMAIL
 Global $Backup_App = $DEFAULT_BACKUP_APP
 Global $Cust_Priority = 4
-Global $hLog = FileOpen(@ScriptDir & "\ScanPST_001.log", 1)
+Global $hLog = FileOpen(@ScriptDir & "\ScanPST_" & @YEAR & "_" & @MON & "_" &  @MDAY & ".log", 1)
 
 Global $DELAY_FORCE = 3000
 
@@ -46,6 +46,8 @@ For $file_pst In $all_PST
 
    ScanPST_Run($file_pst)
 Next
+
+ScanPST_Clear()
 ChangePower_ToNormal()
 
 FileClose($hLog)
@@ -134,7 +136,7 @@ Func ScanPST_Clear()
   "Now Closing '"  & $process_name & "'" , _
 	 -1 ,-1, $DLG_NOTITLE  + $DLG_TEXTVCENTER , -1, -1, "" , 20, $FW_HEAVY  )
   ProcessClose ( $process_name )
-  Sleep($DELAY_FORCE)
+  Sleep(500)
   If ProcessExists($process_name) Then
 	 ShellExecuteWait("taskkill.exe", '/F /IM "' & $process_name & '"')
   EndIf
@@ -232,7 +234,6 @@ Func ScanPST_Run(ByRef $pst_file)
    WEnd
 
    sleep(1000)
-
 
    local $is_error = 0
    local $is_done = 0
