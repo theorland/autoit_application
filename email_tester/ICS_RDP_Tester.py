@@ -1,12 +1,13 @@
 import pyping
 from collections import namedtuple
-from ICS_Email_Tester import ICS_Email_Tester
-from datetime import datetime
-import json
+from ICS_Shared_Config import ICS_Shared_Config
 
 
 class ICS_RDP_Tester:
-    Ping_Config_Type = namedtuple("Ping_Config", ["host", "timeout", "count", "packet_size"])
+
+    Result_Type = namedtuple('Email_Test_Result', \
+                                         ['start', 'end', 'delay', 'num', 'cond', 'stat'])
+
     def __init__(self,config):
         self.config = config
 
@@ -15,7 +16,7 @@ class ICS_RDP_Tester:
                              timeout = int(self.config.timeout),  \
                              count = int(self.config.count), \
                              packet_size = int(self.config.packet_size))
-        print(str(datetime.now()) + ": Pinging " + self.config.host + " Complete")
+        ICS_Shared_Config.log("Pinging " + self.config.host + " Complete")
 
         conclusion = self.conclusion(result)
         return conclusion
@@ -23,14 +24,14 @@ class ICS_RDP_Tester:
 
         conclusion = "GREAT"
         result.max_rtt = float(result.max_rtt)
-        result_output = ICS_Email_Tester.Result_Type( \
+        result_output = self.Result_Type( \
             start =0, \
             end = 0, \
             delay = result.max_rtt, \
             num = self.config.count, \
             cond = conclusion, \
             stat = -1 * result.packet_lost)
-        print result.__dict__
+        ICS_Shared_Config.log(result_output.__dict__)
         if result.packet_lost>2:
             conclusion= "BAD"
         elif result.max_rtt>=500:

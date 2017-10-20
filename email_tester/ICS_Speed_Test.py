@@ -1,3 +1,4 @@
 import pyspeedtest
 
+
 pyspeedtest.SpeedTest()

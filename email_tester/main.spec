@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['C:\\Users\\ics-user\\PycharmProjects\\untitled'],
+             pathex=['C:\\Users\\ics-user\\PycharmProjects\\email_tester'],
              binaries=[],
              datas=[],
              hiddenimports=[],
