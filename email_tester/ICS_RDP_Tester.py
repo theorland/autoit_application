@@ -1,12 +1,15 @@
-import pyping
+import pyping3 as pyping
+
 from collections import namedtuple
 from ICS_Shared_Config import ICS_Shared_Config
 
+MAX_PING_LOST = 2
+DELAY_GREAT = 200
+DELAY_GOOD = 500
 
 class ICS_RDP_Tester:
-
     Result_Type = namedtuple('Email_Test_Result', \
-                                         ['start', 'end', 'delay', 'num', 'cond', 'stat'])
+                    ['start', 'end', 'delay', 'num', 'cond', 'stat'])
 
     def __init__(self,config):
         self.config = config
@@ -31,12 +34,12 @@ class ICS_RDP_Tester:
             num = self.config.count, \
             cond = conclusion, \
             stat = -1 * result.packet_lost)
-        ICS_Shared_Config.log(result_output.__dict__)
-        if result.packet_lost>2:
+        ICS_Shared_Config.log(result_output)
+        if result.packet_lost>MAX_PING_LOST:
             conclusion= "BAD"
-        elif result.max_rtt>=500:
+        elif result.max_rtt>=DELAY_GOOD:
             conclusion = "AVERAGE"
-        elif result.max_rtt>=200:
+        elif result.max_rtt>=DELAY_GREAT:
             conclusion = "GOOD"
         result_output = result_output._replace( cond =conclusion)
 

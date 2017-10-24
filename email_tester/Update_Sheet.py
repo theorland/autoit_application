@@ -1,9 +1,9 @@
-import datetime
+from datetime import datetime
 from ICS_RDP_Tester import ICS_RDP_Tester
 from ICS_Email_Tester import ICS_Email_Tester
 from ICS_Shared_Config import ICS_Shared_Config
 from threading import Thread
-
+import ICS_Speed_Test
 
 class ICS_Monitor:
     def __init__(self):
@@ -11,11 +11,13 @@ class ICS_Monitor:
         AppConfig = ICS_Shared_Config.Config()
 
         self.cfg_sheet = AppConfig.sheet_load()
-        client = ICS_Shared_Config.Gspread_Client()
 
-        self.SS = client.open_by_key(self.cfg_sheet.id)
+        self.SS = ICS_Shared_Config.Gspread_Open(self.cfg_sheet.id)
+
         self.cfg_email = AppConfig.email_load()
         self.cfg_rdp = AppConfig.remote_load()
+        self.cfg_speedtest = AppConfig.speedtest_load()
+
 
     def update_result(self,curr_sheet,result):
         curr_sheet.insert_row([""], 4)
@@ -24,13 +26,13 @@ class ICS_Monitor:
             curr_sheet.resize(self.cfg_sheet.max_row)
 
         cell_list = curr_sheet.range("A4:D4")
-        cell_list[0].value = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        cell_list[0].value = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cell_list[1].value = round(result.delay)
         cell_list[2].value = result.stat
         cell_list[3].value = result.cond
 
         curr_sheet.update_cells(cell_list)
-        curr_sheet.update_cell(2, 1, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        curr_sheet.update_cell(2, 1, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
     def test_email(self):
 
@@ -65,6 +67,7 @@ class ICS_Monitor_POP(ICS_Monitor,Thread):
 
     def run(self):
         ICS_Shared_Config.log("POP Test : Start ")
+
         try:
             EmailTester = ICS_Email_Tester()
             curr_sheet = self.SS.worksheet(self.cfg_sheet.pop)
@@ -88,6 +91,7 @@ class ICS_Monitor_POP_SSL(ICS_Monitor,Thread):
     def run(self):
 
         ICS_Shared_Config.log("POP_SSL Test : Start ")
+
         try:
             EmailTester = ICS_Email_Tester()
 
@@ -109,9 +113,9 @@ class ICS_Monitor_Remote(ICS_Monitor,Thread):
         self.name = "Monitor_RDP"
         self.counter = 3
 
-
     def run(self):
         ICS_Shared_Config.log("RDP Test : Start ")
+
         try:
             tester = ICS_RDP_Tester(self.cfg_rdp)
             curr_sheet = self.SS.worksheet(self.cfg_sheet.rdp)
@@ -122,5 +126,28 @@ class ICS_Monitor_Remote(ICS_Monitor,Thread):
             ICS_Shared_Config.log("RDP Test : Complete ")
         except:
             ICS_Shared_Config.log("RDP Test : Failed ")
+
+class ICS_Monitor_Speedtest(ICS_Monitor,Thread):
+    def __init__(self):
+        Thread.__init__(self)
+        ICS_Monitor.__init__(self)
+        self.threadID = 4
+        self.name = "Monitor_Speedtest"
+        self.counter = 4
+
+    def run(self):
+        ICS_Shared_Config.log("Speedtest : ")
+
+        try:
+            ICS_Speed_Test.Host = self.cfg_speedtest
+
+            curr_sheet = self.SS.worksheet(self.cfg_sheet.speedtest)
+            result = ICS_Speed_Test.do_speed_test()
+
+            self.update_result(curr_sheet, result)
+
+            ICS_Shared_Config.log("Speedtest : Done for %s " %  ICS_Speed_Test.Host )
+        except:
+            ICS_Shared_Config.log("Speedtest: Failed ")
 
 

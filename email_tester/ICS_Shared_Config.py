@@ -2,6 +2,7 @@ from ICS_Config import ICS_Config
 import logging
 from oauth2client.service_account import ServiceAccountCredentials
 import gspread
+
 from datetime import datetime
 import time
 import os
@@ -19,25 +20,53 @@ class ICS_Shared_Config:
     Client_Scope = ['https://spreadsheets.google.com/feeds', \
              'https://www.googleapis.com/auth/drive']
     Client_Secret_Json_Path = None
-    Client_Secret = None
+    Client = None
     Client_Timeout = 600
+    SS_Key = None
+
     @staticmethod
-    def Gspread_Client(renew=False):
-        if ICS_Shared_Config.Client_Secret is None or renew==True:
+    def Gspread_Client(renew=False) -> "gspread.client.Client" :
+
+        if ICS_Shared_Config.Client is None or renew==True:
+
             success = False
             while success == False:
                 try:
                     creds = ServiceAccountCredentials.from_json_keyfile_name( \
                         ICS_Shared_Config.Client_Secret_Json_Path, \
                         ICS_Shared_Config.Client_Scope)
-                    ICS_Shared_Config.Client_Secret = gspread.authorize(creds)
+
+                    ICS_Shared_Config.Client = gspread.authorize(creds)
 
                     ICS_Shared_Config.log("Refresh the token success")
                     success = True
-                except:
-                    ICS_Shared_Config.log("Refresh the token failed will redo in next 10 minutes" )
+                except Exception as ex:
+
+                    ICS_Shared_Config.log("Refresh the token failed will redo in next %d Seconds " %  ICS_Shared_Config.Client_Timeout )
                     time.sleep(ICS_Shared_Config.Client_Timeout)
-        return ICS_Shared_Config.Client_Secret
+
+        return ICS_Shared_Config.Client
+
+    def Gspread_Open(key=""):
+        SS = None
+        renew = False
+        today = datetime.now()
+        client = None
+
+
+        try:
+            client = ICS_Shared_Config.Gspread_Client()
+            SS = client.open_by_key(key)
+            ICS_Shared_Config.Sheet_Last_Sheet = SS
+            ICS_Shared_Config.Gspread_SS_Key = key
+            ICS_Shared_Config.Sheet_Last_Access = datetime.now()
+
+        except:
+            ICS_Shared_Config.log("Cannot find spreadsheet")
+            ICS_Shared_Config.Gspread_Client(True)
+            SS = client.open_by_key(key)
+
+        return SS
 
     @staticmethod
     def Initialization():
@@ -57,6 +86,7 @@ class ICS_Shared_Config:
 
         ICS_Shared_Config.log("Testing Email: setting file in " + ICS_Shared_Config.Client_Secret_Json_Path)
         ICS_Shared_Config.log("Testing Email: setting file in " + ICS_Config.Current_Setting_Path)
+
 
     @staticmethod
     def log(text_to_log):
