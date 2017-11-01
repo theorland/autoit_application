@@ -15,6 +15,8 @@ Host = "speedtest-xg.glbb.ne.jp:8080"
 DELAY_GREAT  = 200
 DELAY_GOOD  = 500
 DELAY_AVERAGE = 1000
+
+
 def calc_cond(speed_test_result = None ) -> "str":
 
     ping_speed = speed_test_result.ping

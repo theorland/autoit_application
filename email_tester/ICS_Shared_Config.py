@@ -1,16 +1,12 @@
 from ICS_Config import ICS_Config
-import logging
+import logging, gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import gspread
-
 from datetime import datetime
-import time
-import os
-import sys
-
+import time, os, sys
 
 class ICS_Shared_Config:
     Var_Config = None
+
     @staticmethod
     def Config():
         if ICS_Shared_Config.Var_Config is None:
@@ -40,7 +36,8 @@ class ICS_Shared_Config:
 
                     ICS_Shared_Config.log("Refresh the token success")
                     success = True
-                except Exception as ex:
+                except Exception as e:
+                    ICS_Shared_Config.log(os.path.basename(__file__) + " : " + str(e))
 
                     ICS_Shared_Config.log("Refresh the token failed will redo in next %d Seconds " %  ICS_Shared_Config.Client_Timeout )
                     time.sleep(ICS_Shared_Config.Client_Timeout)
@@ -61,7 +58,10 @@ class ICS_Shared_Config:
             ICS_Shared_Config.Gspread_SS_Key = key
             ICS_Shared_Config.Sheet_Last_Access = datetime.now()
 
-        except:
+
+        except Exception as e:
+            ICS_Shared_Config.log(os.path.basename(__file__) + " : " + str(e))
+
             ICS_Shared_Config.log("Cannot find spreadsheet")
             ICS_Shared_Config.Gspread_Client(True)
             SS = client.open_by_key(key)

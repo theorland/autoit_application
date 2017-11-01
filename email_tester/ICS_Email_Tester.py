@@ -1,18 +1,33 @@
-import poplib
-import collections
+import poplib, collections
 import datetime
+import json, os
 from ICS_Shared_Config import ICS_Shared_Config
+from ICS_Config import ICS_Email_Tester_Type
 
 DELAY_GREAT = 1000
 DELAY_GOOD = 2000
 DELAY_AVERAGE = 4000
 
 class ICS_Email_Tester:
+
     Result_Type = collections.namedtuple('Email_Test_Result', \
         ['start', 'end', 'delay', 'num', 'cond', 'stat'])
+    def __init__(self,_config:ICS_Email_Tester_Type.Config_Type):
+        self.config = _config
+        self.parse_cond(_config.cond)
 
+    def parse_cond(self,_config : str):
+        global DELAY_GREAT, DELAY_GOOD, DELAY_AVERAGE
+        if (len(_config)<=0):
+            return None
+        _config = json.loads(_config)
 
-    def add_condition(self,Result):
+        DELAY_GREAT = _config["great"]
+        DELAY_GOOD = _config["good"]
+        DELAY_AVERAGE = _config["average"]
+
+    def add_condition(self,Result : Result_Type):
+        global DELAY_GREAT, DELAY_GOOD, DELAY_AVERAGE
         status = "BAD"
         if Result.stat>0:
             if Result.delay<=DELAY_GREAT:
@@ -24,22 +39,17 @@ class ICS_Email_Tester:
         Result = Result._replace(cond=status)
         return Result
 
-    def pop_tester(self,Config):
+    def pop_tester(self):
+        Config = self.config
+
         result = self.Result_Type( \
                 datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0)
         stat = -1
 
-
-
         try:
-            M = poplib.POP3(Config.host, Config.port)
-            M.user(Config.username)
-            M.pass_(Config.password)
-            ICS_Shared_Config.log("POP Success " + str(Config.host) + ":" + str(Config.port) \
-                    + " --> " + str(M.getwelcome()))
-            stat = M.stat()[0]
-            M.quit()
-        except :
+            stat = self.pop_raw_run(Config)
+        except Exception as e:
+            ICS_Shared_Config.log(os.path.basename(__file__) + " : " + str(e))
             ICS_Shared_Config.log("POP Error " + str(Config.host) + ":" + str(Config.port) )
             stat= -1
 
@@ -50,10 +60,30 @@ class ICS_Email_Tester:
 
         return Result
 
-    def pop_ssl_tester(self,Config):
+    def pop_ssl_tester(self):
+
+        Config = self.config
+
         result_ssl = self.Result_Type(\
                 datetime.datetime.now(), datetime.datetime.now(), 0, 0, 0, 0)
         stat = -1
+
+        try:
+
+            stat  = self.pop_ssl_raw_run(Config)
+        except Exception as e:
+            ICS_Shared_Config.log(os.path.basename(__file__) + " : " + str(e))
+
+            ICS_Shared_Config.log("POP SSL Error " + str(Config.host) + ":" + str(Config.port_ssl))
+            stat = -1
+
+        tmp_end = datetime.datetime.now()
+        tmp_delay = (tmp_end - result_ssl.start).total_seconds() * 1000
+
+        result_ssl = result_ssl._replace(end=tmp_end, delay=tmp_delay, stat= stat)
+        return result_ssl
+
+    def pop_ssl_raw_run(self,Config:ICS_Email_Tester_Type):
 
         M = poplib.POP3_SSL(Config.host, Config.port_ssl)
         M.user(Config.username)
@@ -63,23 +93,16 @@ class ICS_Email_Tester:
                               + " --> " + str(M.getwelcome()))
         stat = M.stat()[0]
         M.quit()
-        '''try:
 
-            M = poplib.POP3_SSL(Config.host, Config.port_ssl)
-            M.user(Config.username)
-            M.pass_(Config.password)
+        return stat
 
-            ICS_Shared_Config.log("POP SSL Success " + str(Config.host) + ":" + str(Config.port_ssl) \
-                  + " --> " + str(M.getwelcome()))
-            stat = M.stat()[0]
-            M.quit()
-        except:
-            ICS_Shared_Config.log("POP SSL Error " + str(Config.host) + ":" + str(Config.port_ssl))
-            stat = -1'''
+    def pop_raw_run(self,Config:ICS_Email_Tester_Type):
 
-        tmp_end = datetime.datetime.now()
-        tmp_delay = (tmp_end - result_ssl.start).total_seconds() * 1000
-
-        result_ssl = result_ssl._replace(end=tmp_end, delay=tmp_delay, stat= stat)
-        return result_ssl
-
+        M = poplib.POP3(Config.host, Config.port)
+        M.user(Config.username)
+        M.pass_(Config.password)
+        ICS_Shared_Config.log("POP Success " + str(Config.host) + ":" + str(Config.port) \
+                              + " --> " + str(M.getwelcome()))
+        stat = M.stat()[0]
+        M.quit()
+        return stat

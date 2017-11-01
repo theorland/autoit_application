@@ -3,7 +3,7 @@ from ICS_RDP_Tester import ICS_RDP_Tester
 from ICS_Email_Tester import ICS_Email_Tester
 from ICS_Shared_Config import ICS_Shared_Config
 from threading import Thread
-import ICS_Speed_Test
+import ICS_Speed_Test, os
 
 class ICS_Monitor:
     def __init__(self):
@@ -69,15 +69,18 @@ class ICS_Monitor_POP(ICS_Monitor,Thread):
         ICS_Shared_Config.log("POP Test : Start ")
 
         try:
-            EmailTester = ICS_Email_Tester()
+            EmailTester = ICS_Email_Tester(self.cfg_email)
+
             curr_sheet = self.SS.worksheet(self.cfg_sheet.pop)
 
-            result = EmailTester.pop_tester(self.cfg_email)
+            result = EmailTester.pop_tester()
             result = EmailTester.add_condition(result)
 
             self.update_result(curr_sheet, result)
             ICS_Shared_Config.log("POP Test : Complete ")
-        except:
+        except Exception as e:
+            ICS_Shared_Config.log(os.path.basename(__file__) + " : " + str(e))
+
             ICS_Shared_Config.log("POP Test : Failed ")
 
 class ICS_Monitor_POP_SSL(ICS_Monitor,Thread):
@@ -93,15 +96,17 @@ class ICS_Monitor_POP_SSL(ICS_Monitor,Thread):
         ICS_Shared_Config.log("POP_SSL Test : Start ")
 
         try:
-            EmailTester = ICS_Email_Tester()
+            EmailTester = ICS_Email_Tester(self.cfg_email)
 
             curr_sheet = self.SS.worksheet(self.cfg_sheet.pop_ssl)
-            result = EmailTester.pop_ssl_tester(self.cfg_email)
+            result = EmailTester.pop_ssl_tester()
             result = EmailTester.add_condition(result)
 
             self.update_result(curr_sheet, result)
             ICS_Shared_Config.log("POP_SSL Test : Complete ")
-        except:
+        except Exception as e:
+            ICS_Shared_Config.log(os.path.basename(__file__) + " : " + str(e))
+
             ICS_Shared_Config.log("POP_SSL Test : Failed ")
 
 
@@ -124,7 +129,9 @@ class ICS_Monitor_Remote(ICS_Monitor,Thread):
             self.update_result(curr_sheet, result)
 
             ICS_Shared_Config.log("RDP Test : Complete ")
-        except:
+        except Exception as e:
+            ICS_Shared_Config.log(os.path.basename(__file__) + " : " + str(e))
+
             ICS_Shared_Config.log("RDP Test : Failed ")
 
 class ICS_Monitor_Speedtest(ICS_Monitor,Thread):
@@ -147,7 +154,9 @@ class ICS_Monitor_Speedtest(ICS_Monitor,Thread):
             self.update_result(curr_sheet, result)
 
             ICS_Shared_Config.log("Speedtest : Done for %s " %  ICS_Speed_Test.Host )
-        except:
+        except Exception as e:
+            ICS_Shared_Config.log(os.path.basename(__file__) + " : " + str(e))
+
             ICS_Shared_Config.log("Speedtest: Failed ")
 
 

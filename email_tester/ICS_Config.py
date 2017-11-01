@@ -13,8 +13,10 @@ class ICS_Config:
                         "remote": None, \
                         "email": None, \
                         "sheet": None, \
-                        "speedtest" : None}
+                        "speedtest" : None, \
+                       "timeout" : None}
         self.ini_file = configparser.ConfigParser()
+
         self.ini_file.read(ICS_Config.Current_Setting_Path)
 
 
@@ -30,13 +32,28 @@ class ICS_Config:
     def sleep(self):
         read_value = None
         if self.values["sleep"] is None:
-            read_value = self.ini_file.get("run","sleep")
+            read_value = int(self.ini_file.getfloat("run","sleep"))
 
             self.values["sleep"] = read_value
         else:
             read_value = self.values["sleep"]
         return read_value
 
+    def timeout(self):
+        read_value = None
+        if self.values["timeout"] is None:
+            read_value = self.ini_file.getint("run", "timeout")
+
+            self.values["timeout"] = read_value
+        else:
+
+            read_value = self.values["timeout"]
+
+        return read_value
+
+    '''
+        SPEEDTEST
+    '''
 
     def speedtest_load(self):
         read_value = None
@@ -56,7 +73,9 @@ class ICS_Config:
                 host = self.ini_file.get("remote","host"), \
                 timeout =self.ini_file.get("remote","timeout"), \
                 count = self.ini_file.get("remote","count"),  \
-                packet_size =  self.ini_file.get("remote","packet_size") )
+                packet_size =  self.ini_file.get("remote","packet_size"), \
+                cond =self.ini_file.get("remote", "condition"), \
+                )
 
             self.values["remote"] = config_value
         else:
@@ -71,7 +90,8 @@ class ICS_Config:
                 username= self.ini_file.get("email", "username"), \
                 password = self.ini_file.get("email", "password"), \
                 port = self.ini_file.get("email","pop_port"), \
-                port_ssl = self.ini_file.get("email","pop_ssl_port") )
+                port_ssl = self.ini_file.get("email","pop_ssl_port"),\
+                cond = self.ini_file.get("email","condition"))
 
             self.values["email"]
         else:
@@ -88,18 +108,22 @@ class ICS_Config:
                 rdp = self.ini_file.get("sheet","rdp"), \
                 speedtest = self.ini_file.get("sheet","speedtest"), \
                 max_row = self.ini_file.get("sheet","max_row"))
+
             self.values["sheet"] = config_value
         else:
             config_value = self.values["sheet"]
 
         return config_value
 
+
 class ICS_Email_Tester_Type:
 
     Config_Type = namedtuple('Email_Config', \
-        ['host','username', 'password','port','port_ssl'])
+        ['host','username', 'password','port','port_ssl','cond'])
     Result_Type  = namedtuple('Email_Test_Result', \
-        ['start','end','delay', 'num','cond','stat'])
+        ['start','end','delay', 'num','stat'])
 
 class ICS_RDP_Tester_Type:
-    Ping_Config_Type = namedtuple("Ping_Config", ["host", "timeout", "count", "packet_size"])
+    Ping_Config_Type = namedtuple( \
+        "Ping_Config", \
+        ["host", "timeout", "count", "packet_size", "cond"])
