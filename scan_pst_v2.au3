@@ -21,6 +21,7 @@ Global Const $WIN_TITLE = "Microsoft Outlook Inbox Repair Tool"
 
 Global $ScanPST_PATH = $DEFAULT_SCANPST_PATH
 Global $Cust_Priority = $PROCESS_HIGH
+Global $Do_Default
 
 Global $hLog = FileOpen(@ScriptDir & "\ScanPST_" & @YEAR & "_" & @MON & "_" &  @MDAY & ".log", 1)
 
@@ -45,6 +46,8 @@ Cust_Splash("Initialize Ini File")
 
 IniFile_Load()
 
+Wnd_Init()
+
 Cust_Splash("Change Power Profile to High")
 
 ChangePower_ToHigh()
@@ -52,6 +55,9 @@ ChangePower_ToHigh()
 Cust_Process_Close("outlook.exe")
 
 For $file_pst In $all_PST
+   If ($Wnd_Process_Status<>1) Then
+	  ExitLoop
+   EndIf
    Cust_Splash("Currently Fixing PST """ & $file_pst & """")
 
    Cust_Process_Close("scanpst.exe")
@@ -65,7 +71,7 @@ Cust_Splash("Change Power Profile to Normal")
 
 ChangePower_ToNormal()
 
-FileClose($hLog)
+
 
 Cust_Splash("Start Backup")
 
@@ -81,7 +87,9 @@ Next
 
 Cust_Splash("Shutdown")
 
-if ($do_shutdown == 1 ) Then
+FileClose($hLog)
+
+if ($do_shutdown == 1 OR $Wnd_Process_Status==2) Then
 
    Shutdown ($SD_SHUTDOWN )
 
@@ -90,6 +98,20 @@ EndIf
 #cs
    END OF MAIN PROCESS
 #ce
+
+Func Wnd_Init()
+   Switch $Do_Default
+   Case 1
+	  GuiCtrlSetState($Wnd_GUI_RB_Run, $GUI_CHECKED)
+	  $Wnd_Process_Status = 1
+   Case 2
+	  GuiCtrlSetState($Wnd_GUI_RB_Shut, $GUI_CHECKED)
+	  $Wnd_Process_Status = 2
+   Case 3
+	  GuiCtrlSetState($Wnd_GUI_RB_Stop, $GUI_CHECKED)
+	  $Wnd_Process_Status = 3
+   EndSwitch
+EndFunc
 
 
 
@@ -127,7 +149,12 @@ Func ScanPST_Run($ori_file)
    Cust_Splash("Starting Scanning Process")
 
    While $is_run
+
 	  Cust_Sleep($DELAY_FORCE)
+
+	  If ($Wnd_Process_Status<>1) Then
+		 Return 0
+	  EndIf
 
 	  $text_process = GetText_ScanPST($WIN_TITLE)
 	  Cust_Splash("This is phase 1 scanning process of file" &  @CRLF & _
@@ -149,7 +176,6 @@ Func ScanPST_Run($ori_file)
 	  EndIf
 
 
-
    WEnd
 
    Cust_Sleep(1000)
@@ -160,6 +186,9 @@ Func ScanPST_Run($ori_file)
    $text_process = GetText_ScanPST($WIN_TITLE)
    While $text_process == "#run#"
 	  Cust_Sleep(1000)
+	  If ($Wnd_Process_Status<>1) Then
+		 Return 0
+	  EndIf
 	  $text_process = GetText_ScanPST($WIN_TITLE)
    WEnd
 
@@ -215,6 +244,9 @@ Func ScanPST_Run($ori_file)
    $text_process = GetText_ScanPST($WIN_TITLE)
    While $text_process == "#run#"
 	  Cust_Sleep(1000)
+	  If ($Wnd_Process_Status<>1) Then
+		 Return 0
+	  EndIf
 	  $text_process = GetText_ScanPST($WIN_TITLE)
    WEnd
 
@@ -264,7 +296,10 @@ Func ScanPST_Run($ori_file)
 		 $pst_file &  @CRLF & _
 		 " Please be Patient " _
 		 ,"REPAIR: Waiting Repairing Process", 0 )
-	  Sleep(5000)
+	  Wnd_Sleep(5000)
+	  If ($Wnd_Process_Status<>1) Then
+		 Return 0
+	  EndIf
 	  $text_process = GetText_ScanPST($WIN_TITLE)
 
 	  If $text_process=="#dead#"  Then
@@ -281,11 +316,6 @@ Func ScanPST_Run($ori_file)
 		 ExitLoop
 	  EndIf
    WEnd
-
-   $hWnd = _WinWaitActivate($WIN_TITLE)
-   If ($hWnd<>0) Then
-	  ProcessClose($hWnd)
-   EndIf
 
    Cust_Splash("Start Return File from Scanning")
    Return_File($pst_file, $ori_file)
@@ -323,15 +353,44 @@ Func Duplicate_File($file)
    Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
    _PathSplit($file, $sDrive, $sDir, $sFileName, $sExtension)
 
-   Local $newFile =$sDrive  & $sDir & $sFileName & ".scan" & $sExtension
+   Local $tempDir =$sDrive  & $sDir  & "temp\"
+   Local $tempFile = $tempDir & $sFilename & $sExtension
+   DirCreate ($tempDir)
+
    Cust_Splash("We will backup your file " & @CRLF & $file & @CRLF & "For safety" , "Preparing File Copy")
 
-   If (Not FileCopy($file,$newFile, $FC_OVERWRITE )) Then
-	  Cust_Splash("ERROR : Backup Failed " , "Preparing File Copy")
-	  return 0
+   FileDelete($tempFile)
+   ShellExecute($Backup_App,"Copy """ & $file & """ """ & $tempDir & """ /OverwriteOlder /Close")
+
+   Local $text = WinGetTitle("[CLASS:TeraCopy3]");
+   Cust_Sleep(1000)
+   Local $text = WinGetTitle("[CLASS:TeraCopy3]");
+   If ($Wnd_Process_Status<>1) Then
+	  Return 0
    EndIf
 
-   return $newFile
+   While (ProcessExists("teracopy.exe") And Not StringInStr($text,"100% done",$STR_NOCASESENSEBASIC))
+	  Cust_Sleep(1000)
+	  If ($Wnd_Process_Status<>1) Then
+		 Return 0
+	  EndIf
+	  $text = WinGetTitle("[CLASS:TeraCopy3]")
+   WEnd
+   Cust_Sleep(1000)
+
+
+   Local $newFile =$sDrive  & $sDir & $sFileName & ".scan" & $sExtension
+   If FileExists($tempFile) Then
+	  If Not FileMove($tempFile,$newFile,$FC_OVERWRITE) Then
+		 Cust_Splash("ERROR : Cannot Move The File " , "Backup Process")
+		 Return 0
+	  EndIf
+	  return $newFile
+
+   EndIf
+   Cust_Splash("ERROR : File Backup not Exists '" & $tempFile & "'" , "Backup Process")
+   Return 0
+
 EndFunc
 
 
@@ -400,6 +459,8 @@ Func IniFile_ScanPST()
 	  $curr_name = "EXEC" & $curr_i
 	  $curr_pst = IniRead($IniFile_PATH,"Config",$curr_name,"N/A")
    WEnd
+
+   $Do_Default = IniRead($IniFile_Path,"Config","Default",1 )
 
 
 EndFunc

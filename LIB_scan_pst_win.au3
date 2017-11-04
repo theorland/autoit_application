@@ -109,7 +109,6 @@ Func Wnd_Evt_Radio()
 EndFunc
 
 Func Wnd_Evt_Close()
-
    $Wnd_Process_Status = 0
 EndFunc
 

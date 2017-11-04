@@ -23,7 +23,7 @@ Func Do_Backup()
    Local  $Backup_File_Conf = $Backup_Conf & "\" & @WDAY  & ".ini"
 
    Local $is_today = IniRead($Backup_File_Conf,"Schedule",@ComputerName,"none")
-   Cust_Splash("Checking Backup For" & @ComputerName  & " In file " & $Backup_File_Conf , "BACKUP PROCESS DECITON" )
+   Cust_Splash("Checking Backup For '" & @ComputerName  & "' In file " & $Backup_File_Conf , "BACKUP PROCESS DECITON" )
    If $is_today = "none" Then
 	  Cust_Splash("No Backup Today" , "BACKUP PROCESS STARTED" )
 	  Return 0
@@ -32,7 +32,18 @@ Func Do_Backup()
 
    Cust_Splash("Today is this computer backup" , "BACKUP PROCESS STARTED" )
 
-   ShellExecuteWait($Backup_App,"Copy """ & $Backup_Target & """ """ & $Backup_Server & """ /OverwriteOlder /Close")
+   ShellExecute($Backup_App,"Copy """ & $Backup_Target & """ """ & $Backup_Server & """ /OverwriteOlder /Close")
+   Cust_Sleep(1000)
+   Local $text = WinGetTitle("[CLASS:TeraCopy3]")
+   While (ProcessExists("teracopy.exe") And Not StringInStr($text,"100% done",$STR_NOCASESENSEBASIC))
+
+	  Cust_Sleep(1000)
+	  If ($Wnd_Process_Status<>3) Then
+		 Return 0
+	  EndIf
+
+	  $text = WinGetTitle("[CLASS:TeraCopy3]")
+   WEnd
 
    Local $Backup_File_Log =$Backup_Log & "\" & @YEAR & "_" & @MON & "_" & @MDAY & ".ini"
 
