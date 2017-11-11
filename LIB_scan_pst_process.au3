@@ -11,7 +11,6 @@ Global $Power_Balance = $DEFAULT_POWER_HIGH
 
 Opt("MustDeclareVars",1)
 
-
 Func Cust_Sleep($sleep)
 
    Wnd_Sleep($sleep)
@@ -22,9 +21,8 @@ Func Cust_Sleep($sleep)
 	  Exit(0)
    Case 2
 	  Cust_Splash("[USER CHOOSE]->SHUTDOWN")
-	  Shutdown ($SD_SHUTDOWN )
-	  Exit(0)
    EndSwitch
+
 
 EndFunc
 
@@ -32,7 +30,6 @@ Func Cust_Splash($message,$title="ScanPST Information",$log = 1)
 
    GUICtrlSetData($Wnd_GUI_Title,$title)
    GUICtrlSetData($Wnd_GUI_Text,$message)
-
    if ($log = 1 ) Then
 	  _FileWriteLog($hlog, $message)
    EndIf

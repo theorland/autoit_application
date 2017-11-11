@@ -8,6 +8,7 @@
 #Include <ButtonConstants.au3>
 #Include <GUIConstantsEx.au3>
 #Include <WinAPIEx.au3>
+#Include <StringConstants.au3>
 #Include <LIB_scan_pst_process.au3>
 #Include <LIB_scan_pst_backup.au3>
 
@@ -22,6 +23,7 @@ Global Const $WIN_TITLE = "Microsoft Outlook Inbox Repair Tool"
 Global $ScanPST_PATH = $DEFAULT_SCANPST_PATH
 Global $Cust_Priority = $PROCESS_HIGH
 Global $Do_Default
+Global $Conf_Safety = 1
 
 Global $hLog = FileOpen(@ScriptDir & "\ScanPST_" & @YEAR & "_" & @MON & "_" &  @MDAY & ".log", 1)
 
@@ -46,6 +48,9 @@ Cust_Splash("Initialize Ini File")
 
 IniFile_Load()
 
+IniWrite($Backup_Log_File,"START", @ComputerName, _
+	   @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+
 Wnd_Init()
 
 Cust_Splash("Change Power Profile to High")
@@ -55,7 +60,7 @@ ChangePower_ToHigh()
 Cust_Process_Close("outlook.exe")
 
 For $file_pst In $all_PST
-   If ($Wnd_Process_Status<>1) Then
+   If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
 	  ExitLoop
    EndIf
    Cust_Splash("Currently Fixing PST """ & $file_pst & """")
@@ -65,13 +70,23 @@ For $file_pst In $all_PST
    ScanPST_Run($file_pst)
 Next
 
+Switch $Wnd_Process_Status
+Case 0
+IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
+	  "STOPPED "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+Case 1
+IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
+	  "RUNNING "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+Case 2
+IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
+	  "SHUTDOWN "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+EndSwitch
+
 Cust_Process_Close("scanpst.exe")
 
 Cust_Splash("Change Power Profile to Normal")
 
 ChangePower_ToNormal()
-
-
 
 Cust_Splash("Start Backup")
 
@@ -85,12 +100,14 @@ For $file_exec in $All_Exec
    EndIf
 Next
 
-Cust_Splash("Shutdown")
+
 
 FileClose($hLog)
 
-if ($do_shutdown == 1 OR $Wnd_Process_Status==2) Then
+if (($do_shutdown == 1) OR _
+   ($Wnd_Process_Status==$Wnd_Process_Status_VALUE_SHUT)) Then
 
+   Cust_Splash("Shutdown")
    Shutdown ($SD_SHUTDOWN )
 
 EndIf
@@ -103,13 +120,13 @@ Func Wnd_Init()
    Switch $Do_Default
    Case 1
 	  GuiCtrlSetState($Wnd_GUI_RB_Run, $GUI_CHECKED)
-	  $Wnd_Process_Status = 1
+	  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_RUN
    Case 2
 	  GuiCtrlSetState($Wnd_GUI_RB_Shut, $GUI_CHECKED)
-	  $Wnd_Process_Status = 2
+	  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_SHUT
    Case 3
 	  GuiCtrlSetState($Wnd_GUI_RB_Stop, $GUI_CHECKED)
-	  $Wnd_Process_Status = 3
+	  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_STOP
    EndSwitch
 EndFunc
 
@@ -152,7 +169,7 @@ Func ScanPST_Run($ori_file)
 
 	  Cust_Sleep($DELAY_FORCE)
 
-	  If ($Wnd_Process_Status<>1) Then
+	  If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
 		 Return 0
 	  EndIf
 
@@ -186,7 +203,7 @@ Func ScanPST_Run($ori_file)
    $text_process = GetText_ScanPST($WIN_TITLE)
    While $text_process == "#run#"
 	  Cust_Sleep(1000)
-	  If ($Wnd_Process_Status<>1) Then
+	  If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
 		 Return 0
 	  EndIf
 	  $text_process = GetText_ScanPST($WIN_TITLE)
@@ -244,7 +261,7 @@ Func ScanPST_Run($ori_file)
    $text_process = GetText_ScanPST($WIN_TITLE)
    While $text_process == "#run#"
 	  Cust_Sleep(1000)
-	  If ($Wnd_Process_Status<>1) Then
+	  If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
 		 Return 0
 	  EndIf
 	  $text_process = GetText_ScanPST($WIN_TITLE)
@@ -297,7 +314,7 @@ Func ScanPST_Run($ori_file)
 		 " Please be Patient " _
 		 ,"REPAIR: Waiting Repairing Process", 0 )
 	  Wnd_Sleep(5000)
-	  If ($Wnd_Process_Status<>1) Then
+	  If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
 		 Return 0
 	  EndIf
 	  $text_process = GetText_ScanPST($WIN_TITLE)
@@ -314,6 +331,8 @@ Func ScanPST_Run($ori_file)
 		 Send("{Enter}")
 		 Send("{Space}")
 		 ExitLoop
+	  Else
+
 	  EndIf
    WEnd
 
@@ -350,6 +369,10 @@ EndFunc
 
 Func Duplicate_File($file)
 
+   if $Conf_Safety == 0 Then
+	  return $file
+   EndIf
+
    Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
    _PathSplit($file, $sDrive, $sDir, $sFileName, $sExtension)
 
@@ -365,13 +388,13 @@ Func Duplicate_File($file)
    Local $text = WinGetTitle("[CLASS:TeraCopy3]");
    Cust_Sleep(1000)
    Local $text = WinGetTitle("[CLASS:TeraCopy3]");
-   If ($Wnd_Process_Status<>1) Then
+   If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
 	  Return 0
    EndIf
 
    While (ProcessExists("teracopy.exe") And Not StringInStr($text,"100% done",$STR_NOCASESENSEBASIC))
 	  Cust_Sleep(1000)
-	  If ($Wnd_Process_Status<>1) Then
+	  If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
 		 Return 0
 	  EndIf
 	  $text = WinGetTitle("[CLASS:TeraCopy3]")
@@ -396,6 +419,9 @@ EndFunc
 
 Func Return_File($file_backup, $file_ori)
 
+   If $Conf_Safety == 0 Then
+	  return $file_ori
+   EndIf
    Local $sDrive = "", $sDir = "", $sFileName = "", $sExtension = ""
    _PathSplit($file_ori, $sDrive, $sDir, $sFileName, $sExtension)
 
@@ -461,7 +487,25 @@ Func IniFile_ScanPST()
    WEnd
 
    $Do_Default = IniRead($IniFile_Path,"Config","Default",1 )
+   Cust_Splash("Default is " & $Do_Default )
+   $Conf_Safety = IniRead($IniFile_Path,"Config","Safety",1 )
 
+EndFunc
+
+Func Feedback_Save($text_feedback)
+
+   $text_feedback = StringStripWS ($text_feedback, _
+	  BitOR($STR_STRIPLEADING, $STR_STRIPTRAILING, $STR_STRIPSPACES))
+
+   If $text_feedback=="" Then
+	  Return 0
+   EndIf
+
+   Local $filename_feedback= $Backup_Log_Dir& "\feedback_" & @YEAR & "_" & @MON & "_" &  @MDAY & ".log"
+   Local $f_Wnd = FileOpen($filename_feedback,$FO_APPEND)
+   FileWriteLine($f_Wnd,"[[[["  & @ComputerName & "]]]] " & @YEAR & "-" & @MON & "-" &  @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+   FileWriteLine($f_Wnd,$text_feedback)
+   FileClose($f_Wnd)
 
 EndFunc
 

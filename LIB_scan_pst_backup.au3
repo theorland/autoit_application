@@ -10,12 +10,12 @@ Global Const $DEFAULT_BACKUP_CONF= "\\ICSSERVER\OutlookPST\conf"
 #ce
 #ce
 
-Global $Backup_Log = $DEFAULT_BACKUP_LOG
+Global $Backup_Log_Dir = $DEFAULT_BACKUP_LOG
+Global $Backup_Log_File;
 Global $Backup_Server = $DEFAULT_BACKUP_SERVER
 Global $Backup_Target= $DEFAULT_BACKUP_TARGET
 Global $Backup_App = $DEFAULT_BACKUP_APP
 Global $Backup_Conf = $DEFAULT_BACKUP_CONF
-
 
 
 Func Do_Backup()
@@ -45,9 +45,10 @@ Func Do_Backup()
 	  $text = WinGetTitle("[CLASS:TeraCopy3]")
    WEnd
 
-   Local $Backup_File_Log =$Backup_Log & "\" & @YEAR & "_" & @MON & "_" & @MDAY & ".ini"
 
-   If IniWrite($Backup_File_Log,"Log",@ComputerName, @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC) <> 0 Then
+
+   If IniWrite($Backup_Log_File,"Backup", _
+	  @ComputerName, @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC) <> 0 Then
 	  Cust_Splash("Success Write Log In Server", "BACKUP PROCESS STARTED")
    Else
 	  Cust_Splash("Error Write Log In Server", "BACKUP PROCESS STARTED")
@@ -62,10 +63,11 @@ Func IniFile_Backup()
 	  $DEFAULT_BACKUP_SERVER)
    $Backup_Target = IniRead($IniFile_PATH, "Backup", "TARGET", _
 	  $DEFAULT_BACKUP_TARGET)
-   $Backup_Log = IniRead($IniFile_PATH, "Backup", "LOG", _
+   $Backup_Log_Dir = IniRead($IniFile_PATH, "Backup", "LOG", _
 	  $DEFAULT_BACKUP_LOG)
    $Backup_Conf = IniRead($IniFile_PATH, "Backup", "CONF", _
 	  $DEFAULT_BACKUP_CONF)
    $Backup_App = IniRead($IniFile_PATH, "Backup", "APP", _
 	  $DEFAULT_BACKUP_APP)
+   $Backup_Log_File =$Backup_Log_Dir & "\" & @YEAR & "_" & @MON & "_" & @MDAY & ".ini"
 EndFunc
