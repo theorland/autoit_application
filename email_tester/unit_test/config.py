@@ -1,4 +1,4 @@
-import ICS_Email_Tester, ICS_RDP_Tester, ICS_Config
+import ICS_Email_Tester, ICS_RDP_Tester, ICS_Config, ICS_Http_Tester
 import unittest
 import os, sys
 import pyping3 as pyping
@@ -69,5 +69,6 @@ class ICS_Condition_Tester(unittest.TestCase):
         config.sleep()
         config.timeout()
 
-
+    def test_http(self):
+        ICS_Http_Tester
 

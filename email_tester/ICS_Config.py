@@ -32,7 +32,7 @@ class ICS_Config:
     def sleep(self):
         read_value = None
         if self.values["sleep"] is None:
-            read_value = int(self.ini_file.getfloat("run","sleep"))
+            read_value = self.ini_file.getint("run","sleep")
 
             self.values["sleep"] = read_value
         else:
@@ -71,7 +71,7 @@ class ICS_Config:
 
             config_value = ICS_RDP_Tester_Type.Ping_Config_Type(\
                 host = self.ini_file.get("remote","host"), \
-                timeout =self.ini_file.get("remote","timeout"), \
+                timeout =self.ini_file.getint("remote","timeout"), \
                 count = self.ini_file.get("remote","count"),  \
                 packet_size =  self.ini_file.get("remote","packet_size"), \
                 cond =self.ini_file.get("remote", "condition"), \
@@ -127,3 +127,7 @@ class ICS_RDP_Tester_Type:
     Ping_Config_Type = namedtuple( \
         "Ping_Config", \
         ["host", "timeout", "count", "packet_size", "cond"])
+
+class ICS_Http_Tester_Type:
+    Config_Type = namedtuple("HTTP_config", \
+        [])
