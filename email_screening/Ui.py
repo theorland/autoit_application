@@ -1,14 +1,16 @@
 
 import sys
-from PyQt5.QtWidgets import (QMainWindow,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,QButtonGroup,QStyle,QApplication,QDesktopWidget)
+from PyQt5.QtWidgets import (QMainWindow,QDialog)
+from PyQt5.QtWidgets import (QHBoxLayout,QVBoxLayout)
+from PyQt5.QtWidgets import (QLabel,QPushButton,QButtonGroup,QStyle,QApplication,QDesktopWidget)
 from PyQt5.Qt  import Qt
 from PyQt5.QtGui import QDesktopServices
 
-class Ui(QMainWindow):
+class Ui(QDialog):
     def __init__(self):
         super().__init__()
 
-        self.l_info =QLabel("Here is example of label",self) # type: QLabel
+        self.l_info =QLabel("Here is example of label") # type: QLabel
 
 
         self.initUI()
@@ -20,31 +22,10 @@ class Ui(QMainWindow):
 
     def initUI(self):
         ''' FIRST LINE '''
-        hbox = QHBoxLayout()
-
-        hbox.addStretch()
-        hbox.addWidget(self.l_info,2)
-        hbox.addStretch()
-
-        btn1 = QPushButton("reconnect")
-
-        hbox.addWidget(btn1)
-        hbox.addStretch()
-
-        btn2 = QPushButton("refresh")
-
-        hbox.addWidget(btn2)
-        hbox.addStretch()
-
         vbox = QVBoxLayout()
-
-        vbox.addStretch()
-        vbox.addLayout(hbox)
-
-        self.statusBar().showMessage('Ready')
-
-        statusB = self.statusBar() # type: QStatusBar
         self.setLayout(vbox)
+        vbox.addItem()
+
 
         self.centerWindow()
         self.setWindowTitle("Email Screening")
