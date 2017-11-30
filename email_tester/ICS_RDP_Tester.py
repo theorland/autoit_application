@@ -24,7 +24,7 @@ class ICS_RDP_Tester:
                              timeout = int(self.config.timeout),  \
                              count = int(self.config.count), \
                              packet_size = int(self.config.packet_size))
-        ICS_Shared_Config.log("Pinging " + self.config.host + " Complete")
+
 
         conclusion = self.conclusion(result)
         return conclusion
@@ -56,8 +56,6 @@ class ICS_RDP_Tester:
             conclusion = "GOOD"
 
         result_output = result_output._replace( cond =conclusion)
-
-        ICS_Shared_Config.log(result_output)
 
         return result_output
 
