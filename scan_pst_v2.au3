@@ -59,6 +59,8 @@ ChangePower_ToHigh()
 
 Cust_Process_Close("outlook.exe")
 
+FileFlush ( $hLog)
+
 For $file_pst In $all_PST
    If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
 	  ExitLoop
@@ -68,6 +70,8 @@ For $file_pst In $all_PST
    Cust_Process_Close("scanpst.exe")
 
    ScanPST_Run($file_pst)
+
+   FileFlush ( $hLog)
 Next
 
 Switch $Wnd_Process_Status
@@ -81,6 +85,7 @@ Case 2
 IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
 	  "SHUTDOWN "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
 EndSwitch
+FileFlush ( $hLog)
 
 Cust_Process_Close("scanpst.exe")
 
