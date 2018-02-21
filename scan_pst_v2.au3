@@ -124,8 +124,8 @@ Next
 
 FileClose($hLog)
 
-if (($do_shutdown === 1) OR  _
-   ($Wnd_Process_Status===$Wnd_Process_Status_VALUE_SHUT)) Then
+if (($do_shutdown == 1) OR  _
+   ($Wnd_Process_Status == $Wnd_Process_Status_VALUE_SHUT)) Then
 
    Cust_Splash("Shutdown")
    Shutdown ($SD_SHUTDOWN )
@@ -137,19 +137,24 @@ EndIf
 #ce
 
 Func Wnd_Init()
-   Switch $Do_Default
-   Case 1
+   If $do_shutdown==1 Then
+	  Switch $Do_Default
+	  Case 1
+		 GuiCtrlSetState($Wnd_GUI_RB_Run, $GUI_CHECKED)
+		 $Wnd_Process_Status = $Wnd_Process_Status_VALUE_RUN
+	  Case 2
+
+			GuiCtrlSetState($Wnd_GUI_RB_Shut, $GUI_CHECKED)
+			$Wnd_Process_Status = $Wnd_Process_Status_VALUE_SHUT
+
+	  Case 3
+		 GuiCtrlSetState($Wnd_GUI_RB_Stop, $GUI_CHECKED)
+		 $Wnd_Process_Status = $Wnd_Process_Status_VALUE_STOP
+	  EndSwitch
+   Else
 	  GuiCtrlSetState($Wnd_GUI_RB_Run, $GUI_CHECKED)
 	  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_RUN
-   Case 2
-	  If $do_shutdown Then
-		 GuiCtrlSetState($Wnd_GUI_RB_Shut, $GUI_CHECKED)
-		 $Wnd_Process_Status = $Wnd_Process_Status_VALUE_SHUT
-	  EndIf
-   Case 3
-	  GuiCtrlSetState($Wnd_GUI_RB_Stop, $GUI_CHECKED)
-	  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_STOP
-   EndSwitch
+   EndIf
 EndFunc
 
 

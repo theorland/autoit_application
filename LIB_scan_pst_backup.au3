@@ -32,11 +32,12 @@ Func Do_Backup()
 
    Cust_Splash("Today is this computer backup" , "BACKUP PROCESS STARTED" )
 
-   ShellExecute($Backup_App,"Copy """ & $Backup_Target & """ """ & $Backup_Server & """ /OverwriteOlder /Close")
+   Local $path = "Copy """ & $Backup_Target & """ """ & $Backup_Server & """ /OverwriteAll /Close"
+   ShellExecute($Backup_App,$path)
+
    Cust_Sleep(1000)
    Local $text = WinGetTitle("[CLASS:TeraCopy3]")
    While (ProcessExists("teracopy.exe") And Not StringInStr($text,"100% done",$STR_NOCASESENSEBASIC))
-
 	  Cust_Sleep(1000)
 	  If ($Wnd_Process_Status<>3) Then
 		 Return 0
@@ -44,8 +45,6 @@ Func Do_Backup()
 
 	  $text = WinGetTitle("[CLASS:TeraCopy3]")
    WEnd
-
-
 
    If IniWrite($Backup_Log_File,"Backup", _
 	  @ComputerName, @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC) <> 0 Then
