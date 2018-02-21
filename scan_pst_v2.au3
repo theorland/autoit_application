@@ -1,3 +1,17 @@
+#cs ----------------------------------------------------
+   Created by : theo (lourenzoisthebest@gmail.com)
+   Created Time : 2018-02-20
+   Fixing printer function, disable and enable network for make sure network share fixed
+--------------------------------------------------------
+
+Modified by : theo (lourenzoisthebest@gmail.com)
+Modified Time : 2018-02-20
+Add Obfuscator
+Change ini file to exe file
+Adding changelog
+
+#ce ----------------------------------------------------
+
 #include <AutoItConstants.au3>
 #include <FontConstants.au3>
 #include <Constants.au3>
@@ -11,6 +25,9 @@
 #Include <StringConstants.au3>
 #Include <LIB_scan_pst_process.au3>
 #Include <LIB_scan_pst_backup.au3>
+
+#AutoIt3Wrapper_Run_Obfuscator=y
+#Obfuscator_Parameters=/SO
 
 Opt('MustDeclareVars', 1)
 
@@ -105,12 +122,10 @@ For $file_exec in $All_Exec
    EndIf
 Next
 
-
-
 FileClose($hLog)
 
-if (($do_shutdown == 1) OR _
-   ($Wnd_Process_Status==$Wnd_Process_Status_VALUE_SHUT)) Then
+if (($do_shutdown === 1) OR  _
+   ($Wnd_Process_Status===$Wnd_Process_Status_VALUE_SHUT)) Then
 
    Cust_Splash("Shutdown")
    Shutdown ($SD_SHUTDOWN )
@@ -127,8 +142,10 @@ Func Wnd_Init()
 	  GuiCtrlSetState($Wnd_GUI_RB_Run, $GUI_CHECKED)
 	  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_RUN
    Case 2
-	  GuiCtrlSetState($Wnd_GUI_RB_Shut, $GUI_CHECKED)
-	  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_SHUT
+	  If $do_shutdown Then
+		 GuiCtrlSetState($Wnd_GUI_RB_Shut, $GUI_CHECKED)
+		 $Wnd_Process_Status = $Wnd_Process_Status_VALUE_SHUT
+	  EndIf
    Case 3
 	  GuiCtrlSetState($Wnd_GUI_RB_Stop, $GUI_CHECKED)
 	  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_STOP

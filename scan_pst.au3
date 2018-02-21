@@ -196,7 +196,6 @@ Func Return_File($file_backup, $file_ori)
 
 EndFunc
 
-
 Func ScanPST_Run($ori_file)
    ; Make sure if the window is closed
    local $hWnd
@@ -211,6 +210,7 @@ Func ScanPST_Run($ori_file)
 	  Return 0
 
    EndIf
+
 
    ShellExecute($ScanPST_PATH)
 
@@ -239,7 +239,7 @@ Func ScanPST_Run($ori_file)
 		 ExitLoop
 	  EndIf
 
-	  If StringInStr($text_process , "still", _
+	  If StringInStr ( $text_process , "still", _
 		 $STR_NOCASESENSEBASIC )  Then
 		 ContinueLoop
 	  EndIf
@@ -264,45 +264,53 @@ Func ScanPST_Run($ori_file)
    local $is_done = 0
    Cust_Splash("Decision Phase Repair")
    $text_process = GetTextScanPST()
-
-    If StringInStr($text_process, _
-	  "been canceled", $STR_NOCASESENSEBASIC ) Then
-	  Cust_Splash("ERROR: User Canceled ","Decision Phase Repair")
-	  $is_error = 1
-   ElseIf StringInStr($text_process, _
-   "error prevented access", $STR_NOCASESENSEBASIC ) Then
-	  Cust_Splash("ERROR: Could not open file","Decision Phase Repair")
-	  $is_error = 1
-   ElseIf StringInStr($text_process, _
-   "in use by another", $STR_NOCASESENSEBASIC ) Then
-	  Cust_Splash("ERROR: File already in use","Decision Phase Repair")
-	  $is_error = 1
-   ElseIf  StringInStr($text_process, _
-	  "does not exist", $STR_NOCASESENSEBASIC ) Then
-	   Cust_Splash("ERROR: File doesn't exists","Decision Phase Repair")
-	   $is_error = 1
-   ElseIf  StringInStr($text_process, _
-   "does not recognize the file", $STR_NOCASESENSEBASIC ) Then
-	   Cust_Splash("ERROR: File Type not recognised","Decision Phase Repair")
-	   $is_error = 1
-   ElseIf  StringInStr($text_process, _
-   "error has occurred", $STR_NOCASESENSEBASIC ) Then
-	   Cust_Splash("ERROR: An error has occured","Decision Phase Repair")
-	   $is_error = 1
-   ElseIf  StringInStr($text_process, _
-   "is read-only", $STR_NOCASESENSEBASIC ) Then
-	   Cust_Splash("ERROR: PST is read only","Decision Phase Repair")
-	   $is_error = 1
-   ElseIf  StringInStr($text_process, _
-   "No errors were found", $STR_NOCASESENSEBASIC ) Then
-	   Cust_Splash("SKIP: No Error","Decision Phase Repair")
-	   $is_done = 1
-   ElseIf  StringInStr($text_process, _
-	  "Only minor inconsistencies were found", $STR_NOCASESENSEBASIC ) Then
-	  Cust_Splash("SKIP: Only minor","Decision Phase Repair")
-	  $is_done = 1
+   If $text_process <>"" Then
+	  If StringInStr($text_process, _
+		 "been canceled", $STR_NOCASESENSEBASIC ) Then
+		 Cust_Splash("ERROR: User Canceled ","Decision Phase Repair")
+		 $is_error = 1
+	  EndIf
+	   If StringInStr($text_process, _
+	  "error prevented access", $STR_NOCASESENSEBASIC ) Then
+		 Cust_Splash("ERROR: Could not open file","Decision Phase Repair")
+		 $is_error = 1
+	  EndIf
+	  If StringInStr($text_process, _
+	  "in use by another", $STR_NOCASESENSEBASIC ) Then
+		 Cust_Splash("ERROR: File already in use","Decision Phase Repair")
+		 $is_error = 1
+	  EndIf
+	  If StringInStr($text_process, _
+		 "does not exist", $STR_NOCASESENSEBASIC ) Then
+		  Cust_Splash("ERROR: File doesn't exists","Decision Phase Repair")
+		  $is_error = 1
+	  EndIf
+	  If StringInStr($text_process, _
+	  "does not recognize the file", $STR_NOCASESENSEBASIC ) Then
+		  Cust_Splash("ERROR: File Type not recognised","Decision Phase Repair")
+		  $is_error = 1
+	   EndIf
+	  If StringInStr($text_process, _
+	  "error has occurred", $STR_NOCASESENSEBASIC ) Then
+		  Cust_Splash("ERROR: An error has occured","Decision Phase Repair")
+		  $is_error = 1
+	   EndIf
+	  If StringInStr($text_process, _
+	  "is read-only", $STR_NOCASESENSEBASIC ) Then
+		  Cust_Splash("ERROR: PST is read only","Decision Phase Repair")
+		  $is_error = 1
+	   EndIf
+	  If StringInStr($text_process, _
+	  "No errors were found", $STR_NOCASESENSEBASIC ) Then
+		  Cust_Splash("SKIP: No Error","Decision Phase Repair")
+		  $is_done = 1
+	   EndIf
+	  If StringInStr($text_process, _
+		 "Only minor inconsistencies were found", $STR_NOCASESENSEBASIC ) Then
+		 Cust_Splash("SKIP: Only minor","Decision Phase Repair")
+		 $is_done = 1
+	  EndIf
    EndIf
-
    If $is_error = 1 Then
 	  Cust_Splash("TAKE DECISION: IS ERROR ","Take Decision")
 	  $hWnd = _WinWaitActivate($WIN_TITLE)
