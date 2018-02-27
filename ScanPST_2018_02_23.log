@@ -1,0 +1,273 @@
+2018-02-23 14:28:37 : Initialize Ini File
+2018-02-23 14:28:37 : Default is 1
+2018-02-23 14:28:37 : Change Power Profile to High
+2018-02-23 14:28:40 : Closing Process outlook.exe
+2018-02-23 14:28:43 : Closing Process scanpst.exe
+2018-02-23 14:28:46 : Change Power Profile to Normal
+2018-02-23 14:28:46 : Start Backup
+2018-02-23 14:28:46 : Checking Backup For 'THEODELL' In file \\ICSSERVER\OutlookPST\conf\6.ini
+2018-02-23 14:28:46 : No Backup Today
+2018-02-23 14:28:46 : Exec Post Scan PST
+2018-02-23 14:28:53 : Initialize Ini File
+2018-02-23 14:28:53 : Default is 1
+2018-02-23 14:28:53 : Change Power Profile to High
+2018-02-23 14:28:54 : Closing Process outlook.exe
+2018-02-23 14:28:57 : Closing Process scanpst.exe
+2018-02-23 14:29:00 : Change Power Profile to Normal
+2018-02-23 14:29:01 : Start Backup
+2018-02-23 14:29:01 : Checking Backup For 'THEODELL' In file \\ICSSERVER\OutlookPST\conf\6.ini
+2018-02-23 14:29:01 : No Backup Today
+2018-02-23 14:29:01 : Exec Post Scan PST
+2018-02-23 14:29:24 : Initialize Ini File
+2018-02-23 14:29:24 : Default is 1
+2018-02-23 14:29:24 : Change Power Profile to High
+2018-02-23 14:29:25 : Closing Process outlook.exe
+2018-02-23 14:29:28 : Closing Process scanpst.exe
+2018-02-23 14:29:31 : Change Power Profile to Normal
+2018-02-23 14:29:31 : Start Backup
+2018-02-23 14:29:31 : Checking Backup For 'THEODELL' In file \\ICSSERVER\OutlookPST\conf\6.ini
+2018-02-23 14:29:31 : No Backup Today
+2018-02-23 14:29:31 : Exec Post Scan PST
+2018-02-23 14:46:15 : Initialize Ini File
+2018-02-23 14:46:15 : Default is 1
+2018-02-23 14:46:15 : Change Power Profile to High
+2018-02-23 14:46:16 : Closing Process outlook.exe
+2018-02-23 14:46:20 : Closing Process scanpst.exe
+2018-02-23 14:46:23 : Change Power Profile to Normal
+2018-02-23 14:46:23 : Start Backup
+2018-02-23 14:46:23 : Checking Backup For 'THEODELL' In file \\ICSSERVER\OutlookPST\conf\6.ini
+2018-02-23 14:46:23 : No Backup Today
+2018-02-23 14:46:23 : Exec Post Scan PST
+2018-02-23 15:47:33 : Initialize Ini File
+2018-02-23 15:47:33 : Default is 1
+2018-02-23 15:47:55 : Initialize Ini File
+2018-02-23 15:47:55 : Default is 1
+2018-02-23 15:48:21 : Initialize Ini File
+2018-02-23 15:48:21 : Default is 1
+2018-02-23 15:49:34 : Initialize Ini File
+2018-02-23 15:49:34 : Default is 1
+2018-02-23 15:52:59 : Initialize Ini File
+2018-02-23 15:52:59 : Default is 1
+2018-02-23 15:52:59 : Change Power Profile to High
+2018-02-23 15:53:00 : Closing Process outlook.exe
+2018-02-23 15:53:03 : Currently Fixing PST "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 15:53:03 : Closing Process scanpst.exe
+2018-02-23 15:53:06 : Opening the application C:\Program Files (x86)\Microsoft Office\Office15\SCANPST.EXE
+ For "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 15:53:06 : We will backup your file 
+D:\theorland\Documents\Outlook Files\test.pst
+For safety
+2018-02-23 16:05:03 : Initialize Ini File
+2018-02-23 16:05:03 : Default is 1
+2018-02-23 16:05:03 : Change Power Profile to High
+2018-02-23 16:05:03 : Closing Process outlook.exe
+2018-02-23 16:05:07 : Currently Fixing PST "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:05:07 : Closing Process scanpst.exe
+2018-02-23 16:05:10 : Opening the application C:\Program Files\Microsoft Office\Office15\SCANPST.EXE
+ For "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:05:10 : We will backup your file 
+D:\theorland\Documents\Outlook Files\test.pst
+For safety
+2018-02-23 16:05:14 : Starting Scanning Process
+2018-02-23 16:05:58 : Initialize Ini File
+2018-02-23 16:05:58 : Default is 1
+2018-02-23 16:05:58 : Change Power Profile to High
+2018-02-23 16:05:59 : Closing Process outlook.exe
+2018-02-23 16:06:02 : Currently Fixing PST "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:06:02 : Closing Process scanpst.exe
+2018-02-23 16:06:05 : Opening the application C:\Program Files\Microsoft Office\Office15\SCANPST.EXE
+ For "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:06:05 : We will backup your file 
+D:\theorland\Documents\Outlook Files\test.pst
+For safety
+2018-02-23 16:06:10 : Starting Scanning Process
+2018-02-23 16:06:37 : Initialize Ini File
+2018-02-23 16:06:37 : Default is 1
+2018-02-23 16:06:37 : Change Power Profile to High
+2018-02-23 16:06:38 : Closing Process outlook.exe
+2018-02-23 16:06:41 : Currently Fixing PST "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:06:41 : Closing Process scanpst.exe
+2018-02-23 16:06:44 : Opening the application C:\Program Files\Microsoft Office\Office15\SCANPST.EXE
+ For "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:06:44 : We will backup your file 
+D:\theorland\Documents\Outlook Files\test.pst
+For safety
+2018-02-23 16:06:49 : Starting Scanning Process
+2018-02-23 16:06:56 : Error: Exit Because No Phase The following file has been scanned:
+D:\theorland\Documents\Outlook Files\test.scan.pst
+Only minor inconsistencies were found in this file. Repairing the file is optional. To repair it, click Repair.
+
+Folders found in this file: 7
+Items found in this file: 98
+
+&Make backup of scanned file before repairing
+Enter name of &backup file:
+D:\theorland\Documents\Outlook Files\test.scan.bak
+&Browse...
+&Details...
+&Repair
+Cancel
+2018-02-23 16:06:57 : Decision Phase Repair
+2018-02-23 16:06:58 : SKIP: Only minor
+2018-02-23 16:06:58 : TAKE DECISION: IS DONE JUST QUIT
+2018-02-23 16:06:58 : Currently Fixing PST "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:06:58 : Closing Process scanpst.exe
+2018-02-23 16:07:01 : Opening the application C:\Program Files\Microsoft Office\Office15\SCANPST.EXE
+ For "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:07:01 : We will backup your file 
+D:\theorland\Documents\Outlook Files\test.pst
+For safety
+2018-02-23 16:07:05 : Starting Scanning Process
+2018-02-23 16:07:12 : Error: Exit Because No Phase The following file has been scanned:
+D:\theorland\Documents\Outlook Files\test.scan.pst
+Only minor inconsistencies were found in this file. Repairing the file is optional. To repair it, click Repair.
+
+Folders found in this file: 7
+Items found in this file: 98
+
+&Make backup of scanned file before repairing
+Enter name of &backup file:
+D:\theorland\Documents\Outlook Files\test.scan.bak
+&Browse...
+&Details...
+&Repair
+Cancel
+2018-02-23 16:07:13 : Decision Phase Repair
+2018-02-23 16:07:14 : SKIP: Only minor
+2018-02-23 16:07:14 : TAKE DECISION: IS DONE JUST QUIT
+2018-02-23 16:07:14 : Closing Process scanpst.exe
+2018-02-23 16:07:17 : Change Power Profile to Normal
+2018-02-23 16:08:33 : Initialize Ini File
+2018-02-23 16:08:33 : Default is 1
+2018-02-23 16:08:33 : Change Power Profile to High
+2018-02-23 16:08:34 : Closing Process outlook.exe
+2018-02-23 16:08:37 : Closing Process scanpst.exe
+2018-02-23 16:08:40 : Change Power Profile to Normal
+2018-02-23 16:17:01 : Initialize Ini File
+2018-02-23 16:17:01 : Default is 1
+2018-02-23 16:17:01 : Change Power Profile to High
+2018-02-23 16:17:02 : Closing Process outlook.exe
+2018-02-23 16:17:05 : Closing Process scanpst.exe
+2018-02-23 16:17:08 : Change Power Profile to Normal
+2018-02-23 16:17:22 : Initialize Ini File
+2018-02-23 16:17:22 : Default is 1
+2018-02-23 16:17:22 : Change Power Profile to High
+2018-02-23 16:17:23 : Closing Process outlook.exe
+2018-02-23 16:17:26 : Closing Process scanpst.exe
+2018-02-23 16:17:29 : Change Power Profile to Normal
+2018-02-23 16:19:25 : Initialize Ini File
+2018-02-23 16:19:25 : Default is 1
+2018-02-23 16:19:25 : Change Power Profile to High
+2018-02-23 16:19:26 : Closing Process outlook.exe
+2018-02-23 16:19:29 : Closing Process scanpst.exe
+2018-02-23 16:19:32 : Change Power Profile to Normal
+2018-02-23 16:21:09 : Initialize Ini File
+2018-02-23 16:21:09 : Default is 1
+2018-02-23 16:21:09 : Change Power Profile to High
+2018-02-23 16:21:09 : Closing Process outlook.exe
+2018-02-23 16:21:13 : Closing Process scanpst.exe
+2018-02-23 16:21:16 : Change Power Profile to Normal
+2018-02-23 16:22:13 : Initialize Ini File
+2018-02-23 16:22:13 : Default is 1
+2018-02-23 16:22:13 : Change Power Profile to High
+2018-02-23 16:22:13 : Closing Process outlook.exe
+2018-02-23 16:22:27 : Initialize Ini File
+2018-02-23 16:22:27 : Default is 1
+2018-02-23 16:22:27 : Change Power Profile to High
+2018-02-23 16:22:27 : Closing Process outlook.exe
+2018-02-23 16:22:35 : Closing Process scanpst.exe
+2018-02-23 16:22:38 : Change Power Profile to Normal
+2018-02-23 16:23:06 : Initialize Ini File
+2018-02-23 16:23:06 : Default is 1
+2018-02-23 16:23:06 : Change Power Profile to High
+2018-02-23 16:23:07 : Closing Process outlook.exe
+2018-02-23 16:23:11 : Currently Fixing PST "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:23:11 : Closing Process scanpst.exe
+2018-02-23 16:23:14 : Opening the application C:\Program Files\Microsoft Office\Office15\SCANPST.EXE
+ For "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:23:14 : We will backup your file 
+D:\theorland\Documents\Outlook Files\test.pst
+For safety
+2018-02-23 16:23:21 : Starting Scanning Process
+2018-02-23 16:23:24 : [USER CHOOSE]->END THE TASK
+2018-02-23 16:23:24 : Closing Process scanpst.exe
+2018-02-23 16:23:40 : Initialize Ini File
+2018-02-23 16:23:40 : Default is 1
+2018-02-23 16:23:40 : Change Power Profile to High
+2018-02-23 16:23:40 : Closing Process outlook.exe
+2018-02-23 16:23:43 : Currently Fixing PST "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:23:43 : Closing Process scanpst.exe
+2018-02-23 16:23:46 : Opening the application C:\Program Files\Microsoft Office\Office15\SCANPST.EXE
+ For "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:23:46 : We will backup your file 
+D:\theorland\Documents\Outlook Files\test.pst
+For safety
+2018-02-23 16:23:51 : Starting Scanning Process
+2018-02-23 16:23:58 : Error: Exit Because No Phase The following file has been scanned:
+D:\theorland\Documents\Outlook Files\test.scan.pst
+Only minor inconsistencies were found in this file. Repairing the file is optional. To repair it, click Repair.
+
+Folders found in this file: 7
+Items found in this file: 98
+
+&Make backup of scanned file before repairing
+Enter name of &backup file:
+D:\theorland\Documents\Outlook Files\test.scan.bak
+&Browse...
+&Details...
+&Repair
+Cancel
+2018-02-23 16:23:59 : Decision Phase Repair
+2018-02-23 16:24:00 : SKIP: Only minor
+2018-02-23 16:24:00 : TAKE DECISION: IS DONE JUST QUIT
+2018-02-23 16:24:00 : Currently Fixing PST "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:24:00 : Closing Process scanpst.exe
+2018-02-23 16:24:03 : Opening the application C:\Program Files\Microsoft Office\Office15\SCANPST.EXE
+ For "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:24:03 : We will backup your file 
+D:\theorland\Documents\Outlook Files\test.pst
+For safety
+2018-02-23 16:24:08 : Starting Scanning Process
+2018-02-23 16:24:15 : Error: Exit Because No Phase The following file has been scanned:
+D:\theorland\Documents\Outlook Files\test.scan.pst
+Only minor inconsistencies were found in this file. Repairing the file is optional. To repair it, click Repair.
+
+Folders found in this file: 7
+Items found in this file: 98
+
+&Make backup of scanned file before repairing
+Enter name of &backup file:
+D:\theorland\Documents\Outlook Files\test.scan.bak
+&Browse...
+&Details...
+&Repair
+Cancel
+2018-02-23 16:24:16 : [USER CHOOSE]->SHUTDOWN
+2018-02-23 16:24:16 : Decision Phase Repair
+2018-02-23 16:24:16 : SKIP: Only minor
+2018-02-23 16:24:16 : TAKE DECISION: IS DONE JUST QUIT
+2018-02-23 16:24:17 : Closing Process scanpst.exe
+2018-02-23 16:24:20 : Change Power Profile to Normal
+2018-02-23 16:28:02 : Initialize Ini File
+2018-02-23 16:28:02 : Default is 1
+2018-02-23 16:28:02 : Change Power Profile to High
+2018-02-23 16:28:03 : Closing Process outlook.exe
+2018-02-23 16:28:06 : Closing Process scanpst.exe
+2018-02-23 16:28:09 : Change Power Profile to Normal
+2018-02-23 16:28:10 : Start Backup
+2018-02-23 16:28:10 : Checking Backup For 'THEODELL' In file \\ICSSERVER\OutlookPST\conf\6.ini
+2018-02-23 16:28:10 : No Backup Today
+2018-02-23 16:28:10 : Exec Post Scan PST
+2018-02-23 16:29:14 : Initialize Ini File
+2018-02-23 16:29:14 : Default is 1
+2018-02-23 16:29:14 : Change Power Profile to High
+2018-02-23 16:29:15 : Closing Process outlook.exe
+2018-02-23 16:29:18 : Currently Fixing PST "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:29:18 : Closing Process scanpst.exe
+2018-02-23 16:29:21 : Opening the application C:\Program Files\Microsoft Office\Office15\SCANPST.EXE
+ For "D:\theorland\Documents\Outlook Files\test.pst"
+2018-02-23 16:29:21 : We will backup your file 
+D:\theorland\Documents\Outlook Files\test.pst
+For safety
+2018-02-23 16:29:23 : [USER CHOOSE]->END THE TASK
+2018-02-23 16:29:23 : Closing Process scanpst.exe

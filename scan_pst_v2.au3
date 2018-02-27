@@ -1,3 +1,19 @@
+#pragma compile(Out, ..\scan_pst.exe)
+#pragma compile(Icon, .\scan_pst.ico)
+; #pragma compile(ExecLevel, highestavailable)
+#pragma compile(Compatibility, win7)
+#pragma compile(Compression, 9)
+#pragma compile(inputboxres, false)
+#pragma compile(UPX, False)
+#pragma compile(FileDescription, "Scan PST - Automate Outlook scanpst process"  )
+#pragma compile(ProductName, "scan_pst")
+#pragma compile(ProductVersion, 1.3)
+#pragma compile(FileVersion, "1.3.0.0" ) ; The last parameter is optional.
+#pragma compile(LegalCopyright, "© Theo Christ" )
+#pragma compile(LegalTrademarks, 'Trademark something, and some text in "quotes" etc...')
+#pragma compile(CompanyName, 'home')
+
+
 #include <AutoItConstants.au3>
 #include <FontConstants.au3>
 #include <Constants.au3>
@@ -16,13 +32,15 @@ Opt('MustDeclareVars', 1)
 
 Global Const $IniFile_PATH =@ScriptDir & "\config\pst.ini"
 Global Const $DEFAULT_SCANPST_PATH = "C:\Program Files\Microsoft Office\Office15\SCANPST.EXE"
+Global Const $DEFAULT_OUTLOOK_PATH = "C:\Program Files\Microsoft Office\Office15\OUTLOOK.EXE"
 Global Const $DEFAULT_PST0 = "C:\Users\ics-user\Document\Outlook Files\Outlook.pst"
 
 Global Const $WIN_TITLE = "Microsoft Outlook Inbox Repair Tool"
 
 Global $ScanPST_PATH = $DEFAULT_SCANPST_PATH
+Global $Outlook_PATH = $DEFAULT_OUTLOOK_PATH
 Global $Cust_Priority = $PROCESS_HIGH
-Global $Do_Default
+Global $CONFIG_DEFAULT
 Global $Conf_Safety = 1
 
 Global $hLog = FileOpen(@ScriptDir & "\ScanPST_" & @YEAR & "_" & @MON & "_" &  @MDAY & ".log", 1)
@@ -32,10 +50,11 @@ Global $DELAY_FORCE = 3000
 Global $All_PST[0]
 Global $All_Exec[0]
 
-Global $do_shutdown = 0
+Global $RUN_WHEN_SHUTDOWN = 0
 
 If ((UBound($CmdLine)>1) AND ($CmdLine[1] == "1")) Then
-   $do_shutdown = 1
+   $RUN_WHEN_SHUTDOWN = 1
+
 EndIf
 
 #cs
@@ -43,13 +62,15 @@ EndIf
 #ce
 
 Wnd_Create("ScanPST Process Information")
+If $RUN_WHEN_SHUTDOWN == 0 Then
+	Wnd_Create_Not_Shutdown()
+EndIf
 
 Cust_Splash("Initialize Ini File")
 
 IniFile_Load()
 
-IniWrite($Backup_Log_File,"START", @ComputerName, _
-	   @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+LogServer_Write_StartStatus()
 
 Wnd_Init()
 
@@ -62,7 +83,7 @@ Cust_Process_Close("outlook.exe")
 FileFlush ( $hLog)
 
 For $file_pst In $all_PST
-   If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
+   If (Is_It_Stopped()) Then
 	  ExitLoop
    EndIf
    Cust_Splash("Currently Fixing PST """ & $file_pst & """")
@@ -74,17 +95,8 @@ For $file_pst In $all_PST
    FileFlush ( $hLog)
 Next
 
-Switch $Wnd_Process_Status
-Case 0
-IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
-	  "STOPPED "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
-Case 1
-IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
-	  "RUNNING "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
-Case 2
-IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
-	  "SHUTDOWN "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
-EndSwitch
+LogServer_Write_EndStatus()
+
 FileFlush ( $hLog)
 
 Cust_Process_Close("scanpst.exe")
@@ -93,28 +105,18 @@ Cust_Splash("Change Power Profile to Normal")
 
 ChangePower_ToNormal()
 
-Cust_Splash("Start Backup")
+If $RUN_WHEN_SHUTDOWN==1 Then 
+	Pre_Shutdown();
 
-Do_Backup()
+	FileClose($hLog)
 
-Cust_Splash("Exec Post Scan PST")
+	LogServer_Write_EndStatus()
 
-For $file_exec in $All_Exec
-   If $file_exec<>"" Then
-	  RunWait($file_exec)
-   EndIf
-Next
-
-
-
-FileClose($hLog)
-
-if (($do_shutdown == 1) OR _
-   ($Wnd_Process_Status==$Wnd_Process_Status_VALUE_SHUT)) Then
-
-   Cust_Splash("Shutdown")
-   Shutdown ($SD_SHUTDOWN )
-
+	Post_Shutdown()
+Else 
+	If ($Wnd_Process_Status==$Wnd_Process_Status_VALUE_SHUT) Then
+		Run_Outlook()
+	EndIF
 EndIf
 
 #cs
@@ -122,17 +124,22 @@ EndIf
 #ce
 
 Func Wnd_Init()
-   Switch $Do_Default
-   Case 1
-	  GuiCtrlSetState($Wnd_GUI_RB_Run, $GUI_CHECKED)
-	  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_RUN
-   Case 2
-	  GuiCtrlSetState($Wnd_GUI_RB_Shut, $GUI_CHECKED)
-	  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_SHUT
-   Case 3
-	  GuiCtrlSetState($Wnd_GUI_RB_Stop, $GUI_CHECKED)
-	  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_STOP
-   EndSwitch
+	If $RUN_WHEN_SHUTDOWN==1 Then
+	   Switch $CONFIG_DEFAULT
+	   Case 1
+		  GuiCtrlSetState($Wnd_GUI_RB_Run, $GUI_CHECKED)
+		  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_RUN
+	   Case 2
+		  GuiCtrlSetState($Wnd_GUI_RB_Shut, $GUI_CHECKED)
+		  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_SHUT
+	   Case 3
+		  GuiCtrlSetState($Wnd_GUI_RB_Stop, $GUI_CHECKED)
+		  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_STOP
+	   EndSwitch
+	 Else 
+		GuiCtrlSetState($Wnd_GUI_RB_Run, $GUI_CHECKED)
+		  $Wnd_Process_Status = $Wnd_Process_Status_VALUE_RUN
+	EndIf
 EndFunc
 
 
@@ -174,7 +181,7 @@ Func ScanPST_Run($ori_file)
 
 	  Cust_Sleep($DELAY_FORCE)
 
-	  If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
+	  If (Is_It_Stopped()) Then
 		 Return 0
 	  EndIf
 
@@ -182,8 +189,10 @@ Func ScanPST_Run($ori_file)
 	  Cust_Splash("This is phase 1 scanning process of file" &  @CRLF & _
 		 $pst_file &  @CRLF & _
 		 " Please be Patient ", "Waiting Scanning Process" , 0 )
-
-	  If StringLen($text_process)>40 AND Not StringInStr ( $text_process , "phase", _
+	  If StringInStr($text_process, _
+		"the file you want to scan", $STR_NOCASESENSEBASIC ) Then
+		 ContinueLoop
+	  ElseIf StringLen($text_process)>40 AND Not StringInStr ( $text_process , "phase", _
 		 $STR_NOCASESENSEBASIC ) Then
 		 $is_run = false
 		 Cust_Splash("Error: Exit Because No Phase " & $text_process, "Waiting Scanning Process")
@@ -208,7 +217,7 @@ Func ScanPST_Run($ori_file)
    $text_process = GetText_ScanPST($WIN_TITLE)
    While $text_process == "#run#"
 	  Cust_Sleep(1000)
-	  If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
+	  If (Is_It_Stopped()) Then
 		 Return 0
 	  EndIf
 	  $text_process = GetText_ScanPST($WIN_TITLE)
@@ -266,7 +275,7 @@ Func ScanPST_Run($ori_file)
    $text_process = GetText_ScanPST($WIN_TITLE)
    While $text_process == "#run#"
 	  Cust_Sleep(1000)
-	  If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
+	  If (Is_It_Stopped()) Then
 		 Return 0
 	  EndIf
 	  $text_process = GetText_ScanPST($WIN_TITLE)
@@ -319,7 +328,7 @@ Func ScanPST_Run($ori_file)
 		 " Please be Patient " _
 		 ,"REPAIR: Waiting Repairing Process", 0 )
 	  Wnd_Sleep(5000)
-	  If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
+	  If (Is_It_Stopped()) Then
 		 Return 0
 	  EndIf
 	  $text_process = GetText_ScanPST($WIN_TITLE)
@@ -393,13 +402,13 @@ Func Duplicate_File($file)
    Local $text = WinGetTitle("[CLASS:TeraCopy3]");
    Cust_Sleep(1000)
    Local $text = WinGetTitle("[CLASS:TeraCopy3]");
-   If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
+   If (Is_It_Stopped()) Then
 	  Return 0
    EndIf
 
    While (ProcessExists("teracopy.exe") And Not StringInStr($text,"100% done",$STR_NOCASESENSEBASIC))
 	  Cust_Sleep(1000)
-	  If ($Wnd_Process_Status<>$Wnd_Process_Status_VALUE_RUN) Then
+	  If (Is_It_Stopped()) Then
 		 Return 0
 	  EndIf
 	  $text = WinGetTitle("[CLASS:TeraCopy3]")
@@ -469,6 +478,10 @@ Func IniFile_ScanPST()
   ;scanPST Path
    $ScanPST_PATH = IniRead($IniFile_PATH,"Config", "SCANPST_PATH", _
    $DEFAULT_SCANPST_PATH )
+   
+   $Outlook_PATH = IniRead($IniFile_PATH,"Config", "OUTLOOK_PATH", _
+   $DEFAULT_OUTLOOK_PATH )
+   
    Local $curr_i, $curr_name, $curr_pst
 
    $curr_i = 0
@@ -491,8 +504,8 @@ Func IniFile_ScanPST()
 	  $curr_pst = IniRead($IniFile_PATH,"Config",$curr_name,"N/A")
    WEnd
 
-   $Do_Default = IniRead($IniFile_Path,"Config","Default",1 )
-   Cust_Splash("Default is " & $Do_Default )
+   $CONFIG_DEFAULT = IniRead($IniFile_Path,"Config","Default",1 )
+   Cust_Splash("Default is " & $CONFIG_DEFAULT )
    $Conf_Safety = IniRead($IniFile_Path,"Config","Safety",1 )
 
 EndFunc
@@ -514,4 +527,93 @@ Func Feedback_Save($text_feedback)
 
 EndFunc
 
+Func Pre_Shutdown()
+	Cust_Splash("Start Backup")
 
+	Do_Backup()
+
+	Cust_Splash("Exec Post Scan PST")
+
+	For $file_exec in $All_Exec
+	   If $file_exec<>"" Then
+		  RunWait($file_exec)
+	   EndIf
+	Next
+EndFunc 
+
+
+Func Post_Shutdown()
+	If ($Wnd_Process_Status==$Wnd_Process_Status_VALUE_SHUT) Then
+	
+	   Cust_Splash("Shutdown")
+	   Shutdown ($SD_SHUTDOWN )
+
+	EndIf
+EndFunc
+
+Func LogServer_Write_StartStatus()
+	If $RUN_WHEN_SHUTDOWN == 1 Then
+		IniWrite($Backup_Log_File,"START", @ComputerName, _
+		   "SHUTDOWN  " & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+	Else 
+		IniWrite($Backup_Log_File,"START", @ComputerName , _
+		   "MANUAL SCAN " & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+	EndIf
+EndFunc
+
+Func Run_Outlook()
+	Local $running = Run($Outlook_PATH)
+	_WinWaitActivate("[CLASS:rctrl_renwnd32]")
+	ProcessSetPriority($running,$Cust_Priority)
+EndFunc
+
+Func LogServer_Write_EndStatus()
+	If ($RUN_WHEN_SHUTDOWN == 1) Then 
+		Switch $Wnd_Process_Status
+		Case $Wnd_Process_Status_VALUE_STOP
+		IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
+			  "STOPPED "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+		Case $Wnd_Process_Status_VALUE_RUN
+		IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
+			  "RUNNING "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+		Case $Wnd_Process_Status_VALUE_SHUT
+		IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
+			  "SHUTDOWN "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+		EndSwitch
+	Else 
+		Switch $Wnd_Process_Status
+		Case $Wnd_Process_Status_VALUE_STOP
+		IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
+			  "SCAN CANCELED "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+		Case $Wnd_Process_Status_VALUE_RUN
+		IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
+			  "SCAN COMPLETED "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+		Case $Wnd_Process_Status_VALUE_SHUT
+		IniWrite($Backup_Log_File,"PROCESS", @ComputerName, _
+			  "SCAN AND RUN "  & @YEAR & "-" & @MON & "-" & @MDAY & " " & @HOUR & ":"  & @MIN & ":" & @SEC)
+		EndSwitch
+	EndIf
+EndFunc
+
+Func Is_It_Stopped()
+	
+	If $RUN_WHEN_SHUTDOWN == 1 Then 
+		Switch  $Wnd_Process_Status
+		Case $Wnd_Process_Status_VALUE_STOP
+			Return True
+		Case $Wnd_Process_Status_VALUE_RUN
+			Return False
+		Case $Wnd_Process_Status_VALUE_SHUT
+			Return True
+		EndSwitch
+	Else 
+		Switch  $Wnd_Process_Status
+		Case $Wnd_Process_Status_VALUE_STOP
+			Return True
+		Case $Wnd_Process_Status_VALUE_RUN
+			Return False
+		Case $Wnd_Process_Status_VALUE_SHUT
+			Return False
+		EndSwitch
+	EndIf
+EndFunc

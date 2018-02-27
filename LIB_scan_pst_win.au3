@@ -25,16 +25,14 @@ Global Const $Wnd_Process_Status_VALUE_SHUT = 2
 
 Global $Wnd_Process_Status = 1
 
-
-
 #cs
-Wnd_Create()
-Global $Wnd_Process_Status = 1
-While $Wnd_Process_Status =1
-   Wnd_Sleep(2000)
-WEnd
-
+	Wnd_Create()
+	Wnd_Create_Not_Shutdown();
+	While $Wnd_Process_Status =1
+	   Wnd_Sleep(2000)
+	WEnd
 #ce
+
 
 Func Wnd_Sleep($timeout)
    GUISetState(@SW_SHOW,$Wnd_GUI_hWnd)
@@ -43,6 +41,9 @@ Func Wnd_Sleep($timeout)
    WinSetOnTop($Wnd_GUI_hWnd,"",$WINDOWS_NOONTOP)
 EndFunc
 
+Func Wnd_Create_Not_Shutdown()
+	GUICtrlSetData($Wnd_GUI_RB_Shut,"Run n End with Outlook")
+EndFunc
 
 Func Wnd_Create($title="Normal Title")
    Local $Total_w =@DesktopWidth-160, $Total_h = @DesktopHeight-160, _
