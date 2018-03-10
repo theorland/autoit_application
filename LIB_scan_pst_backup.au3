@@ -37,13 +37,16 @@ Func Do_Backup()
 
    Cust_Sleep(1000)
    Local $text = WinGetTitle("[CLASS:TeraCopy3]")
-   While (ProcessExists("teracopy.exe") And Not StringInStr($text,"100% done",$STR_NOCASESENSEBASIC))
+   ConsoleWrite($text)
+   While (ProcessExists("teracopy.exe") AND Not StringInStr($text,"Error",$STR_NOCASESENSEBASIC))
+
 	  Cust_Sleep(1000)
-	  If ($Wnd_Process_Status<>3) Then
+	  If ($Wnd_Process_Status=$Wnd_Process_Status_VALUE_STOP) Then
 		 Return 0
 	  EndIf
 
 	  $text = WinGetTitle("[CLASS:TeraCopy3]")
+	  ConsoleWrite("dalam " & $text)
    WEnd
 
    If IniWrite($Backup_Log_File,"Backup", _

@@ -23,18 +23,16 @@ Global Const $Wnd_Process_Status_VALUE_STOP = 0
 Global Const $Wnd_Process_Status_VALUE_RUN = 1
 Global Const $Wnd_Process_Status_VALUE_SHUT = 2
 
-Global $Wnd_Process_Status = 1
-
-
+Global $Wnd_Process_Status = $Wnd_Process_Status_VALUE_RUN
 
 #cs
-Wnd_Create()
-Global $Wnd_Process_Status = 1
-While $Wnd_Process_Status =1
-   Wnd_Sleep(2000)
-WEnd
-
+	Wnd_Create()
+	Wnd_Create_Not_Shutdown();
+	While $Wnd_Process_Status =1
+	   Wnd_Sleep(2000)
+	WEnd
 #ce
+
 
 Func Wnd_Sleep($timeout)
    GUISetState(@SW_SHOW,$Wnd_GUI_hWnd)
@@ -43,6 +41,9 @@ Func Wnd_Sleep($timeout)
    WinSetOnTop($Wnd_GUI_hWnd,"",$WINDOWS_NOONTOP)
 EndFunc
 
+Func Wnd_Create_Not_Shutdown()
+	GUICtrlSetData($Wnd_GUI_RB_Shut,"Run n End with Outlook")
+EndFunc
 
 Func Wnd_Create($title="Normal Title")
    Local $Total_w =@DesktopWidth-160, $Total_h = @DesktopHeight-160, _
@@ -151,7 +152,8 @@ Func Wnd_Evt_Close()
 EndFunc
 
 Func Wnd_Evt_Feedback()
-   Local $text = InputBox("Give Us Feedback","We will read it every morning","","",-1,-1,Default,Default,0,$Wnd_GUI_hWnd)
+   Local $text = InputBox("Give Us Feedback","We will read it every morning", _
+	  "","",-1,-1,Default,Default,0,$Wnd_GUI_hWnd)
    Feedback_Save($text)
 EndFunc
 

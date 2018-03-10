@@ -11,19 +11,38 @@ Global $Power_Balance = $DEFAULT_POWER_HIGH
 
 Opt("MustDeclareVars",1)
 
+Global $User_Choose_Sleep_Info
 Func Cust_Sleep($sleep)
 
    Wnd_Sleep($sleep)
-   Switch $Wnd_Process_Status
-   Case 0
-	  Cust_Splash("[USER CHOOSE]->END THE TASK")
-	  Cust_Process_Close("scanpst.exe")
-	  Exit(0)
-   Case 2
-	  Cust_Splash("[USER CHOOSE]->SHUTDOWN")
-   EndSwitch
-
-
+   If $User_Choose_Sleep_Info <> $Wnd_Process_Status Then
+	  $User_Choose_Sleep_Info = $Wnd_Process_Status
+	  If $RUN_WHEN_SHUTDOWN = 1 Then
+		 Switch $Wnd_Process_Status
+		 Case $Wnd_Process_Status_VALUE_STOP
+			Cust_Splash("[USER CHOOSE]" & @CRLF &  @CRLF & "END THE TASK")
+			Cust_Process_Close("scanpst.exe")
+			Exit(0)
+		 Case $Wnd_Process_Status_VALUE_SHUT
+			Cust_Splash("[USER CHOOSE]" & @CRLF &  @CRLF & "ONLY SHUTDOWN")
+		 Case $Wnd_Process_Status_VALUE_RUN
+			Cust_Splash("[USER CHOOSE]" & @CRLF &  @CRLF & "SCAN PROCESS AND SHUT ")
+		 case
+		 EndSwitch
+	  Else
+		 Switch $Wnd_Process_Status
+		 Case $Wnd_Process_Status_VALUE_STOP
+			Cust_Splash("[USER CHOOSE]" & @CRLF &  @CRLF & "END THE TASK")
+			Cust_Process_Close("scanpst.exe")
+			Exit(0)
+		 Case $Wnd_Process_Status_VALUE_SHUT
+			Cust_Splash("[USER CHOOSE]" & @CRLF &  @CRLF & "SCAN PROCESS AND OPEN OUTLOOK")
+		 Case $Wnd_Process_Status_VALUE_RUN
+			Cust_Splash("[USER CHOOSE]" & @CRLF &  @CRLF & "SCAN PROCESS")
+		 case
+		 EndSwitch
+	  EndIf
+   EndIf
 EndFunc
 
 Func Cust_Splash($message,$title="ScanPST Information",$log = 1)
