@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_FolderArchiveSet</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_FolderArchiveSet</font>
+<hr size="2">
+<p>Sets the auto-archive properties of a folder and (optional) all subfolders.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_FolderArchiveSet($oFolder, $bRecursive, $bAgeFolder[, $bDeleteItems = Default[, $sFileName = Default[, $iGranularity = Default[, $iPeriod = Default[, $iDefault = Default]]]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oFolder</td>
+    <td width="85%">Folder object of the folder to be changed as returned by _OL_FolderAccess</td>
+  </tr>
+  <tr>
+   <td>$bRecursive</td>
+   <td>TRUE: Set properties for the specified folder and all subfolders</td>
+  </tr>
+  <tr>
+   <td>$bAgeFolder</td>
+   <td>TRUE: Archive or delete items in the folder as specified</td>
+  </tr>
+  <tr>
+   <td>$bDeleteItems</td>
+   <td>Optional: TRUE: Delete, instead of archive, items that are older than the aging period (default = Default)</td>
+  </tr>
+  <tr>
+   <td>$sFileName</td>
+   <td>Optional: File for archiving aged items. If this is an empty string, the default archive file, archive.pst, will be used (default = Default)</td>
+  </tr>
+  <tr>
+   <td>$iGranularity</td>
+   <td>Optional: Unit of time for aging, whether archiving is to be calculated in units of months, weeks, or days (default = Default).<br>
+       Valid granularity: 0=Months, 1=Weeks, 2=Days</td>
+  </tr>
+  <tr>
+   <td>$iPeriod</td>
+   <td>Optional: Amount of time in the given granularity. Valid period: 1-999 (default = Default)</td>
+  </tr>
+  <tr>
+   <td>$iDefault</td>
+   <td>Optional: Indicates which settings should be set to the default (default = Default):<br>
+       0: Nothing assumes a default value<br>
+       1: Only the file location assumes a default value.<br>
+       This is the same as checking Archive this folder using these settings and Move old items to default archive folder in the AutoArchive<br>
+       tab of the Properties dialog box for the folder<br>
+       3: All settings assume a default value. This is the same as checking Archive items in this folder using default settings in the AutoArchive<br>
+       tab of the Properties dialog box for the folder</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: 1<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - $oFolder is not an object<br>
+&nbsp;&nbsp;&nbsp; 2 - $bRecursive is not boolean<br>
+&nbsp;&nbsp;&nbsp; 3 - $bAgeFolder is not boolean<br>
+&nbsp;&nbsp;&nbsp; 4 - $bDeleteItems is not boolean<br>
+&nbsp;&nbsp;&nbsp; 5 - $iGranularity is not an integer or <0 or > 2<br>
+&nbsp;&nbsp;&nbsp; 6 - $iPeriod is not an integer or < 1 or > 999<br>
+&nbsp;&nbsp;&nbsp; 7 - $iDefault is not an integer or an invalid number (must be 0, 1 or 3)<br>
+&nbsp;&nbsp;&nbsp; 8 - Error creating $oStorage. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 9 - Error creating $oPA. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 10 - Error saving changed properties. @extended is set to the COM error<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+More links:<br>
+http://msdn.microsoft.com/en-us/library/ff870123.aspx (Outlook 2010)<br>
+https://blogs.msdn.com/b/jmazner/archive/2006/10/30/setting-autoarchive-properties-on-a-folder-hierarchy-in-outlook-2007.aspx?Redirected=true<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>See Also</b></p>
+http://msdn.microsoft.com/en-us/library/bb176434(v=office.12).aspx (Outlook 2007)<br>
+<p>&nbsp;</p>
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$iResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_TestEnvironmentCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - Manage Test Environment"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating the test environment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Disable Auto-Archiving for a single folder</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderAccess</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Mail"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderArchiveSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error accessing folder '*\Outlook-UDF-Test\SourceFolder\Mail'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S16">_OL_FolderArchiveSet</span><span class="S8">(</span><span class="S9">$aFolder</span><span class="S8">[</span><span class="S3">1</span><span class="S8">],</span><span class="S0"> </span><span class="S5">False</span><span class="S8">,</span><span class="S0"> </span><span class="S5">False</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderArchiveSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error setting Auto-Archiving for folder '*\Outlook-UDF-Test\SourceFolder\Mail'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderArchiveSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Auto-Archiving for folder '*\Outlook-UDF-Test\SourceFolder\Mail' successfully disabled."</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 2</span><br>
+<span class="S1">; Set Auto-Archiving for a folder and all subfolders</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$aFolder</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderAccess</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderArchiveSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error accessing folder '*\Outlook-UDF-Test\SourceFolder'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S16">_OL_FolderArchiveSet</span><span class="S8">(</span><span class="S9">$aFolder</span><span class="S8">[</span><span class="S3">1</span><span class="S8">],</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S0"> </span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S3">0</span><span class="S8">,</span><span class="S0"> </span><span class="S3">999</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderArchiveSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error setting Auto-Archiving for folder '*\Outlook-UDF-Test\SourceFolder'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderArchiveSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Auto-Archiving for folder '*\Outlook-UDF-Test\SourceFolder' and all subfolders successfully set."</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

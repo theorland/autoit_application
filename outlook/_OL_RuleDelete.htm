@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_RuleDelete</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_RuleDelete</font>
+<hr size="2">
+<p>Deletes a rule from the specified store.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_RuleDelete($oOL, $sStore, $sRuleName)<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$sStore</td>
+   <td>Name of the Store where the rule will be deleted from. "*" = your default store</td>
+  </tr>
+  <tr>
+   <td>$sRuleName</td>
+   <td>Name of the rule to be deleted</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: 1<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - Rule doesn't exist in the specified store<br>
+&nbsp;&nbsp;&nbsp; 2 - Error returned by method .GetRules. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 3 - Error deleting the rule. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 4 - Error saving the changed rules. @extended is set to the COM error<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+None.<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$iReply</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">308</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleDelete Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"This script deletes all rules where the name starts with 'Outlook-UDF-Test'."</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S7">"Are you sure you want to delete this rules?"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S9">$iReply</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">6</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOL</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Get a list of rules (active and inactive) where the name starts with "Outlook-UDF-Test"</span><br>
+<span class="S1">; Display the array of rules and ask the user if they should be deleted.</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleGet</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S5">False</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleDelete Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error retrieving list of rules. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Remove all rules where the name doesn't start with "Outlook-UDF-Test" from the array</span><br>
+<span class="S5">For</span><span class="S0"> </span><span class="S9">$iIndex</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S3">0</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S5">To</span><span class="S0"> </span><span class="S3">1</span><span class="S0"> </span><span class="S5">Step</span><span class="S0"> </span><span class="S8">-</span><span class="S3">1</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S5">If</span><span class="S0"> </span><span class="S4">Stringleft</span><span class="S8">(</span><span class="S9">$aResult</span><span class="S8">[</span><span class="S9">$iIndex</span><span class="S8">][</span><span class="S3">4</span><span class="S8">],</span><span class="S0"> </span><span class="S3">16</span><span class="S8">)</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test"</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S15">_ArrayDelete</span><span class="S8">(</span><span class="S9">$aResult</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$iIndex</span><span class="S8">)</span><br>
+<span class="S5">Next</span><br>
+<span class="S9">$aResult</span><span class="S8">[</span><span class="S3">0</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S4">UBound</span><span class="S8">(</span><span class="S9">$aResult</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">)</span><span class="S0"> </span><span class="S8">-</span><span class="S0"> </span><span class="S3">1</span><br>
+<span class="S1">; Display the rules to be deleted and ask the user for OK</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sRules</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Should the following rules be deleted?"</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><br>
+<span class="S5">For</span><span class="S0"> </span><span class="S9">$iIndex</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">1</span><span class="S0"> </span><span class="S5">To</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S3">0</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S9">$sRules</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$sRules</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S9">$iIndex</span><span class="S8">][</span><span class="S3">4</span><span class="S8">]</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><br>
+<span class="S5">Next</span><br>
+<span class="S9">$iReply</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">308</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleDelete Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sRules</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S9">$iReply</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">6</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><br>
+<span class="S1">; Delete the selected rules</span><br>
+<span class="S5">For</span><span class="S0"> </span><span class="S9">$iIndex</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">1</span><span class="S0"> </span><span class="S5">To</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S3">0</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S16">_OL_RuleDelete</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S9">$iIndex</span><span class="S8">][</span><span class="S3">4</span><span class="S8">])</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleDelete Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error deleting rule '"</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S9">$iIndex</span><span class="S8">][</span><span class="S3">4</span><span class="S8">]</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Next</span><br>
+<br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleDelete Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"All specified rules successfully deleted!"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_Wrapper_SendMail</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_Wrapper_SendMail</font>
+<hr size="2">
+<p>Creatse and sends a mail (wrapper function).<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_Wrapper_SendMail($oOL[, $sTo = ""[, $sCc= ""[, $sBCc = ""[, $sSubject = ""[, $sBody = ""[, $sAttachments = ""[, $iBodyFormat = $olFormatUnspecified[, $iImportance = $olImportanceNormal]]]]]]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$sTo</td>
+   <td>Optional: The recipiant(s), separated by ;</td>
+  </tr>
+  <tr>
+   <td>$sCc</td>
+   <td>Optional: The CC recipiant(s) of the mail, separated by ;</td>
+  </tr>
+  <tr>
+   <td>$sBCc</td>
+   <td>Optional: The BCC recipiant(s) of the mail, separated by ;</td>
+  </tr>
+  <tr>
+   <td>$sSubject</td>
+   <td>Optional: The Subject of the mail</td>
+  </tr>
+  <tr>
+   <td>$sBody</td>
+   <td>Optional: The Body of the mail</td>
+  </tr>
+  <tr>
+   <td>$sAttachments</td>
+   <td>Optional: Attachments, separated by ;</td>
+  </tr>
+  <tr>
+   <td>$iBodyFormat</td>
+   <td>Optional: The Bodyformat of the mail as defined by the OlBodyFormat enumeration (default = $olFormatPlain)</td>
+  </tr>
+  <tr>
+   <td>$iImportance</td>
+   <td>Optional: The Importance of the mail as defined by the OlImportance enumeration (default = $olImportanceNormal)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: Object of the sent mail<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - $iBodyFormat is not a number<br>
+&nbsp;&nbsp;&nbsp; 2 - $sBody is missing<br>
+&nbsp;&nbsp;&nbsp; 3 - $sTo, $sCc and $sBCc are missing<br>
+&nbsp;&nbsp;&nbsp; 1xxx - Error returned by function _OL_FolderAccess<br>
+&nbsp;&nbsp;&nbsp; 2xxx - Error returned by function _OL_ItemCreate (creating mail item and setting properties Subject, BodyFormat and Importance)<br>
+&nbsp;&nbsp;&nbsp; 3xxx - Error returned by function _OL_ItemModify (when setting property Body)<br>
+&nbsp;&nbsp;&nbsp; 4xxx - Error returned by function _OL_ItemRecipientAdd (properties To, CC or BCC)<br>
+&nbsp;&nbsp;&nbsp; 5xxx - Error returned by function _OL_ItemAttachmentAdd<br>
+&nbsp;&nbsp;&nbsp; 6xxx - Error returned by function _OL_ItemSend<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+This is a wrapper function to simplify sending an email. If you have to set more properties etc. you have to do all steps yourself<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Send a html mail to the current user.</span><br>
+<span class="S1">; Add an attachment and set importance to high.</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sCurrentUser</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S8">.</span><span class="S14">GetNameSpace</span><span class="S8">(</span><span class="S7">"MAPI"</span><span class="S8">).</span><span class="S14">CurrentUser</span><span class="S8">.</span><span class="S14">Name</span><br>
+<span class="S16">_OL_Wrapper_SendMail</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sCurrentUser</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"TestSubject"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Body&lt;br&gt;&lt;b&gt;fett&lt;/b&gt; normal."</span><span class="S8">,</span><span class="S0"> </span><span class="S6">@ScriptDir</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"\_OL_Wrapper_SendMail.au3"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olFormatHTML</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olImportanceHigh</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OutlookSendMail Wrapper Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error sending mail. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OutlookSendMail Wrapper Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Mail successfully sent to user '"</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sCurrentUser</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"'!"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

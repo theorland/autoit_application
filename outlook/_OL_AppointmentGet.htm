@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_AppointmentGet</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_AppointmentGet</font>
+<hr size="2">
+<p>Returns appointments in a specified time frame plus (optional) recurrences.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_AppointmentGet($oOL, $vFolder[, $sStart = Default[, $sEnd = Default[, $bInclRecurrences = True[, $bInclSpan = True]]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$vFolder</td>
+   <td>Calendar folder object as returned by _OL_FolderAccess or full name of folder where the search will be started</td>
+  </tr>
+  <tr>
+   <td>$sStart</td>
+   <td>Optional: Start date/time (default = Today 00:00)</td>
+  </tr>
+  <tr>
+   <td>$sEnd</td>
+   <td>Optional: End date/time (default = Today+1 00:00)</td>
+  </tr>
+  <tr>
+   <td>$bInclRecurrences</td>
+   <td>Optional: True includes recurring appointments (default = True)</td>
+  </tr>
+  <tr>
+   <td>$bInclSpan</td>
+   <td>Optional: True includes appointments that span the time frame or that only end or only start in the time frame (default = True)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: One based two-dimensional array with the following properties:<br>
+&nbsp;&nbsp;&nbsp; 0 - EntryId of the item<br>
+&nbsp;&nbsp;&nbsp; 1 - Object of the item<br>
+&nbsp;&nbsp;&nbsp; 2 - Start date and time<br>
+&nbsp;&nbsp;&nbsp; 3 - End date and time<br>
+&nbsp;&nbsp;&nbsp; 4 - Subject of the item<br>
+&nbsp;&nbsp;&nbsp; 5 - True if the item is a recurring appointment<br>
+Failure: Returns "" and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - $oOL is not an object<br>
+&nbsp;&nbsp;&nbsp; 2 - Error accessing the specified folder. See @extended for errorcode returned by _OL_FolderAccess<br>
+&nbsp;&nbsp;&nbsp; 3 - The specified folder is not a calendar folder<br>
+&nbsp;&nbsp;&nbsp; 4 - Error accessing the items of the specified folder. See @extended for errorcode returned when accessing the Items property<br>
+&nbsp;&nbsp;&nbsp; 4 - Error executing the Restrict method to filter appointments. See @extended for errorcode returned by the Restrict method<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+To get all appointments of a whole day set $sStart to "date 00:00" and $sEnd to "date+1 00:00".<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+</body>
+</html>

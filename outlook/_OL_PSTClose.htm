@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_PSTClose</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_PSTClose</font>
+<hr size="2">
+<p>Closes a PST file and removes the Outlook folder.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_PSTClose($oOL, $oFolder)<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$vFolder</td>
+   <td>Object of the Outlook folder representing the PST file or the displayname of the folder</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: 1<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - Error accessing Namespace object. @extended is set to the COM error code<br>
+&nbsp;&nbsp;&nbsp; 2 - Error accessing the specified folder. @extended is set to the COM error code<br>
+&nbsp;&nbsp;&nbsp; 3 - Error removing the specified folder. @extended is set to the COM error code<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+None.<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Close the PST archive created by _OL_PSTCreate by displayname</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oPST</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_PSTClose</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-PST"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_PSTClose Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error closing 'Outlook-UDF-PST' archive. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_PSTClose Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Archive 'Outlook-UDF-PST' successfully closed!"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

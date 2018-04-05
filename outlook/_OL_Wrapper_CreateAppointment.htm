@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_Wrapper_CreateAppointment</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_Wrapper_CreateAppointment</font>
+<hr size="2">
+<p>Creates an appointment (wrapper function).<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_Wrapper_CreateAppointment($oOL, $sSubject, $sStartDate[, $vEndDate = ""[, $sLocation = ""[, $bAllDayEvent = False[, $sBody = ""[, $sReminder = 15[, $sShowTimeAs = ""[, $iImportance = ""[, $iSensitivity = ""[, $iRecurrenceType = ""[, $sPatternStartDate = ""[, $sPatternEndDate = ""[, $iInterval = ""[, $iDayOfWeekMask = ""[, $iDay_MonthOfMonth_Year = ""[, $iInstance = ""]]]]]]]]]]]]]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$sSubject</td>
+   <td>The Subject of the Appointment.</td>
+  </tr>
+  <tr>
+   <td>$sStartDate</td>
+   <td>Start date & time of the Appointment, format YYYY-MM-DD HH:MM - or what is set locally.</td>
+  </tr>
+  <tr>
+   <td>$vEndDate</td>
+   <td>Optional: End date & time of the Appointment, format YYYY-MM-DD HH:MM - or what is set locally OR</td>
+  </tr>
+  <tr>
+   <td>$sLocation</td>
+   <td>Optional: The location where the meeting is going to take place.</td>
+  </tr>
+  <tr>
+   <td>$bAllDayEvent</td>
+   <td>Optional: True or False(default), if set to True and the appointment is lasting for more than one day, end Date</td>
+  </tr>
+  <tr>
+   <td>$sBody</td>
+   <td>Optional: The Body of the Appointment.</td>
+  </tr>
+  <tr>
+   <td>$sReminder</td>
+   <td>Optional: Reminder in Minutes before start, 0 for no reminder</td>
+  </tr>
+  <tr>
+   <td>$sShowTimeAs</td>
+   <td>Optional: $olBusy=2 (default), $olFree=0, $olOutOfOffice=3, $olTentative=1</td>
+  </tr>
+  <tr>
+   <td>$iImportance</td>
+   <td>Optional: $olImportanceNormal=1 (default), $olImportanceHigh=2, $olImportanceLow=0</td>
+  </tr>
+  <tr>
+   <td>$iSensitivity</td>
+   <td>Optional: $olNormal=0, $olPersonal=1, $olPrivate=2, $olConfidential=3</td>
+  </tr>
+  <tr>
+   <td>$iRecurrenceType</td>
+   <td>Optional: $olRecursDaily=0, $olRecursWeekly=1, $olRecursMonthly=2, $olRecursMonthNth=3, $olRecursYearly=5, $olRecursYearNth=6</td>
+  </tr>
+  <tr>
+   <td>$sPatternStartDate</td>
+   <td>Optional: Start Date of the Reccurent Appointment, format YYYY-MM-DD - or what is set locally.</td>
+  </tr>
+  <tr>
+   <td>$sPatternEndDate</td>
+   <td>Optional: End Date of the Reccurent Appointment, format YYYY-MM-DD - or what is set locally.</td>
+  </tr>
+  <tr>
+   <td>$iInterval</td>
+   <td>Optional: Interval between the Reccurent Appointment</td>
+  </tr>
+  <tr>
+   <td>$iDayOfWeekMask</td>
+   <td>Optional: Add the values of the days the appointment shall occur. $olSunday=1, $olMonday=2, $olTuesday=4, $olWednesday=8, $olThursday=16, $olFriday=32, $olSaturday=64</td>
+  </tr>
+  <tr>
+   <td>$iDay_MonthOfMonth_Year</td>
+   <td>Optional: DayOfMonth or MonthOfYear, Day of the month or month of the year on which the recurring appointment or task occurs</td>
+  </tr>
+  <tr>
+   <td>$iInstance</td>
+   <td>Optional: This property is only valid for recurrences of the $olRecursMonthNth and $olRecursYearNth type and allows the definition of a recurrence pattern that is only valid for the Nth occurrence, such as "the 2nd Sunday in March" pattern. The count is set numerically: 1 for the first, 2 for the second, and so on through 5 for the last. Values greater than 5 will generate errors when the pattern is saved.</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: Object of the appointment<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - $sStartDate is invalid<br>
+&nbsp;&nbsp;&nbsp; 2 - $sBody is missing<br>
+&nbsp;&nbsp;&nbsp; 4 - $sTo, $sCc and $sBCc are missing<br>
+&nbsp;&nbsp;&nbsp; 1xxx - 1000 + error returned by function _OL_FolderAccess<br>
+&nbsp;&nbsp;&nbsp; 2xxx - 2000 + error returned by function _OL_ItemCreate<br>
+&nbsp;&nbsp;&nbsp; 3xxx - 3000 + error returned by function _OL_ItemModify<br>
+&nbsp;&nbsp;&nbsp; 4xxx - 4000 + error returned by function _OL_ItemRecurrenceSet<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+This is a wrapper function to simplify creating an appointment. If you have to set more properties etc. you have to do all steps yourself<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;Date.au3&gt;</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Create an appointment and set recurrence properties.</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sCurrentUser</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S8">.</span><span class="S14">GetNameSpace</span><span class="S8">(</span><span class="S7">"MAPI"</span><span class="S8">).</span><span class="S14">CurrentUser</span><span class="S8">.</span><span class="S14">Name</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sStart</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S4">StringLeft</span><span class="S8">(</span><span class="S15">_Nowcalc</span><span class="S8">(),</span><span class="S3">16</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sEnd</span><span class="S0"> &nbsp;&nbsp;</span><span class="S8">=</span><span class="S0"> </span><span class="S4">StringLeft</span><span class="S8">(</span><span class="S15">_DateAdd</span><span class="S8">(</span><span class="S7">"h"</span><span class="S8">,</span><span class="S0"> </span><span class="S3">3</span><span class="S8">,</span><span class="S0"> </span><span class="S15">_NowCalc</span><span class="S8">()),</span><span class="S0"> </span><span class="S3">16</span><span class="S8">)</span><br>
+<span class="S16">_OL_Wrapper_CreateAppointment</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"TestMeeting"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sStart</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sEnd</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"My office"</span><span class="S8">,</span><span class="S0"> </span><span class="S5">False</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Testbody"</span><span class="S8">,</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S3">15</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olBusy</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olImportanceHigh</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olPrivate</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olRecursWeekly</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sStart</span><span class="S8">,</span><span class="S0"> </span><span class="S15">_DateAdd</span><span class="S8">(</span><span class="S7">"w"</span><span class="S8">,</span><span class="S0"> </span><span class="S3">3</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sEnd</span><span class="S8">),</span><span class="S0"> </span><span class="S3">1</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OutlookCreateAppointment Wrapper Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating appointment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OutlookCreateAppointment Wrapper Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Appointment successfully created '"</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sCurrentUser</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"'!"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

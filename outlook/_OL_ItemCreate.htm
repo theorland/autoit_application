@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_ItemCreate</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_ItemCreate</font>
+<hr size="2">
+<p>Creates an item.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_ItemCreate($oOL, $iItemType[, $vFolder = ""[, $sTemplate = ""[,$sP1 = ""[, $sP2 = ""[, $sP3 = ""[, $sP4 = ""[, $sP5 = ""[, $sP6 = ""[, $sP7 = ""[, $sP8 = ""[, $sP9 = ""[, $sP10 = ""]]]]]]]]]]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$iItemType</td>
+   <td>Type of item to create. Is defined by the Outlook OlItemType enumeration</td>
+  </tr>
+  <tr>
+   <td>$vFolder</td>
+   <td>Optional: Folder object as returned by _OL_FolderAccess or full name of folder where the item will be created.<br>
+       If not specified the default folder for the item type specified by $iItemType will be selected</td>
+  </tr>
+  <tr>
+   <td>$sTemplate</td>
+   <td>Optional: Path and file name of the Outlook template for the new item</td>
+  </tr>
+  <tr>
+   <td>$sP1</td>
+   <td>Optional: Item property in the format: propertyname=propertyvalue<br>
+       or a zero based one-dimensional array with unlimited number of properties in the same format</td>
+  </tr>
+  <tr>
+   <td>$sP2</td>
+   <td>Optional: Item property in the format: propertyname=propertyvalue</td>
+  </tr>
+  <tr>
+   <td>$sP3</td>
+   <td>Optional: Item property in the format: propertyname=propertyvalue</td>
+  </tr>
+  <tr>
+   <td>$sP4</td>
+   <td>Optional: Item property in the format: propertyname=propertyvalue</td>
+  </tr>
+  <tr>
+   <td>$sP5</td>
+   <td>Optional: Item property in the format: propertyname=propertyvalue</td>
+  </tr>
+  <tr>
+   <td>$sP6</td>
+   <td>Optional: Item property in the format: propertyname=propertyvalue</td>
+  </tr>
+  <tr>
+   <td>$sP7</td>
+   <td>Optional: Item property in the format: propertyname=propertyvalue</td>
+  </tr>
+  <tr>
+   <td>$sP8</td>
+   <td>Optional: Item property in the format: propertyname=propertyvalue</td>
+  </tr>
+  <tr>
+   <td>$sP9</td>
+   <td>Optional: Item property in the format: propertyname=propertyvalue</td>
+  </tr>
+  <tr>
+   <td>$sP10</td>
+   <td>Optional: Item property in the format: propertyname=propertyvalue</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: Item object of the created item<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - Error accessing specified folder. See @extended for errorcode returned by _OL_FolderAccess<br>
+&nbsp;&nbsp;&nbsp; 2 - Error moving the item to the specified folder. See @extended for errorcode returned by _OL_ItemMove<br>
+&nbsp;&nbsp;&nbsp; 3 - Property doesn't contain a "=" to separate name and value. @extended = number of property in error (zero based)<br>
+&nbsp;&nbsp;&nbsp; 4 - Error creating the item. @extended is set to the returned COM error<br>
+&nbsp;&nbsp;&nbsp; 5 - Invalid or no $iItemType specified<br>
+&nbsp;&nbsp;&nbsp; 6 - Specified template file does not exist<br>
+&nbsp;&nbsp;&nbsp; 7 - Error saving item. @extended is set to the returned COM error<br>
+&nbsp;&nbsp;&nbsp; 1nmm - Error checking the properties $sP1 to $sP10 as returned by __OL_CheckProperties.	n is either 0 (property does not exist) or 1 (Property has invalid case)	mm is the index of the property in error (zero based)<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+$sP2 to $sP10 will be ignored if $sP1 is an array of properties<br>
+Be sure to specify the properties in correct case e.g. "FirstName" is valid, "Firstname" is invalid<br>
++<br>
+If you want to create a meeting request and send it to some attendees you have to create an appointment and set property<br>
++MeetingStatus to one of the OlMeetingStatus enumeration<br>
++<br>
+Note: Mails are created in the drafts folder if you do not specify $vFolder<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oItem</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$Result</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_TestEnvironmentCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - Manage Test Environment"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating the test environment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Create an appointment with subject, start- and enddate.</span><br>
+<span class="S1">; Attendee is the current user.</span><br>
+<span class="S1">; Set the body using Microsoft Word as editor.</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olAppointmentItem</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Calendar"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Subject=TestSubject"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Start="</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S15">_NowCalc</span><span class="S8">(),</span><span class="S0"> </span><span class="S7">"End="</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S15">_DateAdd</span><span class="S8">(</span><span class="S7">"h"</span><span class="S8">,</span><span class="S0"> </span><span class="S3">3</span><span class="S8">,</span><span class="S0"> </span><span class="S15">_NowCalc</span><span class="S8">()),</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S7">"Location=Building A, Room 10"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"RequiredAttendees="</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S8">.</span><span class="S14">GetNameSpace</span><span class="S8">(</span><span class="S7">"MAPI"</span><span class="S0"> </span><span class="S8">).</span><span class="S14">CurrentUser</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating an appointment in folder 'Outlook-UDF-Test\TargetFolder\Calendar'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; Set the body of the appointment using Word as editor</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S5">Const</span><span class="S0"> </span><span class="S9">$wdCollapseStart</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">1</span><span class="S0"> </span><span class="S1">; Collapse the range to the starting point</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S5">Const</span><span class="S0"> </span><span class="S9">$wdWord</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">2</span><span class="S0"> </span><span class="S1">; A word</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S5">Const</span><span class="S0"> </span><span class="S9">$wdCharacter</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">1</span><span class="S0"> </span><span class="S1">; A character</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oDoc</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oItem</span><span class="S8">.</span><span class="S14">GetInspector</span><span class="S8">.</span><span class="S14">WordEditor</span><span class="S0"> </span><span class="S1">; Get the Microsoft Word Document Object Model</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oRange</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oDoc</span><span class="S8">.</span><span class="S14">Range</span><span class="S0"> </span><span class="S1">; Get the range object</span><br>
+<span class="S9">$oRange</span><span class="S8">.</span><span class="S14">InsertAfter</span><span class="S8">(</span><span class="S7">"This is a test"</span><span class="S8">)</span><span class="S0"> </span><span class="S1">; Insert some text</span><br>
+<span class="S9">$oRange</span><span class="S8">.</span><span class="S14">Collapse</span><span class="S8">(</span><span class="S9">$wdCollapseStart</span><span class="S8">)</span><span class="S0"> </span><span class="S1">; Move the range start/end to the start of the document</span><br>
+<span class="S9">$oRange</span><span class="S8">.</span><span class="S14">MoveStart</span><span class="S8">(</span><span class="S9">$wdWord</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">)</span><span class="S0"> </span><span class="S1">; Move the range start/end to word 1</span><br>
+<span class="S9">$oRange</span><span class="S8">.</span><span class="S14">MoveEnd</span><span class="S8">(</span><span class="S9">$wdWord</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">)</span><span class="S0"> </span><span class="S1">; Move the range end two words to the right</span><br>
+<span class="S9">$oRange</span><span class="S8">.</span><span class="S14">MoveEnd</span><span class="S8">(</span><span class="S9">$wdCharacter</span><span class="S8">,</span><span class="S0"> </span><span class="S8">-</span><span class="S3">1</span><span class="S8">)</span><span class="S0"> </span><span class="S1">; Move the range end one character to the left (so the space isn't included)</span><br>
+<span class="S9">$oRange</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Underline</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S5">True</span><span class="S0"> </span><span class="S1">; Set the font.underline property for the range</span><br>
+<span class="S9">$oItem</span><span class="S8">.</span><span class="S14">Display</span><span class="S8">()</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"The body of this appointment has been created using Microsoft Word as editor."</span><span class="S8">)</span><br>
+<span class="S9">$oItem</span><span class="S8">.</span><span class="S14">Close</span><span class="S8">(</span><span class="S9">$olSave</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 2</span><br>
+<span class="S1">; Create a contact with first- and lastname</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olContactItem</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Contacts"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"FirstName=TestFirstName"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"LastName=TestLastName"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a contact in folder 'Outlook-UDF-Test\TargetFolder\Contacts'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Add a picture to the contact</span><br>
+<span class="S9">$oItem</span><span class="S8">.</span><span class="S14">AddPicture</span><span class="S8">(</span><span class="S6">@ScriptDir</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"\The_Outlook.jpg"</span><span class="S8">)</span><br>
+<span class="S9">$oItem</span><span class="S8">.</span><span class="S14">Save</span><span class="S8">()</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 3</span><br>
+<span class="S1">; Create a distribution list with importance set to high</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olDistributionListItem</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Contacts"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Subject=TestDistributionList"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Importance="</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$olImportanceHigh</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a distributionlist in folder 'Outlook-UDF-Test\TargetFolder\Contacts'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 4</span><br>
+<span class="S1">; Create a html mail plus two attachments (plus one inline picture = attachment)</span><br>
+<span class="S1">; but don't send it</span><br>
+<span class="S1">; Inline picture using Content-ID</span><br>
+<span class="S1">; http://stackoverflow.com/questions/9158706/how-to-embed-an-image-on-an-outlook-2007-vsto</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create the item without setting the body. We first need to add the picture before we can refer to in by the HTML body.</span><br>
+<span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olMailItem</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Mail"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Subject=TestMail"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"BodyFormat="</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$olFormatHTML</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a mail in folder 'Outlook-UDF-Test\TargetFolder\Mail'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Add all attachments</span><br>
+<span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemAttachmentAdd</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oItem</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S6">@ScriptDir</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"\The_Outlook.jpg"</span><span class="S8">,</span><span class="S0"> </span><span class="S6">@ScriptDir</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"\_OL_ItemCopy.au3, 4"</span><span class="S8">,</span><span class="S0"> </span><span class="S6">@ScriptDir</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"\_OL_Foldertree.au3"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding an attachment to a mail in folder 'Outlook-UDF-Test\TargetFolder\Mail'. @error = "</span><span class="S0"> &nbsp;</span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Modify the item to add HTML &nbsp;that refers to the picture</span><br>
+<span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemModify</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oItem</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"HTMLBody=Bodytext in &lt;b&gt;bold&lt;/b&gt;&lt;img src='cid:The_Outlook.jpg'&gt;Embedded image."</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error modifying the item in folder 'Outlook-UDF-Test\TargetFolder\Mail'. @error = "</span><span class="S0"> &nbsp;</span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S9">$oItem</span><span class="S8">.</span><span class="S14">Display</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Mail with inline picture created."</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 5</span><br>
+<span class="S1">; Create a mail from a template</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olMailItem</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Mail"</span><span class="S8">,</span><span class="S0"> </span><span class="S6">@ScriptDir</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"\_OL_ItemCreate.oft"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a mail in folder 'Outlook-UDF-Test\TargetFolder\Mail'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 6</span><br>
+<span class="S1">; Create a note with a body and a specified display width</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olNoteItem</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Notes"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Body=TestNote"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Width=350"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a note in folder 'Outlook-UDF-Test\TargetFolder\Notes'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 7</span><br>
+<span class="S1">; Create a task with a startdate of today</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olTaskItem</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Tasks"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Subject=TestSubject"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"StartDate="</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S15">_NowDate</span><span class="S8">())</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a task in folder 'Outlook-UDF-Test\TargetFolder\Tasks'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; Display Target folder</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderAccess</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder"</span><span class="S8">)</span><br>
+<span class="S9">$aResult</span><span class="S8">[</span><span class="S3">1</span><span class="S8">].</span><span class="S14">Display</span><br>
+<br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"All items successfully created in 'Outlook-UDF-Test\TargetFolder' and its subfolders!"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

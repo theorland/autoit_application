@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_ItemExport</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_ItemExport</font>
+<hr size="2">
+<p>Exports item properties from an array to a file (CSV).<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_ItemExport($sPath, $sDelimiter, $sQuote, $iFormat, $sHeader, $aData)<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$sPath</td>
+    <td width="85%">Drive, Directory, Filename and Extension of the output file</td>
+  </tr>
+  <tr>
+   <td>$sDelimiter</td>
+   <td>Optional: Fieldseparator (default = , (comma))</td>
+  </tr>
+  <tr>
+   <td>$sQuote</td>
+   <td>Optional: Quote character (default = " (double quote))</td>
+  </tr>
+  <tr>
+   <td>$iFormat</td>
+   <td>Character encoding of file:<br>
+       0 or 1 - ASCII writing<br>
+       2 - Unicode UTF16 Little Endian writing (with BOM)<br>
+       3 - Unicode UTF16 Big Endian writing (with BOM)<br>
+       4 - Unicode UTF8 writing (with BOM)<br>
+       5 - Unicode UTF8 writing (without BOM)</td>
+  </tr>
+  <tr>
+   <td>$sHeader</td>
+   <td>Header line with comma separated list of properties to export</td>
+  </tr>
+  <tr>
+   <td>$aData</td>
+   <td>1-based two-dimensional array</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: Number of records exported<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - Parameter $sPath is empty<br>
+&nbsp;&nbsp;&nbsp; 2 - File $sPath already exists<br>
+&nbsp;&nbsp;&nbsp; 3 - $iType is not numeric or an invalid number<br>
+&nbsp;&nbsp;&nbsp; 4 - $sHeader is empty<br>
+&nbsp;&nbsp;&nbsp; 5 - $aData is empty or not a two-dimensional array<br>
+&nbsp;&nbsp;&nbsp; 6 - Error writing header line to file $sPath. Please see @extended for error of function __WriteCSV<br>
+&nbsp;&nbsp;&nbsp; 7 - Error writing data lines to file $sPath. Please see @extended for error of function __WriteCSV<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+Fill the array with data using _OL_ItemFind<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$Result</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_TestEnvironmentCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - Manage Test Environment"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating the test environment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Export all contacts from the test folder to c:\temp\_OL_ItemExport.csv</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aData</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemFind</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Contacts"</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"FirstName, LastName"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemExport Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error getting contacts from folder '*\Outlook-UDF-Test\SourceFolder\Contacts'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$iResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemExport</span><span class="S8">(</span><span class="S7">"C:\temp\_OL_ItemExport.csv"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"FirstName,LastName"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$aData</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemExport Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error exporting contacts to file 'C:\temp\_OL_ItemExport.csv'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemExport Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$iResult</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">" contact(s) successfully exported to file 'C:\temp\_OL_ItemExport.csv'."</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

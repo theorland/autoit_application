@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_RuleGet</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_RuleGet</font>
+<hr size="2">
+<p>Returns a list of rules for the specified store.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_RuleGet($oOL[, sOL_Store = "*" [, $bEnabled = True]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$sStore</td>
+   <td>Optional: Store to query for rules. Use "*" to denote the default store or specify the name of another store (default = "*")</td>
+  </tr>
+  <tr>
+   <td>$bEnabled</td>
+   <td>Optional: Only returns enabled rules if set to True (default = True)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: two-dimensional one based array with the following information:<br>
+&nbsp;&nbsp;&nbsp; 0 - Rule object<br>
+&nbsp;&nbsp;&nbsp; 1 - Boolean value that determines if the rule is to be applied<br>
+&nbsp;&nbsp;&nbsp; 2 - Integer indicating the order of execution of the rule in the rules collection<br>
+&nbsp;&nbsp;&nbsp; 3 - Boolean value that indicates if the rule executes as a client-side rule<br>
+&nbsp;&nbsp;&nbsp; 4 - String representing the name of the rule<br>
+&nbsp;&nbsp;&nbsp; 5 - Constant from the OlRuleType enumeration indicating if the rule applies to messages being sent or received<br>
+Failure: Returns "" and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - No rules found for the specified store<br>
+&nbsp;&nbsp;&nbsp; 2 - Error returned by method .GetRules. @extended is set to the COM error<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+None.<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Get all rules</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aRules</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleGet</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleGet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error accessing rules. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$aRules</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: All rules for the currently logged on users default store"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S3">0</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"|"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Object|Enabled?|Execution order|Client side rule?|Name|Send or Receive rule"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

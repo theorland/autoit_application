@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_MailSignatureCreate</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_MailSignatureCreate</font>
+<hr size="2">
+<p>Creates a new/modifies an existing e-mail signature.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_MailSignatureCreate($sName, $oWord, $oRange[, $bNewMessage = False[, $bReplyMessage = False]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$sName</td>
+    <td width="85%">Name of the signature to be created/modified.</td>
+  </tr>
+  <tr>
+   <td>$oWord</td>
+   <td>Object of an already running Word Application</td>
+  </tr>
+  <tr>
+   <td>$oRange</td>
+   <td>Range (as defined by the word range method) that contains the signature text + formatting</td>
+  </tr>
+  <tr>
+   <td>$bNewMessage</td>
+   <td>Optional: True sets the signature as the default signature to be added to new email messages (default = False)</td>
+  </tr>
+  <tr>
+   <td>$bReplyMessage</td>
+   <td>Optional: True sets the signature as the default signature to be added when you reply to an email messages (default = False)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: 1<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - $oWord is not an object<br>
+&nbsp;&nbsp;&nbsp; 2 - $sName is empty<br>
+&nbsp;&nbsp;&nbsp; 3 - $oRange is not an object<br>
+&nbsp;&nbsp;&nbsp; 4 - Error adding signature. @extended is set to the COM error code<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+If the signature already exists $bNewMessage and $bReplyMessage can be set but not unset. Use _OL_MailSignatureSet in this case.<br>
+<br>
+When using AutoIt > 3.3.12.0 you need to call _OL_Open or _OL_ErrorNotify(4) at the top of your script to prevent COM error crashes!<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>See Also</b></p>
+http://technet.microsoft.com/en-us/magazine/2006.10.heyscriptingguy.aspx<br>
+<p>&nbsp;</p>
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$iReply</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">308</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_MailSignatureCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"This script creates signature 'Outlook-UDF-Test'."</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S7">"To delete the signature please run '_OL_SignatureDelete'."</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S7">"Are you sure you want to create the signature?"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S9">$iReply</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">6</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Use Word to create the signature content.</span><br>
+<span class="S1">; Then call _OL_MailSignatureCreate and pass the content.</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sGiven</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Firstname"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sSurname</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Lastname"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sAddress1</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Streetname and number"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sAddress2</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Town"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sPostcode</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"PostalCode"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sFax</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Your Faxnumber"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sMobile</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Your Mobile Phone number"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sTitle</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Your Title - if you have one"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sCompany</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Name of your company"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sPhone</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Your Phone number"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sEmail</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"yourmailaddress@yourcompany.TLD"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sWeb</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"http://www.yourcompany.TLD"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sExt</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Extension"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sPicture</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S6">@ScriptDir</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"\The_outlook.jpg"</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S5">Const</span><span class="S0"> </span><span class="S9">$END_OF_STORY</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">6</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oWord</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oDoc</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oSelection</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oRange</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oTable</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oCell</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oCellRange</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oLink</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sStyle</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"No Spacing"</span><br>
+<br>
+<span class="S1">; Set up word template</span><br>
+<span class="S9">$oWord</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S4">ObjCreate</span><span class="S8">(</span><span class="S7">"Word.Application"</span><span class="S8">)</span><br>
+<span class="S9">$oDoc</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oWord</span><span class="S8">.</span><span class="S14">Documents</span><span class="S8">.</span><span class="S14">Add</span><span class="S8">()</span><br>
+<span class="S9">$oSelection</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oWord</span><span class="S8">.</span><span class="S14">Selection</span><br>
+<br>
+<span class="S1">; Sets initial font typeface, colour etc., inserts name and title</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S9">$oWord</span><span class="S8">.</span><span class="S14">LanguageSettings</span><span class="S8">.</span><span class="S14">LanguageID</span><span class="S8">(</span><span class="S9">$msoLanguageIDUI</span><span class="S8">)</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">1031</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S9">$sStyle</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Kein Leerraum"</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Style</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$sStyle</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Name</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Verdana"</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Size</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">10</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Bold</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S5">True</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Color</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">0x002D9A</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">TypeParagraph</span><span class="S8">()</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">TypeText</span><span class="S8">(</span><span class="S9">$sGiven</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">" "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sSurname</span><span class="S8">)</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Size</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">7</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">TypeText</span><span class="S8">(</span><span class="S4">Chr</span><span class="S8">(</span><span class="S3">11</span><span class="S8">))</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Size</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">8</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Bold</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S5">False</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">TypeText</span><span class="S8">(</span><span class="S9">$sTitle</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; Inserts a 2 column table to contain the Address (left) and the contact information (right)</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">TypeText</span><span class="S8">(</span><span class="S4">Chr</span><span class="S8">(</span><span class="S3">11</span><span class="S8">))</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">TypeParagraph</span><span class="S8">()</span><br>
+<span class="S9">$oRange</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Range</span><br>
+<span class="S9">$oDoc</span><span class="S8">.</span><span class="S14">Tables</span><span class="S8">.</span><span class="S14">Add</span><span class="S8">(</span><span class="S9">$oRange</span><span class="S8">,</span><span class="S0"> </span><span class="S3">5</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">)</span><br>
+<span class="S9">$oTable</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oDoc</span><span class="S8">.</span><span class="S14">Tables</span><span class="S8">(</span><span class="S3">1</span><span class="S8">)</span><br>
+<span class="S9">$oTable</span><span class="S8">.</span><span class="S14">Cell</span><span class="S8">(</span><span class="S3">1</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">).</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Text</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$sCompany</span><br>
+<span class="S9">$oTable</span><span class="S8">.</span><span class="S14">Cell</span><span class="S8">(</span><span class="S3">2</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">).</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Text</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$sAddress1</span><br>
+<span class="S9">$oTable</span><span class="S8">.</span><span class="S14">Cell</span><span class="S8">(</span><span class="S3">3</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">).</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Text</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$sAddress2</span><br>
+<span class="S9">$oTable</span><span class="S8">.</span><span class="S14">Cell</span><span class="S8">(</span><span class="S3">4</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">).</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Text</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$sPostcode</span><br>
+<span class="S9">$oTable</span><span class="S8">.</span><span class="S14">Cell</span><span class="S8">(</span><span class="S3">1</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">).</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Text</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Tel: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sPhone</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">" &nbsp;| &nbsp;Ext: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sExt</span><br>
+<span class="S9">$oTable</span><span class="S8">.</span><span class="S14">Cell</span><span class="S8">(</span><span class="S3">2</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">).</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Text</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Fax: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sFax</span><br>
+<span class="S9">$oTable</span><span class="S8">.</span><span class="S14">Cell</span><span class="S8">(</span><span class="S3">3</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">).</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Text</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Mobile: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sMobile</span><br>
+<br>
+<span class="S1">; Creates a clickable hyperlink</span><br>
+<span class="S9">$oCell</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oTable</span><span class="S8">.</span><span class="S14">Cell</span><span class="S8">(</span><span class="S3">4</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">)</span><br>
+<span class="S9">$oCellRange</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oCell</span><span class="S8">.</span><span class="S14">Range</span><br>
+<span class="S9">$oCell</span><span class="S8">.</span><span class="S14">Select</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">TypeText</span><span class="S8">(</span><span class="S7">"Web: "</span><span class="S8">)</span><br>
+<span class="S9">$oLink</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Hyperlinks</span><span class="S8">.</span><span class="S14">Add</span><span class="S8">(</span><span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Range</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sWeb</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sWeb</span><span class="S8">)</span><br>
+<span class="S9">$oLink</span><span class="S8">.</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Name</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Verdana"</span><br>
+<span class="S9">$oLink</span><span class="S8">.</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Size</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">8</span><br>
+<span class="S9">$oLink</span><span class="S8">.</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Bold</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S5">False</span><br>
+<br>
+<span class="S1">; Creates a clickable mailto: email address</span><br>
+<span class="S9">$oCell</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oTable</span><span class="S8">.</span><span class="S14">Cell</span><span class="S8">(</span><span class="S3">5</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">)</span><br>
+<span class="S9">$oCellRange</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oCell</span><span class="S8">.</span><span class="S14">Range</span><br>
+<span class="S9">$oCell</span><span class="S8">.</span><span class="S14">Select</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">typeText</span><span class="S8">(</span><span class="S7">"Email: "</span><span class="S8">)</span><br>
+<span class="S9">$oLink</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Hyperlinks</span><span class="S8">.</span><span class="S14">Add</span><span class="S8">(</span><span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">Range</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"mailto: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sEmail</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sEmail</span><span class="S8">)</span><br>
+<span class="S9">$oLink</span><span class="S8">.</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Name</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Verdana"</span><br>
+<span class="S9">$oLink</span><span class="S8">.</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Size</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">8</span><br>
+<span class="S9">$oLink</span><span class="S8">.</span><span class="S14">Range</span><span class="S8">.</span><span class="S14">Font</span><span class="S8">.</span><span class="S14">Bold</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S5">False</span><br>
+<span class="S9">$oTable</span><span class="S8">.</span><span class="S14">AutoFitBehavior</span><span class="S8">(</span><span class="S3">1</span><span class="S8">)</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">EndKey</span><span class="S8">(</span><span class="S9">$END_OF_STORY</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; Insert logo</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">TypeText</span><span class="S8">(</span><span class="S4">Chr</span><span class="S8">(</span><span class="S3">11</span><span class="S8">))</span><br>
+<span class="S9">$oSelection</span><span class="S8">.</span><span class="S14">InlineShapes</span><span class="S8">.</span><span class="S14">AddPicture</span><span class="S8">(</span><span class="S9">$sPicture</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; Select the whole text</span><br>
+<span class="S9">$oSelection</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oDoc</span><span class="S8">.</span><span class="S14">Range</span><span class="S8">()</span><br>
+<br>
+<span class="S1">; Create the Signature</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$iResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_MaiLSignatureCreate</span><span class="S8">(</span><span class="S7">"Outlook-UDF-Test"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oWord</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oSelection</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_MailSignatureCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Signature 'Outlook-UDF-Test' could not be created. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_MailSignatureCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Signature 'Outlook-UDF-Test' successfully created."</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S1">; End Word</span><br>
+<span class="S9">$oDoc</span><span class="S8">.</span><span class="S14">Saved</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S5">True</span><br>
+<span class="S9">$oWord</span><span class="S8">.</span><span class="S14">Quit</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

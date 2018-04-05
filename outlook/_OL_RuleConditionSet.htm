@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_RuleConditionSet</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_RuleConditionSet</font>
+<hr size="2">
+<p>Adds a new or overwrites an existing condition or condition exception to an existing rule of the specified store.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_RuleConditionSet($oOL, $sStore, $sRuleName, $iRuleConditionType, $bEnabled[, $sP1 = ""])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$sStore</td>
+   <td>Name of the Store where the rule will be defined. "*" = your default store</td>
+  </tr>
+  <tr>
+   <td>$sRuleName</td>
+   <td>Name of the rule</td>
+  </tr>
+  <tr>
+   <td>$iRuleConditionType</td>
+   <td>Type of the rule condition. Please see the OlRuleCOnditionType enumeration</td>
+  </tr>
+  <tr>
+   <td>$bEnabled</td>
+   <td>Optional: True sets the rule condition to enabled (default = True)</td>
+  </tr>
+  <tr>
+   <td>$bExceptions</td>
+   <td>Optional: Sets exceptions to the rule conditions if set to True (default = False)</td>
+  </tr>
+  <tr>
+   <td>$sP1</td>
+   <td>Optional: Data to create the rule condition depending on $iRuleConditionType</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: Object of the added condition<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - Error accessing specified store. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 2 - Error accessing the rule collection. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 3 - Error accessing the specified rule. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 4 - Error creating the condition for the specified rule. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 5 - Error saving the specified rule. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 6 - The specified rule condition is not valid for the rule type (send/receive)<br>
+&nbsp;&nbsp;&nbsp; 7 - Error adding a recipient. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 8 - Error resolving recipients. @extended is the 1-based number of the recipient in error<br>
+&nbsp;&nbsp;&nbsp; 9 - The specified $iRuleConditionType is invalid<br>
+&nbsp;&nbsp;&nbsp; 10 - The specified $iRuleConditionType is not supported by the Outlook object model at the moment<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+Not all possible rule conditions can be created using the COM model.<br>
+To remove an action from a rule set $bEnabled to False.<br>
+Remarks for different types of conditions:<br>
+<br>
+$olConditionAccount:<br>
+$sP1: Account object that represents the account used to evaluate the rule condition<br>
+<br>
+$olConditionBody, $olConditionBodyOrSubject, $olConditionMessageHeader, $olConditionSubject:<br>
+$sP1: Specify a string of elements that represent the text to be evaluated separated by the pipe character e.g. "Vacation|return"<br>
+<br>
+$olConditionCategory:<br>
+$sP1: Specify a string of elements that represent the categories separated by the pipe character e.g. "Birthday|Private"<br>
+<br>
+$olConditionFormName:<br>
+$sP1: Specify a string of form identifiers to be evaluated by the rule condition separated by the pipe character<br>
+<br>
+$olConditionFrom, $olConditionSentTo:<br>
+$sP1: Specify a string of elements that represents the recipient list separated by ";" e.g. "George Smith;John Doe"<br>
+<br>
+$olFromRSSFeed:<br>
+$sP1: Specify a string of elements that represent the RSS subscriptions separated by the pipe character<br>
+<br>
+$olConditionImportance:<br>
+$sP1: OlImportance constant indicating the relative level of importance<br>
+<br>
+$olConditionRecipientAddress, $olConditionSenderAddress:<br>
+$sP1: Specify a string of elements to evaluate the address rule condition separated by ";"<br>
+<br>
+$olConditionSenderInAddressList:<br>
+$sP1: AddressList object that represents the address list used to evaluate the rule condition<br>
+<br>
+$olConditionAnyCategory, $olConditionCC, $olConditionFromAnyRSSFeed, $olConditionHasAttachment, $olConditionMeetingInviteOrUpdate,<br>
+$olConditionNotTo, $olConditionLocalMachineOnly, $olConditionOnlyToMe, $olConditionTo, $olConditionToOrCC:<br>
+No parameters need to be set<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>See Also</b></p>
+http://msdn.microsoft.com/en-us/library/bb206766(v=office.12).aspx<br>
+<p>&nbsp;</p>
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; All rule examples are placed in one script</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Please see script _OL_RuleAdd for an example!"</span><span class="S8">)</span><br>
+<span class="S5">Exit</span><br>
+<span class="S0"></span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

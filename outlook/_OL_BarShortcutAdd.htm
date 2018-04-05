@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_BarShortcutAdd</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_BarShortcutAdd</font>
+<hr size="2">
+<p>Adds a shortcut to a group in the OutlookBar.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_BarShortcutAdd($oOL, $vGroupname, $sShortcutname, $sTarget[, $iPosition = 1[, $sIcon = ""]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$vGroupname</td>
+   <td>Name or 1-based index value of the group where the shortcut will be created</td>
+  </tr>
+  <tr>
+   <td>$oShortcutname</td>
+   <td>Name of the shortcut to be created</td>
+  </tr>
+  <tr>
+   <td>$sTarget</td>
+   <td>Target of the shortcut being created. Can be an Outlook folder, filesystem folder, filesystem path or URL</td>
+  </tr>
+  <tr>
+   <td>$iPosition</td>
+   <td>Optional: Position at which the new shortcut will be inserted in the group (default = 0 = first shortcut in an empty group)</td>
+  </tr>
+  <tr>
+   <td>$sIcon</td>
+   <td>Optional: The path of the icon file e.g. C:\temp\sample.ico (default = no icon)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: 1<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - Error accessing the group specified by $vGroupname. For details please see @extended<br>
+&nbsp;&nbsp;&nbsp; 2 - Error creating the shortcut. For details please see @extended<br>
+&nbsp;&nbsp;&nbsp; 3 - Specified icon file could not be found<br>
+&nbsp;&nbsp;&nbsp; 4 - Error setting the icon for the created shortcut. For details please see @extended<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+Specify $iPosition = 1 to position a shortcut at the top of a non empty group<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Add a shortcut to the "Outlook-UDF-Test" group in the Outlookbar</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Get list of groups in the OutlookBar</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_BarGroupGet</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_BarShortcutAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error getting list of groups in OutlookBar. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Search for group "Outlook-UDF-Test"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$iFound</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">0</span><br>
+<span class="S5">For</span><span class="S0"> </span><span class="S9">$iIndex</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">1</span><span class="S0"> </span><span class="S5">To</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S3">0</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S5">If</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S9">$iIndex</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test"</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S9">$iFound</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$iIndex</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S5">ExitLoop</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S5">EndIf</span><br>
+<span class="S5">Next</span><br>
+<span class="S1">; Group not found - create it</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S9">$iFound</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S16">_OL_BarGroupAdd</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test"</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">)</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_BarShortcutAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding group 'Outlook-UDF-Test' to the OutlookBar. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_BarShortcutAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Group 'Outlook-UDF-Test' has been added to the OutlookBar"</span><span class="S8">)</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S9">$iFound</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">2</span><br>
+<span class="S5">EndIf</span><br>
+<span class="S1">; Add shortcut to the group "Outlook-UDF-Test". The group is accessed by its index value</span><br>
+<span class="S16">_OL_BarShortcutAdd</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$iFound</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test-Shortcut"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"http://www.autoitscript.com"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_BarShortcutAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding shortcut to group 'Outlook-UDF-Test'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Activate the OutlookBar and show the created shortcut</span><br>
+<span class="S9">$oOutlook</span><span class="S8">.</span><span class="S14">ActiveExplorer</span><span class="S8">.</span><span class="S14">ShowPane</span><span class="S8">(</span><span class="S9">$olOutlookBar</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_BarShortcutAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Shortcut successfully added to group 'Outlook-UDF-Test'!"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

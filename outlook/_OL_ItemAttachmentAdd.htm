@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_ItemAttachmentAdd</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_ItemAttachmentAdd</font>
+<hr size="2">
+<p>Adds one or more attachments to an item.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_ItemAttachmentAdd($oOL, $vItem, $sStoreID, $vP1 = ""[, $vP2 = ""[, $vP3 = ""[, $vP4 = ""[, $vP5 = ""[, $vP6 = ""[, $vP7 = ""[, $vP8 = ""[, $vP9 = ""[, $vP10 = ""[, $sDelimiter = ","]]]]]]]]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$vItem</td>
+   <td>EntryID or object of the item</td>
+  </tr>
+  <tr>
+   <td>$sStoreID</td>
+   <td>StoreID where the EntryID is stored. Use the keyword "Default" to use the users mailbox</td>
+  </tr>
+  <tr>
+   <td>$vP1</td>
+   <td>The source of the attachment. This can be a file (represented by the full file system path (drive letter or UNC path) with a file name) or an<br>
+       Outlook item (EntryId or object) that constitutes the attachment<br>
+       or a zero based one-dimensional array with unlimited number of attachments.<br>
+       Every attachment parameter can consist of up to 4 sub-parameters separated by commas or parameter $sDelimiter:<br>
+       &nbsp;1 - Source: The source of the attachment as described above<br>
+       &nbsp;2 - (Optional) Type: The type of the attachment. Can be one of the OlAttachmentType constants (default = $olByValue)<br>
+       &nbsp;3 - (Optional) Position: For RTF format. Position where the attachment should be placed within the body text (default = Beginning of the item)<br>
+       &nbsp;4 - (Optional) DisplayName: For RTF format and Type = $olByValue. Name is displayed in an Inspector object or when viewing the properties of the attachment</td>
+  </tr>
+  <tr>
+   <td>$vP2</td>
+   <td>Optional: Same as $vP1 but no array is allowed</td>
+  </tr>
+  <tr>
+   <td>$vP3</td>
+   <td>Optional: Same as $vP2</td>
+  </tr>
+  <tr>
+   <td>$vP4</td>
+   <td>Optional: Same as $vP2</td>
+  </tr>
+  <tr>
+   <td>$vP5</td>
+   <td>Optional: Same as $vP2</td>
+  </tr>
+  <tr>
+   <td>$vP6</td>
+   <td>Optional: Same as $vP2</td>
+  </tr>
+  <tr>
+   <td>$vP7</td>
+   <td>Optional: Same as $vP2</td>
+  </tr>
+  <tr>
+   <td>$vP8</td>
+   <td>Optional: Same as $vP2</td>
+  </tr>
+  <tr>
+   <td>$vP9</td>
+   <td>Optional: Same as $vP2</td>
+  </tr>
+  <tr>
+   <td>$vP10</td>
+   <td>Optional: Same as $vP2</td>
+  </tr>
+  <tr>
+   <td>$sDelimiter</td>
+   <td>Optional: Delimiter to separate the sub-parameters of the attachment parameters $vP1 - $vP10 (default = ",")</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: Item object<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - No Outlook item specified<br>
+&nbsp;&nbsp;&nbsp; 2 - Item could not be found. EntryID might be wrong<br>
+&nbsp;&nbsp;&nbsp; 3 - Error adding attachment to the item list. @extended = number of the invalid attachment (zero based)<br>
+&nbsp;&nbsp;&nbsp; 4 - Attachment could not be found. @extended = number of the invalid attachment (zero based)<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+$vP2 to $vP10 will be ignored if $vP1 is an array of attachments.<br>
+For more details about sub-parameters 2-4 please check MSDN for the Attachments.Add method<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$Result</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_TestEnvironmentCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - Manage Test Environment"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating the test environment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Attach a file to a mail (link to the file)</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aOL_Item</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemFind</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Mail"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olMail</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"EntryID"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S9">$aOL_Item</span><span class="S8">[</span><span class="S3">0</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemAttachmentAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Could not find a mail item in folder 'Outlook-UDF-Test\SourceFolder\Mail'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemAttachmentAdd</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$aOL_Item</span><span class="S8">[</span><span class="S3">1</span><span class="S8">][</span><span class="S3">0</span><span class="S8">],</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S6">@ScriptDir</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"\The_Outlook.jpg,"</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$olByReference</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemAttachmentAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding attachment to mail item in folder 'Outlook-UDF-Test\SourceFolder\Mail'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Display item</span><br>
+<span class="S9">$oItem</span><span class="S8">.</span><span class="S14">Display</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemAttachmentAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"A link to the file was successfully added to the mail item!"</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 2</span><br>
+<span class="S1">; Attach a file to a task (copy file)</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$aOL_Item</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemFind</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Tasks"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olTask</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"EntryID"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S9">$aOL_Item</span><span class="S8">[</span><span class="S3">0</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemAttachmentAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Could not find a task item in folder 'Outlook-UDF-Test\SourceFolder\Tasks'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S8">)</span><br>
+<span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemAttachmentAdd</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$aOL_Item</span><span class="S8">[</span><span class="S3">1</span><span class="S8">][</span><span class="S3">0</span><span class="S8">],</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S6">@ScriptDir</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"\The_Outlook.jpg"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemAttachmentAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding attachment to task item in folder 'Outlook-UDF-Test\SourceFolder\Tasks'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Display item</span><br>
+<span class="S9">$oItem</span><span class="S8">.</span><span class="S14">Display</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemAttachmentAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"A copy of the file was successfully added to the task item!"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

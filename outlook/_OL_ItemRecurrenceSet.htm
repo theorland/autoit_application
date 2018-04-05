@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_ItemRecurrenceSet</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_ItemRecurrenceSet</font>
+<hr size="2">
+<p>Sets recurrence information of an item (appointment or task).<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_ItemRecurrenceSet($oOL, $vItem, $sStoreID, $sPatternStartDate, $sStartTime, $vPatternEndDate, $vEndTime, $iRecurrenceType, $iDayOf, $iInterval, $iInstance, $iOccurrences)<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$vItem</td>
+   <td>EntryID or object of the appointment or task item</td>
+  </tr>
+  <tr>
+   <td>$sStoreID</td>
+   <td>StoreID where the EntryID is stored. Use "Default" if you use the users mailbox</td>
+  </tr>
+  <tr>
+   <td>$sPatternStartDate</td>
+   <td>Date indicating the start date for the recurrence pattern</td>
+  </tr>
+  <tr>
+   <td>$sStartTime</td>
+   <td>Time indicating the start time for the recurrence pattern</td>
+  </tr>
+  <tr>
+   <td>$vPatternEndDate</td>
+   <td>Date indicating the end date for the recurrence pattern OR<br>
+       "" that indicates the recurrence pattern has no end date OR<br>
+       an integer indicating the number of occurrences of the recurrence pattern</td>
+  </tr>
+  <tr>
+   <td>$vEndTime</td>
+   <td>Time indicating the end time for the recurrence pattern OR<br>
+       an integer indicating the duration (in minutes) of the recurrence pattern</td>
+  </tr>
+  <tr>
+   <td>$iRecurrenceType</td>
+   <td>Constant specifying the frequency of occurrences for the recurrence pattern.<br>
+       Is defined by the Outlook OlRecurrenceType enumeration</td>
+  </tr>
+  <tr>
+   <td>$iDayOf</td>
+   <td>DayOfWeekMask (mask for the days of the week on which the recurring appointment or task occurs) OR<br>
+       DayOfMonth (integer indicating the day of the month on which the recurring appointment or task occurs) if $sRecurrenceType = $olRecursMonthly OR<br>
+       DayOfMonth/MonthOfYear (integer indicating the day of the month and month of the year on which the recurring appointment or task occurs) if $sRecurrenceType = $olRecursYearly</td>
+  </tr>
+  <tr>
+   <td>$iInterval</td>
+   <td>Integer specifying the number of units of a given recurrence type between occurrences</td>
+  </tr>
+  <tr>
+   <td>$iInstance</td>
+   <td>Integer specifying the count for which the recurrence pattern is valid for a given interval.</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: Item object<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - No appointment or task item specified<br>
+&nbsp;&nbsp;&nbsp; 2 - Item could not be found. EntryID might be wrong<br>
+&nbsp;&nbsp;&nbsp; 3 - Error with Save. For more info please see @extended<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+None.<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$Result</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_TestEnvironmentCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - Manage Test Environment"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating the test environment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Add recurrence: Daily with defined start and end date/time</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sItem1</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olAppointmentItem</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Calendar"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Subject=Recurrence Test 1"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Start="</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S15">_NowCalcDate</span><span class="S8">()</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">" 08:00:00"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"End="</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S15">_NowCalcDate</span><span class="S8">()</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">" 11:30:00"</span><span class="S8">,</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S7">"Location=Building A, Room 10"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"RequiredAttendees="</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S8">.</span><span class="S14">GetNameSpace</span><span class="S8">(</span><span class="S7">"MAPI"</span><span class="S0"> </span><span class="S8">).</span><span class="S14">CurrentUser</span><span class="S8">.</span><span class="S14">Name</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemRecurrenceSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating an appointment in folder 'Outlook-UDF-Test\SourceFolder\Calendar'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S8">)</span><br>
+<span class="S1">; Add recurrence</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemRecurrenceSet</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sItem1</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S15">_NowCalcDate</span><span class="S8">(),</span><span class="S0"> </span><span class="S7">"08:00:00"</span><span class="S8">,</span><span class="S0"> </span><span class="S15">_DateAdd</span><span class="S8">(</span><span class="S7">"D"</span><span class="S8">,</span><span class="S0"> </span><span class="S3">14</span><span class="S8">,</span><span class="S0"> </span><span class="S15">_NowCalcDate</span><span class="S8">()),</span><span class="S0"> </span><span class="S7">"11:30"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olRecursDaily</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemRecurrenceSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding recurrence information'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S8">)</span><br>
+<span class="S1">; Show item</span><br>
+<span class="S9">$oItem</span><span class="S8">.</span><span class="S14">Display</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemRecurrenceSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Recurrence Test 1: Daily with defined start and end date/time - Success!"</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 2</span><br>
+<span class="S1">; Add recurrence: Every 3rd month on the 2nd monday in 2011</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sItem2</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olAppointmentItem</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Calendar"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Subject=Recurrence Test 2"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Start=2011/02/08 08:00:00"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"End=2011/02/08 11:30:00"</span><span class="S8">,</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S7">"Location=Building A, Room 10"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"RequiredAttendees="</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S8">.</span><span class="S14">GetNameSpace</span><span class="S8">(</span><span class="S7">"MAPI"</span><span class="S0"> </span><span class="S8">).</span><span class="S14">CurrentUser</span><span class="S8">.</span><span class="S14">Name</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemRecurrenceSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating an appointment in folder 'Outlook-UDF-Test\SourceFolder\Calendar'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S8">)</span><br>
+<span class="S1">; Add recurrence</span><br>
+<span class="S9">$oItem</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemRecurrenceSet</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sItem2</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"2011/01/01"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"08:00:00"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"2011/12/31"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"11:30"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olRecursMonthNTh</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olMonday</span><span class="S8">,</span><span class="S0"> </span><span class="S3">3</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemRecurrenceSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding recurrence information'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S8">)</span><br>
+<span class="S1">; Show item</span><br>
+<span class="S9">$oItem</span><span class="S8">.</span><span class="S14">Display</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemRecurrenceSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Recurrence Test 2: Every 3rd month on the 2nd monday in 2011 - Success!"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

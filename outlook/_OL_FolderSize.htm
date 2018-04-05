@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_FolderSize</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_FolderSize</font>
+<hr size="2">
+<p>Returns information about the size and number of items of a folder and subfolders.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_FolderSize($oOL[, $vFolder = "*"[, $iFolderType = Default[, $bRecursive = True[, $bSizeOnly = True]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$vFolder</td>
+   <td>Optional: Folder object as returned by _OL_FolderAccess or full name of folder (default = "*" = The root folder of the current user)</td>
+  </tr>
+  <tr>
+   <td>$iFolderType</td>
+   <td>Optional: Type of folder if you want to access a default folder. Is defined by the Outlook OlDefaultFolders enumeration (default = Default)</td>
+  </tr>
+  <tr>
+   <td>$bRecursive</td>
+   <td>Optional: Calculates all subfolders of the specified folder as well (default = True)</td>
+  </tr>
+  <tr>
+   <td>$bSizeOnly</td>
+   <td>Optional: Specifies that only the size of the folder and all subfolders will be returned (default = True)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: one-dimensional zero based array with the following information:<br>
+&nbsp;&nbsp;&nbsp; 0 - Size of the specified folder/subfolders in Bytes<br>
+&nbsp;&nbsp;&nbsp; 1 - Number of items in the specified folder/subfolders<br>
+Failure: Returns "" and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - Error accessing specified folder. See @extended for the error code of _OL_AccessFolder<br>
+&nbsp;&nbsp;&nbsp; 2 - Error calling the PropertyAccessor for the specified folder. @extended is set to the COM error code<br>
+&nbsp;&nbsp;&nbsp; 3 - Error accessing the PR_MESSAGE_SIZE_EXTENDED property. @extended is set to the COM error code<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+The returned size might differ from what Outlook reports. That's because Outlook folders hold some hidden items<br>
+which are invisible for the UDF.<br>
+<br>
+For $bSizeOnly = False or for none Exchange folders the function is not very fast as it has to query all items for its size.<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;MsgBoxConstants.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Connect to Outlook</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONERROR</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Calculate size of your Inbox (omitting subfolders)</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$vResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderSize</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S5">False</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONERROR</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderSize Example Script 1"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error calculating folder size. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONINFORMATION</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderSize Example Script 1"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Size of your inbox (excluding subfolders) is: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$vResult</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">" Bytes ("</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S4">Round</span><span class="S8">(</span><span class="S9">$vResult</span><span class="S0"> </span><span class="S8">/</span><span class="S0"> </span><span class="S3">1024</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">)</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">" KB)."</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 2</span><br>
+<span class="S1">; Calculate size of your Inbox (including all subfolders)</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$vResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderSize</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONERROR</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderSize Example Script 2"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error calculating folder size. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONINFORMATION</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderSize Example Script 2"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Size of your inbox (including subfolders) is: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$vResult</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">" Bytes ("</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S4">Round</span><span class="S8">(</span><span class="S9">$vResult</span><span class="S0"> </span><span class="S8">/</span><span class="S0"> </span><span class="S3">1024</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">)</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">" KB)."</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 3</span><br>
+<span class="S1">; Calculate size and number of items of your Inbox (including all subfolders)</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONINFORMATION</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderSize Example Script 3"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Processing your inbox might take a few minutes!"</span><span class="S8">,</span><span class="S0"> </span><span class="S3">5</span><span class="S8">)</span><br>
+<span class="S9">$vResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderSize</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S5">False</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONERROR</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderSize Example Script 3"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error calculating folder size. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$vResult</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderSize Example Script 3"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S3">0</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"total size &amp; number of items"</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 4</span><br>
+<span class="S1">; Calculate size and number of items for a PST (including all subfolders)</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sPath</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S4">FileOpenDialog</span><span class="S8">(</span><span class="S7">"Please select a PST file to process!"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"PST files (*.pst)"</span><span class="S8">,</span><span class="S0"> </span><span class="S4">BitOR</span><span class="S8">(</span><span class="S9">$FD_FILEMUSTEXIST</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$FD_PATHMUSTEXIST</span><span class="S8">))</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oPST</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_PSTAccess</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sPath</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONERROR</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderSize Example Script 4"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error accessing PST '"</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sPath</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S9">$vResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderSize</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oPST</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S5">False</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONERROR</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderSize Example Script 4"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error calculating folder size. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$vResult</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderSize Example Script 4"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S3">0</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"total size &amp; number of items"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S0"></span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

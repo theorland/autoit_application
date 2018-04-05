@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_ItemFind</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_ItemFind</font>
+<hr size="2">
+<p>Finds items (contacts, appointments ...) returning an array of all specified properties.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_ItemFind($oOL, $vFolder[, $iObjectClass = Default[, $sRestrict = ""[, $sSearchName = ""[, $sSearchValue = ""[, $sReturnProperties = ""[, $sSort = ""[, $iFlags = 0[, $sWarningClick = ""]]]]]]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$vFolder</td>
+   <td>Folder object as returned by _OL_FolderAccess or full name of folder where the search will be started.<br>
+       If you want to search a default folder you have to specify the folder object.</td>
+  </tr>
+  <tr>
+   <td>$iObjectClass</td>
+   <td>Optional: Class of items to search for. Defined by the Outlook OlObjectClass enumeration (default = Default = $olContact)</td>
+  </tr>
+  <tr>
+   <td>$sRestrict</td>
+   <td>Optional: Filter text to restrict number of items returned (exact match). For details please see Remarks</td>
+  </tr>
+  <tr>
+   <td>$sSearchName</td>
+   <td>Optional: Name of the property to search for (without brackets)</td>
+  </tr>
+  <tr>
+   <td>$sSearchValue</td>
+   <td>Optional: String value of the property to search for (partial match)</td>
+  </tr>
+  <tr>
+   <td>$sReturnProperties</td>
+   <td>Optional: Comma separated list of properties to return (default = depending on $iObjectClass. Please see Remarks)</td>
+  </tr>
+  <tr>
+   <td>$sSort</td>
+   <td>Optional: Property to sort the result on plus optional flag to sort descending (default = None). E.g. "[Subject], True" sorts the result descending on the subject</td>
+  </tr>
+  <tr>
+   <td>$iFlags</td>
+   <td>Optional: Flags to set different processing options. Can be a combination of the following:<br>
+       &nbsp;&nbsp;1: Subfolders will be included<br>
+       &nbsp;&nbsp;2: Row 1 contains column headings. Therefore the number of rows/columns in the table has to be calculated using UBound<br>
+       &nbsp;&nbsp;4: Just return the number of records. You don't get an array, just a single integer denoting the total number of records found</td>
+  </tr>
+  <tr>
+   <td>$sWarningClick</td>
+   <td>Optional: The entire path (drive, directory, file name and extension) to 'OutlookWarning2.exe' or another exe with the same function (default = None)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: One based two-dimensional array with the properties specified by $sReturnProperties<br>
+Failure: Returns "" and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - You have to specifiy $sSearchName AND $sSearchValue or none of them<br>
+&nbsp;&nbsp;&nbsp; 2 - $sWarningClick not found<br>
+&nbsp;&nbsp;&nbsp; 3 - Error accessing the specified folder. See @extended for errorcode returned by _OL_FolderAccess<br>
+&nbsp;&nbsp;&nbsp; 4 - Error accessing specified property. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 5 - Error filtering items. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 1nmm - Error checking the $sReturnProperties as returned by __OL_CheckProperties.	n is either 0 (property does not exist) or 1 (Property has invalid case)	mm is the index of the property in error (one based)<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+Be sure to specify the values in $sReturnProperties and $sSearchName in correct case e.g. "FirstName" is valid, "Firstname" is invalid<br>
+<br>
+If you do not specify any properties then the following properties will be returned depending on the objectclass:<br>
+Contact: FirstName, LastName, Email1Address, Email2Address, MobileTelephoneNumber<br>
+DistributionList: Subject, Body, MemberCount<br>
+Note, Mail: Subject, Body, CreationTime, LastModificationTime, Size<br>
+<br>
+$sRestrict: Filter can be a Jet query or a DASL query with the @SQL= prefix. Jet query language syntax:<br>
+Restrict filter: Filter LogicalOperator Filter ...<br>
+LogicalOperator: And, Or, Not. Use ( and ) to change the processing order<br>
+Filter: "[property] operator 'value'" or '[property] operator "value"'<br>
+Operator: <, >, <=, >=, <>, =<br>
+Example: "[Start]='2011-02-21 08:00' And [End]='2011-02-21 10:00' And [Subject]='Test'"<br>
+See: http://msdn.microsoft.com/en-us/library/cc513841.aspx - "Searching Outlook Data"<br>
+http://msdn.microsoft.com/en-us/library/bb220369(v=office.12).aspx - "Items.Restrict Method"<br>
+<br>
+N.B.: Pass time as HH:MM, HH:MM:SS is invalid and returns no result<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$Result</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_TestEnvironmentCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - Manage Test Environment"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating the test environment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aItems</span><br>
+<br>
+<span class="S1">;------------------------------------------------------------------------------------------------------------------------------------------------</span><br>
+<span class="S1">; Example 1 - Search for contacts with firstname = TestFirstName</span><br>
+<span class="S1">;------------------------------------------------------------------------------------------------------------------------------------------------</span><br>
+<span class="S9">$aItems</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemFind</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Contacts"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olContact</span><span class="S8">,</span><span class="S0"> </span><span class="S7">'[FirstName] = "TestFirstName"'</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$aItems</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemFind Example Script - Find contacts by firstname"</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">48</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemFind Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error finding a contact. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S1">;------------------------------------------------------------------------------------------------------------------------------------------------</span><br>
+<span class="S1">; Example 2 - Search for appointments with "Room" as location (partial match)</span><br>
+<span class="S1">;------------------------------------------------------------------------------------------------------------------------------------------------</span><br>
+<span class="S9">$aItems</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemFind</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Calendar"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olAppointment</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Location"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Room"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"EntryID,Subject,Location"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$aItems</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemFind Example Script - Find appointments by partial search"</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">48</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemFind Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error finding an appointment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S1">;------------------------------------------------------------------------------------------------------------------------------------------------</span><br>
+<span class="S1">; Example 3 - Get number of items (contacts without distribution lists) in the contacts folder</span><br>
+<span class="S1">;------------------------------------------------------------------------------------------------------------------------------------------------</span><br>
+<span class="S9">$aItems</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemFind</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Contacts"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olContact</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S3">4</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemFind Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Number of items found: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$aItems</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">48</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemFind Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Could not find an item in the contacts folders. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S1">;------------------------------------------------------------------------------------------------------------------------------------------------</span><br>
+<span class="S1">; Example 4 - Get unread mails from a folder and all subfolders</span><br>
+<span class="S1">;------------------------------------------------------------------------------------------------------------------------------------------------</span><br>
+<span class="S9">$aItems</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemFind</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olMail</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"[UnRead]=True"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Subject,Body"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S4">IsArray</span><span class="S8">(</span><span class="S9">$aItems</span><span class="S8">)</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$aItems</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemFind Example Script - Unread mails"</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">48</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemFind Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Could not find an unread mail. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_ApplicationGet</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_ApplicationGet</font>
+<hr size="2">
+<p>Returns information about the Outlook application.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_ApplicationGet($oOL)<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: one-dimensional one based array with the following information:<br>
+&nbsp;&nbsp;&nbsp; 1 - Name of the default profile<br>
+&nbsp;&nbsp;&nbsp; 2 - LanguageSettings: Execution mode language<br>
+&nbsp;&nbsp;&nbsp; 3 - LanguageSettings: Help language<br>
+&nbsp;&nbsp;&nbsp; 4 - LanguageSettings: Install language<br>
+&nbsp;&nbsp;&nbsp; 5 - LanguageSettings: User interface language<br>
+&nbsp;&nbsp;&nbsp; 6 - Name of the application<br>
+&nbsp;&nbsp;&nbsp; 7 - Product code. String specifying the Microsoft Outlook globally unique identifier (GUID<br>
+&nbsp;&nbsp;&nbsp; 8 - Product version (n.n.n.n)<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+None.<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Get information about the Outlook application</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ApplicationGet</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S4">ConsoleWrite</span><span class="S8">(</span><span class="S9">$aresult</span><span class="S8">[</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ApplicationGet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error getting info about Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aDisplay</span><span class="S8">[</span><span class="S9">$aResult</span><span class="S8">[</span><span class="S3">0</span><span class="S8">]+</span><span class="S3">1</span><span class="S8">][</span><span class="S3">2</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S8">[[</span><span class="S9">$aResult</span><span class="S8">[</span><span class="S3">0</span><span class="S8">],</span><span class="S0"> </span><span class="S3">2</span><span class="S8">],</span><span class="S0"> </span><span class="S8">[</span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"default profile"</span><span class="S8">],[</span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Execution mode language"</span><span class="S8">],[</span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Help language"</span><span class="S8">],[</span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Install language"</span><span class="S8">],</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S8">[</span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"User interface language"</span><span class="S8">],</span><span class="S0"> </span><span class="S8">[</span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"application name"</span><span class="S8">],[</span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Product code (GUID)"</span><span class="S8">],[</span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Product version"</span><span class="S8">]]</span><br>
+<span class="S5">For</span><span class="S0"> </span><span class="S9">$i</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">1</span><span class="S0"> </span><span class="S5">To</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S3">0</span><span class="S8">]</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S9">$aDisplay</span><span class="S8">[</span><span class="S9">$i</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S9">$i</span><span class="S8">]</span><br>
+<span class="S5">Next</span><br>
+<span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$aDisplay</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_AccountGet Example Script"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_RuleActionGet</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_RuleActionGet</font>
+<hr size="2">
+<p>Returns all actions for a specified rule.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_RuleActionGet($oRule[, $bEnabled = True])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oRule</td>
+    <td width="85%">Rule object returned by a preceding call to _OL_RuleGet in element 0</td>
+  </tr>
+  <tr>
+   <td>$bEnabled</td>
+   <td>Optional: Only returns enabled actions if set to True (default = True)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: two-dimensional one based array with the following information:<br>
+Elements 0: 2 are the same for every action type. The other elements (if any) depend on the action type.<br>
+&nbsp;&nbsp;&nbsp; 0 - OlRuleActionType constant indicating the type of action that is taken by the rule action<br>
+&nbsp;&nbsp;&nbsp; 1 - OlObjectClass constant indicating the class of the rule action<br>
+&nbsp;&nbsp;&nbsp; 2 - True if the action is enabled<br>
+&nbsp;&nbsp;&nbsp; AssignToCategoryRuleAction<br>
+&nbsp;&nbsp;&nbsp; 3 - Categories assigned to the message separated by the pipe character<br>
+&nbsp;&nbsp;&nbsp; MoveOrCopyRuleAction<br>
+&nbsp;&nbsp;&nbsp; 3 - Object of the folder where the message will be copied/moved to<br>
+&nbsp;&nbsp;&nbsp; 4 - Name of the folder where the message will be copied/moved to<br>
+&nbsp;&nbsp;&nbsp; SendRuleAction<br>
+&nbsp;&nbsp;&nbsp; 3 - Recipients collection (object) that represents the recipient list for the cc/forward/redirect action<br>
+&nbsp;&nbsp;&nbsp; 4 - Recipients (string) separated by the pipe character<br>
+&nbsp;&nbsp;&nbsp; MarkAsTaskRuleAction<br>
+&nbsp;&nbsp;&nbsp; 3 - String that represents the label of the flag for the message<br>
+&nbsp;&nbsp;&nbsp; 4 - constant in the OlMarkInterval enumeration representing the interval before the task is due<br>
+&nbsp;&nbsp;&nbsp; NewItemAlertRuleAction<br>
+&nbsp;&nbsp;&nbsp; 3 - Text to be displayed in the new item alert dialog box<br>
+&nbsp;&nbsp;&nbsp; PlaySoundRuleAction<br>
+&nbsp;&nbsp;&nbsp; 3 - Full file path to a sound file (.wav)<br>
+Failure: Returns "" and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - The ActionType can not be handled by this function. @extended contains the ActionType in error<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+None.<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Get all rules and display the enabled actions for the first rule</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aRules</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleGet</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleActionGet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error accessing rules. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aActions</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleActionGet</span><span class="S8">(</span><span class="S9">$aRules</span><span class="S8">[</span><span class="S3">1</span><span class="S8">][</span><span class="S3">0</span><span class="S8">])</span><br>
+<span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$aActions</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: All actions for rule '"</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$aRules</span><span class="S8">[</span><span class="S3">1</span><span class="S8">][</span><span class="S3">4</span><span class="S8">]</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"'"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S3">0</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"|"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OlRuleActionType|OlObjectClass|Enabled?|Depending on the OlRuleActionType| | | | | | | | | | | "</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

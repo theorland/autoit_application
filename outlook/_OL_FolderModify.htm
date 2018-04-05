@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_FolderModify</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_FolderModify</font>
+<hr size="2">
+<p>Modifies the properties of a folder.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_FolderModify($oOL, $vFolder[, $sAddressBookName = ""[, $bCustomViewsOnly = Default[, $sDescription = ""[, $bInAppFolderSyncObject = Default[, $sName = ""[, $bShowAsOutlookAB = Default[, $iShowItemCount = Default[, $bWebViewOn = Default[, $sWebViewURL = ""]]]]]]]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$vFolder</td>
+   <td>Folder object as returned by _OL_FolderAccess or full name of folder to modify</td>
+  </tr>
+  <tr>
+   <td>$sAddressBookName</td>
+   <td>Address Book name if the folder represents a contacts folder (default = "" = do not change property)</td>
+  </tr>
+  <tr>
+   <td>$bCustomViewsOnly</td>
+   <td>True/False. Determines which views are displayed on the view menu (default = keyword "Default" = do not change property)</td>
+  </tr>
+  <tr>
+   <td>$sDescription</td>
+   <td>Description of the folder (default = "" = do not change property)</td>
+  </tr>
+  <tr>
+   <td>$bInAppFolderSyncObject</td>
+   <td>True/False. Determines if the folder will be synchronized with the e-mail server. (default = keyword "Default" = do not change property)</td>
+  </tr>
+  <tr>
+   <td>$sName</td>
+   <td>Display name for the folder (default = "" = do not change property)</td>
+  </tr>
+  <tr>
+   <td>$bShowAsOutlookAB</td>
+   <td>True/False. Specifies whether the folder will be displayed as an address list in the Outlook Address Book (folder thas to be a contacts folder) (default = keyword "Default" = do not change property)</td>
+  </tr>
+  <tr>
+   <td>$iShowItemCount</td>
+   <td>OlShowItemCount enumeration. Indicates the itemcount to display - if any (default = keyword "Default" = do not change property)</td>
+  </tr>
+  <tr>
+   <td>$bWebViewOn</td>
+   <td>True/False. Indicates the web view state (default = keyword "Default" = do not change property)</td>
+  </tr>
+  <tr>
+   <td>$sWebViewURL</td>
+   <td>URL of the Web page for this folder (default = "" = do not change property)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: Folder object of the created folder<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - $vFolder has not been specified<br>
+&nbsp;&nbsp;&nbsp; 2 - Error accessing the specified folder. See @extended for errorcode returned by GetFolderFromID<br>
+&nbsp;&nbsp;&nbsp; 3 - Error setting propery $sAddressBookName. See @extended for more details<br>
+&nbsp;&nbsp;&nbsp; 4 - Error setting propery $bCustomViewsOnly. See @extended for more details<br>
+&nbsp;&nbsp;&nbsp; 5 - Error setting propery $sDescription. See @extended for more details<br>
+&nbsp;&nbsp;&nbsp; 6 - Error setting propery $bInAppFolderSyncObject. See @extended for more details<br>
+&nbsp;&nbsp;&nbsp; 7 - Error setting propery $sName. See @extended for more details<br>
+&nbsp;&nbsp;&nbsp; 8 - Error setting propery $bShowAsOutlookAB. See @extended for more details<br>
+&nbsp;&nbsp;&nbsp; 9 - Error setting propery $iShowItemCount. See @extended for more details<br>
+&nbsp;&nbsp;&nbsp; 10 - Error setting propery $bWebViewOn. See @extended for more details<br>
+&nbsp;&nbsp;&nbsp; 11 - Error setting propery $sWebViewURL. See @extended for more details<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+To reset a string property set the corresponding value to " ".<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$Result</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_TestEnvironmentCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - Manage Test Environment"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating the test environment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Changes the description of a folder</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Display the properties of the folder</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderGet</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Mail"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderModify Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error accessing folder 'Outlook-UDF-Test\TargetFolder\Mail'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$aFolder</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Description (Element 12) is empty!"</span><span class="S8">)</span><br>
+<span class="S1">; Change the description of the folder</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oFolder</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderModify</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Mail"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"TestDescription"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderModify Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error modifying folder 'Outlook-UDF-Test\TargetFolder\Mail'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Display the properties of the folder</span><br>
+<span class="S9">$aFolder</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderGet</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Mail"</span><span class="S8">)</span><br>
+<span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$aFolder</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Description (Element 12) has changed!"</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderModify Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Folder 'Outlook-UDF-Test\TargetFolder\Mail' successfully modified."</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

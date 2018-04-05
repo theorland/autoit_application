@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_ItemImport</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_ItemImport</font>
+<hr size="2">
+<p>Imports items from a file.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_ItemImport($oOL, $sPath, $sDelimiters, $sQuote, $iFormat, $vFolder, $iItemType)<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object</td>
+  </tr>
+  <tr>
+   <td>$sPath</td>
+   <td>Path (drive, directory, filename) where the data to be imported is stored</td>
+  </tr>
+  <tr>
+   <td>$sDelimiters</td>
+   <td>Optional: Fieldseparators of CSV, multiple are allowed (default = ,;)</td>
+  </tr>
+  <tr>
+   <td>$sQuote</td>
+   <td>Optional: Character to quote strings (default = ")</td>
+  </tr>
+  <tr>
+   <td>$iFormat</td>
+   <td>Character encoding of file:<br>
+       0 or 1 - ASCII writing<br>
+       2 - Unicode UTF16 Little Endian writing (with BOM)<br>
+       3 - Unicode UTF16 Big Endian writing (with BOM)<br>
+       4 - Unicode UTF8 writing (with BOM)<br>
+       5 - Unicode UTF8 writing (without BOM)</td>
+  </tr>
+  <tr>
+   <td>$vFolder</td>
+   <td>Folder object as returned by _OL_FolderAccess or full name of folder where the objects will be stored</td>
+  </tr>
+  <tr>
+   <td>$iItemType</td>
+   <td>Type of the items that will be created in the $vFolder. Defined by the Outlook OlItemType enumeration</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: Number of records imported<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - Parameter $sPath is empty<br>
+&nbsp;&nbsp;&nbsp; 2 - File $sPath does not exist<br>
+&nbsp;&nbsp;&nbsp; 3 - $vFolder is empty<br>
+&nbsp;&nbsp;&nbsp; 4 - $iItemType is not numeric<br>
+&nbsp;&nbsp;&nbsp; 5 - Error processing input file $sPath. Please see @extended for the returncode of __ParseCSV<br>
+&nbsp;&nbsp;&nbsp; 6 - Error accessing folder $vFolder. Please see @extended for more information<br>
+&nbsp;&nbsp;&nbsp; 7 - Error creating item in folder $vFolder. Please see @extended for more information<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+The first line of the file (header line) has to be a list of Outlook item property names.<br>
+The manual import allows to map user defined names to Outlook item property names.<br>
+This isn't supported with this function!<br>
+E.g.:<br>
+Name,Mobile Phone,Business Phone,e-mail is invalid<br>
+FullName,MobileTelephoneNumber,BusinessTelephoneNumber,Email1Address is fine!<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$Result</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_TestEnvironmentCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - Manage Test Environment"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating the test environment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Import all contacts from c:\temp\_OL_ItemExport.csv to</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$iResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemImport</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"C:\temp\_OL_ItemExport.csv"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Contacts"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olContactItem</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemImport Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating contacts from file 'C:\temp\_OL_ItemExport.csv' in folder '*\Outlook-UDF-Test\TargetFolder\Contacts'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemImport Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$iResult</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">" contact(s) successfully imported to folder '*\Outlook-UDF-Test\TargetFolder\Contacts'."</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_FolderAccess</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_FolderAccess</font>
+<hr size="2">
+<p>Accesses a folder.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_FolderAccess($oOL[, $sFolder = "" [, $iFolderType = Default[, $iItemType = Default]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$sFolder</td>
+   <td>Optional: Name of folder to access (default = default folder of current user (class specified by $iFolderType))<br>
+       &nbsp;&nbsp;"rootfolder\subfolder\...\subfolder" to access any public folder or any folder of the current user<br>
+       "rootfolder" for the current user can be replaced by "*"<br>
+       &nbsp;&nbsp;"\\firstname name" to access the default folder of another user (class specified by $iFolderType)<br>
+       &nbsp;&nbsp;"\\firstname name\\subfolder\...\subfolder" to access a subfolder of the default folder of another user (class specified by $iFolderType)<br>
+       &nbsp;&nbsp;"\\firstname name\subfolder\..\subfolder" to access any subfolder of another user<br>
+       "firstname name" for the current user can be replaced by "*"<br>
+       &nbsp;&nbsp;"" to access the default folder of the current user (class specified by $iFolderType)<br>
+       &nbsp;&nbsp;"\subfolder" to access a subfolder of the default folder of the current user (class specified by $iFolderType)</td>
+  </tr>
+  <tr>
+   <td>$iFolderType</td>
+   <td>Optional: Type of folder if you want to access a default folder. Is defined by the Outlook OlDefaultFolders enumeration (default = Default)</td>
+  </tr>
+  <tr>
+   <td>$iItemType</td>
+   <td>Optional: Type of item which is used to select the default folder. Is defined by the Outlook OlItemType enumeration (default = Default)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: one-dimensional one based array with the following information:<br>
+&nbsp;&nbsp;&nbsp; 1 - Object to the folder<br>
+&nbsp;&nbsp;&nbsp; 2 - Default item type (integer) for the specified folder. Defined by the Outlook OlItemType enumeration<br>
+&nbsp;&nbsp;&nbsp; 3 - StoreID (string) of the store to access the folder by ID<br>
+&nbsp;&nbsp;&nbsp; 4 - EntryID (string) of the folder to access the folder by ID<br>
+&nbsp;&nbsp;&nbsp; 5 - Folderpath (string)<br>
+Failure: Returns "" and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - $iFolderType is missing or not a number<br>
+&nbsp;&nbsp;&nbsp; 2 - Could not resolve specified User in $sFolder<br>
+&nbsp;&nbsp;&nbsp; 3 - Error accessing specified folder<br>
+&nbsp;&nbsp;&nbsp; 4 - Specified folder could not be found. @extended is set to the index of the subfolder in error (1 = root folder)<br>
+&nbsp;&nbsp;&nbsp; 5 - Neither $sFolder, $iFolderType nor $iItemType was specified<br>
+&nbsp;&nbsp;&nbsp; 6 - No valid $iItemType was found to set the default folder $iFolderType accordingly<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+If you only specify $iItemType then $iFolderType is set to the default folder for this item type.<br>
+Supported item types are: $olAppointmentItem, $olContactItem, $olDistributionListItem, $olJournalItem, $olMailItem, $olNoteItem and $olTaskItem<br>
+<br>
+Examples:<br>
+"\\room1", $olFolderCalendar: Accesses the invisible root folder of user "room1"<br>
+"\\room1\", $olFolderCalendar: Accesses the calendar of user "room1"<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$Result</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_TestEnvironmentCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - Manage Test Environment"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating the test environment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Access a folder of the test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderAccess</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Contacts"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderAccess Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error accessing folder 'Outlook-UDF-Test\TargetFolder\Contacts'. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aFolderDisplay</span><span class="S8">[</span><span class="S3">6</span><span class="S8">][</span><span class="S3">2</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S8">[[</span><span class="S9">$aFolder</span><span class="S8">[</span><span class="S3">0</span><span class="S8">]],[</span><span class="S7">""</span><span class="S8">,</span><span class="S7">"Folder object"</span><span class="S8">],[</span><span class="S7">""</span><span class="S8">,</span><span class="S7">"Default item type for the folder"</span><span class="S8">],[</span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"StoreID where the folder resides"</span><span class="S8">],[</span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"EntryID of the folder"</span><span class="S8">],[</span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Folder path"</span><span class="S8">]]</span><br>
+<span class="S9">$aFolderDisplay</span><span class="S8">[</span><span class="S3">1</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S8">[</span><span class="S3">1</span><span class="S8">]</span><br>
+<span class="S9">$aFolderDisplay</span><span class="S8">[</span><span class="S3">2</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S8">[</span><span class="S3">2</span><span class="S8">]</span><br>
+<span class="S9">$aFolderDisplay</span><span class="S8">[</span><span class="S3">3</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S8">[</span><span class="S3">3</span><span class="S8">]</span><br>
+<span class="S9">$aFolderDisplay</span><span class="S8">[</span><span class="S3">4</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S8">[</span><span class="S3">4</span><span class="S8">]</span><br>
+<span class="S9">$aFolderDisplay</span><span class="S8">[</span><span class="S3">5</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S8">[</span><span class="S3">5</span><span class="S8">]</span><br>
+<span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$aFolderDisplay</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Folder 'Outlook-UDF-Test\TargetFolder\Contacts' successfully accessed."</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; ***************************************************************************************</span><br>
+<span class="S1">; Example 2</span><br>
+<span class="S1">; Access the default contacts folder of the current user and display in a separate window</span><br>
+<span class="S1">; ***************************************************************************************</span><br>
+<span class="S9">$aFolder</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderAccess</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olFolderContacts</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderAccess Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error accessing the default contacts folder. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S8">)</span><br>
+<span class="S9">$aFolder</span><span class="S8">[</span><span class="S3">1</span><span class="S8">].</span><span class="S14">Display</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_FolderAccess Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Default contacts folder successfully accessed and displayed."</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

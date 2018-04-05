@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_ItemSearch</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_ItemSearch</font>
+<hr size="2">
+<p>Find items (extended search) using a DASL query returning an array of all specified properties.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_ItemSearch($oOL, $vFolder, $avSearch, $sReturnProperties)<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$vFolder</td>
+   <td>Folder object as returned by _OL_FolderAccess or full name of folder where the search will be started.<br>
+       If you want to search a default folder you have to specify the folder object.</td>
+  </tr>
+  <tr>
+   <td>$avSearch</td>
+   <td>Can bei either a string containing the full DASL query or a one based two-dimensional array with unlimited number of rows containing the elements to build the DASL query:<br>
+       0: Property to query. This can be either the hex value or the name of the property. The function translates the name to the hex value. Unknown names set @error<br>
+       1: Type of comparison operator: 1 = "=", 2 = "ci_startswith", 3 = "ci_phrasematch", 4 = "like"<br>
+       2: Value to search for<br>
+       3: Operator to concatenate the next comparison. Has to be "and", "or", "or not" or "and not"</td>
+  </tr>
+  <tr>
+   <td>$sReturnProperties</td>
+   <td>Comma separated list of properties to return. Can be the property name (e.g. "subject") or the MAPI proptag (e.g. "http://schemas.microsoft.com/mapi/proptag/0x10F4000B")</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: One based two-dimensional array with the properties specified by $sReturnProperties<br>
+Failure: Returns "" and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - $oOL is not an object<br>
+&nbsp;&nbsp;&nbsp; 2 - Error accessing the specified folder. See @extended for errorcode returned by _OL_FolderAccess<br>
+&nbsp;&nbsp;&nbsp; 3 - $sReturnProperties is empty<br>
+&nbsp;&nbsp;&nbsp; 4 - $avSearch is an array but not a two dimensional array or the first row doesn't contain the numbers of rows and columns<br>
+&nbsp;&nbsp;&nbsp; 5 - Specified search property could not be translated to a hex code. @extended is set to the row in $avSearch<br>
+&nbsp;&nbsp;&nbsp; 6 - Specified search operator is not an integer or < 1 or > 4. @extended is set to the row in $avSearch<br>
+&nbsp;&nbsp;&nbsp; 7 - Specified search value is empty. @extended is set to the row in $avSearch<br>
+&nbsp;&nbsp;&nbsp; 8 - Invalid search operator. Must be "and" or "or". @extended is set to the row in $avSearch<br>
+&nbsp;&nbsp;&nbsp; 9 - The last entry in the search array has a search operator<br>
+&nbsp;&nbsp;&nbsp; 10 - The entry in the search array has no operator but more search arguments follow<br>
+&nbsp;&nbsp;&nbsp; 11 - Error executing the search operation. @extended is set to the error returned by method GetTable<br>
+&nbsp;&nbsp;&nbsp; 12 - No records returned by the search operation<br>
+&nbsp;&nbsp;&nbsp; 13 - Error adding $sReturnProperties to the result set. @extended is the number of the property in error<br>
+&nbsp;&nbsp;&nbsp; 14 - Error filling the result table. @extended is set to the error returned by method GetRowCount<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+DASL syntax: "Searching Outlook Data" - http://msdn.microsoft.com/en-us/library/cc513841.aspx"<br>
+List of MAPI proptags: - http://www.dimastr.com/redemption/enum_MAPITags.htm<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - _OL_ItemSearch Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error running _OL_Open. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$Result</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_TestEnvironmentCreate</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - Manage Test Environment"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating the test environment. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Search the subject of mail items containing $sString1 or</span><br>
+<span class="S1">; starting with $sString2</span><br>
+<span class="S1">; Returns: Subject, CreationTime, Recipient</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sString1</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Test"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sString2</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Mail"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aSearchArray</span><span class="S8">[</span><span class="S3">3</span><span class="S8">][</span><span class="S3">4</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S8">[[</span><span class="S3">2</span><span class="S8">,</span><span class="S0"> </span><span class="S3">4</span><span class="S8">],[</span><span class="S3">0x0037001E</span><span class="S8">,</span><span class="S0"> </span><span class="S3">3</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sString1</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"or"</span><span class="S8">],[</span><span class="S7">"subject"</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sString2</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">]]</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemSearch</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Mail"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$aSearchArray</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"subject,CreationTime,To"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - _OL_ItemSearch Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error running _OL_ItemSearch. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S15">_Arraydisplay</span><span class="S8">(</span><span class="S9">$aResult</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Example 1"</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 2</span><br>
+<span class="S1">; Same as example 1 but filter specified in DASL format</span><br>
+<span class="S1">; Returns: EntryID, Subject, CreationTime, Recipient</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sFilter</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"@SQL=""http://schemas.microsoft.com/mapi/proptag/0x0037001E"" ci_phrasematch '"</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sString1</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"' or ""http://schemas.microsoft.com/mapi/proptag/0x0037001E"" ci_startswith '"</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sString2</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"'"</span><br>
+<span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemSearch</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Mail"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sFilter</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"EntryID,Subject,CreationTime,To"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - _OL_ItemSearch Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error running _OL_ItemSearch. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S15">_Arraydisplay</span><span class="S8">(</span><span class="S9">$aResult</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Example 2"</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 3</span><br>
+<span class="S1">; Search the subject of mail items with exact matching $sString3</span><br>
+<span class="S1">; Returns: EntryID, Subject</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sString3</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"TestMail"</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aSearchArray</span><span class="S8">[</span><span class="S3">2</span><span class="S8">][</span><span class="S3">4</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S8">[[</span><span class="S3">1</span><span class="S8">,</span><span class="S0"> </span><span class="S3">4</span><span class="S8">],[</span><span class="S3">0x0037001E</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sString3</span><span class="S8">]]</span><br>
+<span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemSearch</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Mail"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$aSearchArray</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"EntryID,Subject"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - _OL_ItemSearch Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error running _OL_ItemSearch. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S15">_Arraydisplay</span><span class="S8">(</span><span class="S9">$aResult</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Example 3"</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 4</span><br>
+<span class="S1">; Search the body of mail items for phrase $sString4</span><br>
+<span class="S1">; Returns: EntryID, Subject, max 255 characters of the body</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sString4</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"Bodytext"</span><br>
+<span class="S9">$sFilter</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"@SQL=""urn:schemas:httpmail:textdescription"" ci_phrasematch '"</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sString4</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"'"</span><br>
+<span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemSearch</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Mail"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sFilter</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"EntryID,Subject,urn:schemas:httpmail:textdescription"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - _OL_ItemSearch Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error running _OL_ItemSearch. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S15">_Arraydisplay</span><span class="S8">(</span><span class="S9">$aResult</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Example 4"</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 5</span><br>
+<span class="S1">; Search the contacts for a specific name.</span><br>
+<span class="S1">; Returns: EntryID, FullName and HomeAddressCountry</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sString5</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"%FirstName"</span><br>
+<span class="S9">$sFilter</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"@SQL=""http://schemas.microsoft.com/mapi/id/{00062004-0000-0000-C000-000000000046}/8005001f"" LIKE '"</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$sString5</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"'"</span><br>
+<span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemSearch</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\SourceFolder\Contacts"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sFilter</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"EntryID,FullName,HomeAddressCountry"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - _OL_ItemSearch Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error running _OL_ItemSearch. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S15">_Arraydisplay</span><span class="S8">(</span><span class="S9">$aResult</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Example 5"</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 6</span><br>
+<span class="S1">; Search the inbox for mails with at least one attachment</span><br>
+<span class="S1">; Returns: EntryID, subject</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Access the default mail folder</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderAccess</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olFolderInbox</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - _OL_ItemSearch Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error running _OL_FolderAccess. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S9">$sFilter</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">"@SQL=(""urn:schemas:httpmail:hasattachment"" = 1)"</span><br>
+<span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemSearch</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S8">[</span><span class="S3">1</span><span class="S8">],</span><span class="S0"> </span><span class="S9">$sFilter</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"EntryID,subject"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - _OL_ItemSearch Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error running _OL_ItemSearch. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="S15">_Arraydisplay</span><span class="S8">(</span><span class="S9">$aResult</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Example 6"</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_SearchFolderCreate</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_SearchFolderCreate</font>
+<hr size="2">
+<p>Creates a new searchfolder.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_SearchFolderCreate($oOL, $sSearchFolderName, $sScope[, $sFilter = ""[, $bSearchSubFolders = Default]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$sSearchFolderName</td>
+   <td>Name of the searchfolder to create</td>
+  </tr>
+  <tr>
+   <td>$sScope</td>
+   <td>Scope of the search. For example, the folder path of a folder. For details please check section "Remarks".</td>
+  </tr>
+  <tr>
+   <td>$sFilter</td>
+   <td>	<b>[optional]</b> The DASL search filter that defines the parameters of the search.</td>
+  </tr>
+  <tr>
+   <td>$bSearchSubFolders</td>
+   <td>	<b>[optional]</b> Determines if the search will include any of the folder's subfolders (default = keyword Default = False).</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: Object of the created searchfolder<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - $oOL is not an object<br>
+&nbsp;&nbsp;&nbsp; 2 - $sSearchFolderName has not been specified<br>
+&nbsp;&nbsp;&nbsp; 3 - $sScope has not been specified<br>
+&nbsp;&nbsp;&nbsp; 4 - Error creating the advanced search. @extended is set to the returned COM error<br>
+&nbsp;&nbsp;&nbsp; 5 - Error saving the searchfolder. @extended is set to the returned COM error<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+Scope: It is recommended that the folder path is enclosed within single quotes if it contains special characters. <== Does not work with Outlook 2016<br>
+For default folders such as Inbox or Sent Items, you can use the simple folder name instead of the full folder path.<br>
+To specify multiple folder paths, enclose each folder path in single quotes and separate the single quoted folder paths with a comma. <== Does not work with Outlook 2016<br>
+You can specify multiple folders in the same store, but not in multiple stores.<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOL</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sScope</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$oOL</span><span class="S8">.</span><span class="S14">GetNamespace</span><span class="S8">(</span><span class="S7">"MAPI"</span><span class="S8">).</span><span class="S14">GetDefaultFolder</span><span class="S8">(</span><span class="S9">$olFolderInbox</span><span class="S8">).</span><span class="S14">FolderPath</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Create a searchfolder with all unread mails of the inbox</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oSF</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_SearchFolderCreate</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"SearchFolder - Unread"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sScope</span><span class="S8">,</span><span class="S0"> </span><span class="S7">'"urn:schemas:httpmail:read" = 0'</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_SearchFolderCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error returned by example 1. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 2</span><br>
+<span class="S1">; Create a searchfolder with all mails where the senders name contains "Thomas"</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$oSF</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_SearchFolderCreate</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"SearchFolder - Sender"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sScope</span><span class="S8">,</span><span class="S0"> </span><span class="S7">'"urn:schemas:httpmail:fromname" LIKE ''%Thomas%'''</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_SearchFolderCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error returned by example 2. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 3</span><br>
+<span class="S1">; Create a searchfolder with all unread mails where the senders name</span><br>
+<span class="S1">; contains "Thomas"</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$oSF</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> _OL_SearchFolderCreate</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"SearchFolder - Sender AND Unread"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$sScope</span><span class="S8">,</span><span class="S0"> </span><span class="S7">'"urn:schemas:httpmail:fromname" LIKE ''%Thomas%'' AND "urn:schemas:httpmail:read" = 0'</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_SearchFolderCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error returned by example 3. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_SearchFolderCreate Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"All searchfolders created successfully!"</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

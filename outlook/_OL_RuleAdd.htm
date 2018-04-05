@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_RuleAdd</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_RuleAdd</font>
+<hr size="2">
+<p>Adds a new rule to the specified store.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_RuleAdd($oOL, $sStore, $sRuleName[, $bEnabled = True[, $iRuleType = $olRuleReceive[, $iExecutionOrder = 0]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$sStore</td>
+   <td>Name of the Store where the rule will be defined. "*" = your default store</td>
+  </tr>
+  <tr>
+   <td>$sRuleName</td>
+   <td>Name of the rule</td>
+  </tr>
+  <tr>
+   <td>$bEnabled</td>
+   <td>Optional: True sets the rule to enabled (default = True)</td>
+  </tr>
+  <tr>
+   <td>$iRuleType</td>
+   <td>Optional: Can be $olRuleSend or $olRuleReceive (default = $olRuleReceive)</td>
+  </tr>
+  <tr>
+   <td>$iExecutionOrder</td>
+   <td>Optional: Integer indicating the order of execution of the rule among other rules (default = 1)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: Object of the created rule<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - Rule already exists for the specified store<br>
+&nbsp;&nbsp;&nbsp; 2 - Error returned by method .GetRules. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 3 - Error creating the rule. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 4 - Error saving the rule collection. @extended is set to the COM error<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+A newly added rule is always a client rule till you add actions which can be executed on the server<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>See Also</b></p>
+http://www.outlookpower.com/issues/issue200904/00002353001.html<br>
+<p>&nbsp;</p>
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$iReply</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">308</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"This script creates three rules 'Outlook-UDF-Test - *' for incoming/outgoing messages."</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S7">"To remove this rules please run _OL_RuleDelete.au3."</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S7">"Are you sure you want to create this rules?"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S9">$iReply</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">6</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOL</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Create a rule to be used on incomming messages named "Outlook-UDF-Test - AssignToCategory"</span><br>
+<span class="S1">; The new message will be assigned a category of "Outlook-UDF-Test" if the body contains text "AssignToCategory"</span><br>
+<span class="S1">; Exception is that all messages with subject "test" or "Outlook-UDF-Test" will be ignored</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oResult</span><br>
+<span class="S1">; Create the rule</span><br>
+<span class="S9">$oResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleAdd</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test - AssignToCategory"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating rule 1. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Add the rule action</span><br>
+<span class="S9">$oResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleActionSet</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test - AssignToCategory"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olRuleActionAssignToCategory</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding rule action for rule 1. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Add the rule condition</span><br>
+<span class="S9">$oResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleConditionSet</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test - AssignToCategory"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olConditionBody</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S5">False</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"AssignToCategory"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding rule condition for rule 1. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Add the exceptions to the rule condition</span><br>
+<span class="S9">$oResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleConditionSet</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test - AssignToCategory"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olConditionSubject</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"test|Outlook-UDF-Test"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding rule condition for rule 1. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Rule 1 'Outlook-UDF-Test - AssignToCategory' + Action + Condition + Condition Exceptions successfully created!"</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 2</span><br>
+<span class="S1">; Create a rule to be used on outgoing messages named "Outlook-UDF-Test - CcMessage"</span><br>
+<span class="S1">; The new message will be sent to as CC to the current user if the body contains text "Archive"</span><br>
+<span class="S1">; The rule is executed as number 2 in list of active rules</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create the rule</span><br>
+<span class="S9">$oResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleAdd</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test - CcMessage"</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olRuleSend</span><span class="S8">,</span><span class="S0"> </span><span class="S3">2</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating rule 2. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Add the rule action</span><br>
+<span class="S9">$oResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleActionSet</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test - CcMessage"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olRuleActionCcMessage</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Thomas Rupp"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding rule action for rule 2. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Add the rule condition</span><br>
+<span class="S9">$oResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleConditionSet</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test - CcMessage"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olConditionBody</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S5">False</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Archive"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding rule condition for rule 2. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Rule 2 'Outlook-UDF-Test - CcMessage' + Action + Condition successfully created!"</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 3</span><br>
+<span class="S1">; Create a rule to be used on incoming messages named "Outlook-UDF-Test - MoveToFolder"</span><br>
+<span class="S1">; The new message will be moved to folder "\\*\Outlook-UDF-Test\TargetFolder\Mail"</span><br>
+<span class="S1">; if the subject contains "TestMail"</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_FolderAccess</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*\Outlook-UDF-Test\TargetFolder\Mail"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating rule 3. Can't access target folder. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Create the rule</span><br>
+<span class="S9">$oResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleAdd</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test - MoveToFolder"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating rule 3. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Add the rule action</span><br>
+<span class="S9">$oResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleActionSet</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test - MoveToFolder"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olRuleActionMoveToFolder</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$aFolder</span><span class="S8">[</span><span class="S3">1</span><span class="S8">])</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding rule action for rule 3. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S1">; Add the rule condition</span><br>
+<span class="S9">$oResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_RuleConditionSet</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"*"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Outlook-UDF-Test - MoveToFolder"</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$olConditionSubject</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">,</span><span class="S0"> </span><span class="S5">False</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"TestMail"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error adding rule condition for rule 3. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RuleAdd Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Rule 3 'Outlook-UDF-Test - MoveToFolder' + Action + Condition successfully created!"</span><span class="S8">)</span><br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOL</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

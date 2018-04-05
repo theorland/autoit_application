@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_MailSignatureSet</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_MailSignatureSet</font>
+<hr size="2">
+<p>Sets the signature to be added to new email messages and/or when you reply to an email message.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_MailSignatureSet($sNewMessage, $sReplyMessage[, $oWord = 0])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$sNewMessage</td>
+    <td width="85%">Name of the signature to be added to new email messages. "" removes the default signature. Keyword Default leaves the signature unchanged</td>
+  </tr>
+  <tr>
+   <td>$sReplyMessage</td>
+   <td>Name of the signature to be added when you reply to an email messages. "" removes the default signature. Keyword Default leaves the signature unchanged</td>
+  </tr>
+  <tr>
+   <td>$oWord</td>
+   <td>Optional: Object of an already running Word Application (default = 0 = no Word Application running)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: 1<br>
+Failure: Returns 0 and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - $oWord is not an object or MS Word could not be started when $oWord = 0<br>
+&nbsp;&nbsp;&nbsp; 2 - Error accessing Word EmailOptions object. @extended is set to the COM error<br>
+&nbsp;&nbsp;&nbsp; 3 - $sNewMessage could not be found in the list of already defined signatures. @extended is set to the value of @error as returned by _OL_MailSignatureGet<br>
+&nbsp;&nbsp;&nbsp; 4 - $sReplyMessage could not be found in the list of already defined signatures. @extended is set to the value of @error as returned by _OL_MailSignatureGet<br>
+&nbsp;&nbsp;&nbsp; 5 - Error accessing Word EmailSignature object. @extended is set to the COM error code<br>
+&nbsp;&nbsp;&nbsp; 6 - Error setting property NewMessageSignature. @extended is set to the COM error code<br>
+&nbsp;&nbsp;&nbsp; 7 - Error setting property ReplyMessageSignature. @extended is set to the COM error code<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+When using AutoIt > 3.3.12.0 you need to call _OL_Open or _OL_ErrorNotify(4) at the top of your script to prevent COM error crashes!<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$iReply</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">308</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_MailSignatureSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"This script sets signature 'Outlook-UDF-Test' as the default signature for new messages."</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S7">"To remove this setting please call the Outlook signature/wallpaper wizard."</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S7">"Are you sure you want to set the default signature?"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S9">$iReply</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">6</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Create test environment</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error creating a connection to Outlook. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Sets the signature "Outlook-UDF-Test" as the default signature for</span><br>
+<span class="S1">; new messages.</span><br>
+<span class="S1">; The default signature for replies is unchanged.</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S16">_OL_MailSignatureSet</span><span class="S8">(</span><span class="S7">"Outlook-UDF-Test"</span><span class="S8">,</span><span class="S0"> </span><span class="S5">Default</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">3</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_MailSignatureSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Signature 'Outlook-UDF-Test' could not be set."</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> &nbsp;</span><span class="S7">"This signature does not exist."</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"Please use '_OL_MailSignatureCreate' to create the signature."</span><span class="S8">)</span><br>
+<span class="S5">ElseIf</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">16</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_MailSignatureSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Signature 'Outlook-UDF-Test' could not be set. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S5">Else</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S3">64</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_MailSignatureSet Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Signature 'Outlook-UDF-Test' set as the default signature for new messages."</span><span class="S8">)</span><br>
+<span class="S5">EndIf</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function _OL_ItemRecipientCheck</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Function Reference</h1>
+<font size="+1">_OL_ItemRecipientCheck</font>
+<hr size="2">
+<p>Checks one/more recipients to be valid.<br></p>
+
+<p class="codeheader">
+#Include &lt;OutlookEX.au3&gt;<br>
+_OL_ItemRecipientCheck($oOL, $sP1[, $sP2 = ""[, $sP3 = ""[, $sP4 = ""[, $sP5 = ""[, $sP6 = ""[, $sP7 = ""[, $sP8 = ""[, $sP9 = ""[, $sP10 = ""[, $bOnlyValid = False]]]]]]]]]])<br>
+</p>
+<p>&nbsp;</p>
+
+<p><b>Parameters</b></p>
+<table border="1" width="100%" cellspacing="0" cellpadding="3" bordercolor="#C0C0C0">
+  <tr>
+    <td width="15%">$oOL</td>
+    <td width="85%">Outlook object returned by a preceding call to _OL_Open()</td>
+  </tr>
+  <tr>
+   <td>$sP1</td>
+   <td>Name, Alias or SMTP mail address of one or multiple recipients separated by ";" ($sP2 to $sP10 are ignored if ";" is used)<br>
+       or a zero based one-dimensional array with unlimited number of recipients</td>
+  </tr>
+  <tr>
+   <td>$sP2</td>
+   <td>Optional: Name, Alias or SMTP mail address of a single recipient (no concatenation of recipients using ";" allowed)</td>
+  </tr>
+  <tr>
+   <td>$sP3</td>
+   <td>Optional: Same as $sP2</td>
+  </tr>
+  <tr>
+   <td>$sP4</td>
+   <td>Optional: Same as $sP2</td>
+  </tr>
+  <tr>
+   <td>$sP5</td>
+   <td>Optional: Same as $sP2</td>
+  </tr>
+  <tr>
+   <td>$sP6</td>
+   <td>Optional: Same as $sP2</td>
+  </tr>
+  <tr>
+   <td>$sP7</td>
+   <td>Optional: Same as $sP2</td>
+  </tr>
+  <tr>
+   <td>$sP8</td>
+   <td>Optional: Same as $sP2</td>
+  </tr>
+  <tr>
+   <td>$sP9</td>
+   <td>Optional: Same as $sP2</td>
+  </tr>
+  <tr>
+   <td>$sP10</td>
+   <td>Optional: Same as $sP2</td>
+  </tr>
+  <tr>
+   <td>$bOnlyValid</td>
+   <td>Optional: Only return the resolved recipient objects in a one-dimensional zero based array (default = False)</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><b>Return Value</b></p>
+Success: two-dimensional one based array with the following information (for $bOnlyValid = False):<br>
+&nbsp;&nbsp;&nbsp; 0 - Recipient derived from the list of recipients in $sP1<br>
+&nbsp;&nbsp;&nbsp; 1 - True if the recipient could be resolved successfully<br>
+&nbsp;&nbsp;&nbsp; 2 - Recipient object as returned by the Resolve method<br>
+&nbsp;&nbsp;&nbsp; 3 - AddressEntry object<br>
+&nbsp;&nbsp;&nbsp; 4 - Recipients mail address (empty for distribution lists). This can be:<br>
+&nbsp;&nbsp;&nbsp;      PrimarySmtpAddress for an Exchange User<br>
+&nbsp;&nbsp;&nbsp;      Email1Address for an Outlook contact<br>
+&nbsp;&nbsp;&nbsp;      Empty for Exchange or Outlook distribution lists<br>
+&nbsp;&nbsp;&nbsp; 5 - Display type is one of the OlDisplayType enumeration that describes the nature of the recipient<br>
+&nbsp;&nbsp;&nbsp; 6 - Display name of the recipient<br>
+Success: one-dimensional zero based array with the following information (for $bOnlyValid = True):<br>
+&nbsp;&nbsp;&nbsp; 0 - Recipient object which was successfully resolved by the Resolve method. Unresolveable recipients are not part of the result!<br>
+&nbsp;&nbsp;&nbsp;      @extended holds the number of unresolved recipients.<br>
+Failure: Returns "" and sets @error:<br>
+&nbsp;&nbsp;&nbsp; 1 - $oOL is not an object<br>
+&nbsp;&nbsp;&nbsp; 2 - $sP1 is empty<br>
+&nbsp;&nbsp;&nbsp; 3 - Error creating recipient object. @extended contains the error returned by method CreateRecipient<br>
+<p>&nbsp;</p>
+
+<p><b>Remarks</b></p>
+When $bOnlyValid = True you get a one-dimensional zero based array with all invalid recipients removed.<br>
+This array can easily be passed to _OL_ItemRecipientAdd.<br>
+@extended holds the number of unresolved recipients.<br>
+<br>
+<p>&nbsp;</p>
+
+<p><b>Related</b></p>
+
+<p>&nbsp;</p>
+
+<p><b>Example</b></p>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;OutlookEX.au3&gt;</span><br>
+<span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;MsgBoxConstants.au3&gt;</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Connect to Outlook</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_Open</span><span class="S8">()</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONERROR</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF - _OL_RecipientCheck Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error running _OL_Open. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 1</span><br>
+<span class="S1">; Test recipients: The current user, a SMTP mail address and a wrong address.</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemRecipientCheck</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S8">.</span><span class="S14">GetNameSpace</span><span class="S8">(</span><span class="S7">"MAPI"</span><span class="S8">).</span><span class="S14">CurrentUser</span><span class="S8">.</span><span class="S14">Name</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">";test.user@google.com;Wrong address"</span><span class="S8">)</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONERROR</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemRecipientCheck Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error running _OL_ItemRecipientCheck. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S15">_ArrayDisplay</span><span class="S8">(</span><span class="S9">$aResult</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_RecipientCheck Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S8">_</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S3">0</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"|"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Recipient|Resolved?|Recipient object|AddressEntry object|Mail address|DisplayType|Name"</span><span class="S8">)</span><br>
+<br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$sTo</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S7">""</span><br>
+<span class="S5">For</span><span class="S0"> </span><span class="S9">$i</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S3">1</span><span class="S0"> </span><span class="S5">To</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S3">0</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S5">If</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S9">$i</span><span class="S8">][</span><span class="S3">1</span><span class="S8">]</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S5">True</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S9">$sTo</span><span class="S0"> </span><span class="S8">&amp;=</span><span class="S0"> </span><span class="S9">$aResult</span><span class="S8">[</span><span class="S9">$i</span><span class="S8">][</span><span class="S3">0</span><span class="S8">]</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">";"</span><br>
+<span class="S5">Next</span><br>
+<br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S1">; Example 2</span><br>
+<span class="S1">; Test recipients: The current user, a SMTP mail address and a wrong address.</span><br>
+<span class="S1">; Set flag $bOnlyValid = True so only valid recipients will be returned.</span><br>
+<span class="S1">; @extended holds the number of invalid recipients.</span><br>
+<span class="S1">; *****************************************************************************</span><br>
+<span class="S9">$aResult</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S16">_OL_ItemRecipientCheck</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$oOutlook</span><span class="S8">.</span><span class="S14">GetNameSpace</span><span class="S8">(</span><span class="S7">"MAPI"</span><span class="S8">).</span><span class="S14">CurrentUser</span><span class="S8">.</span><span class="S14">Name</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">";test.user@google.com;Wrong address"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S7">""</span><span class="S8">,</span><span class="S0"> </span><span class="S5">True</span><span class="S8">)</span><br>
+<span class="S5">Global</span><span class="S0"> </span><span class="S9">$iUnresolved</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S6">@extended</span><br>
+<span class="S5">If</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&lt;&gt;</span><span class="S0"> </span><span class="S3">0</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">Exit</span><span class="S0"> </span><span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONERROR</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemRecipientCheck Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Error running _OL_ItemRecipientCheck. @error = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@error</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">", @extended = "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@extended</span><span class="S8">)</span><br>
+<span class="S4">MsgBox</span><span class="S8">(</span><span class="S9">$MB_ICONINFORMATION</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"OutlookEX UDF: _OL_ItemRecipientCheck Example Script"</span><span class="S8">,</span><span class="S0"> </span><span class="S7">"Resolved recipients: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S4">UBound</span><span class="S8">(</span><span class="S9">$aResult</span><span class="S8">,</span><span class="S0"> </span><span class="S3">1</span><span class="S8">)</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S6">@CRLF</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S7">"Unresolved recipients: "</span><span class="S0"> </span><span class="S8">&amp;</span><span class="S0"> </span><span class="S9">$iUnresolved</span><span class="S8">)</span><br>
+<br>
+<span class="S16">_OL_Close</span><span class="S8">(</span><span class="S9">$oOutlook</span><span class="S8">)</span></span><br>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,554 @@
+2018-01-26 - Version 1.3.3.1
+
+FIXED BUGS
+==========
+* _OL_RuleConditionSet: Function did not properly handle parameter rule condition type ($iRuleConditionType) when 
+  value $olConditionSentTo was passed. It was processed the same way as $olConditionFrom.
+  Thanks to user Moonscarlet for reporting this bug. 
+
+-------------------------------------------------------------------------------------------------------------------------------
+2018-01-15 - Version 1.3.3.0
+
+NEW FUNCTIONS
+=============
+* _OL_SearchFolderCreate: Creates a new searchfolder
+
+-------------------------------------------------------------------------------------------------------------------------------
+2018-01-05 - Version 1.3.2.0
+
+GENERAL
+=======
+* Brushed up inline documentation
+
+NEW FUNCTIONS
+=============
+* _OL_SearchFolderGet: Returns a list of searchfolders in all accessed stores
+* _OL_SearchFolderAccess: Accesses a searchfolder. Can then be processed like any other folder
+
+CHANGED FUNCTIONS
+=================
+* _OL_ItemRecipientAdd: A recipient parameter can now be a list of recipients, separated by ;
+* _OL_MailSignatureDelete: Now returns @error = 4 in case of an error when deleting the signature
+
+FIXED BUGS
+==========
+* Fixed: Some functions did not return the documented return value in case of an error (_OL_MailSignatureCreate, _OL_MailSignatureDelete, _OL_MailSignatureSet)
+* Fixed: Some functions did not set @extended to the COM error code (_OL_MailSignatureDelete, _OL_PSTAccess, _OL_PSTClose, _OL_PSTCreate, _OL_PSTGet)
+* Fixed: _OL_Wrapper_SendMail sets @error = 3 when $sTo, $sCc and $sBCc are missing. Docu said @error = 4
+
+-------------------------------------------------------------------------------------------------------------------------------
+2017-02-27 - Version 1.3.1.0
+
+GENERAL
+=======
+* All functions now support the keyword Default as parameter.
+* Fixed documentation bugs.
+
+FIXED BUGS
+==========
+* _OL_ItemRecipientAdd: In some rare cases the function returned a recipient as resolved but _OL_ItemSend then crashed with 
+  an error telling that a user name could not be resolved.
+* _OL_PSTAccess: Did not properly set the displayname and crashed in some rare cases.
+
+-------------------------------------------------------------------------------------------------------------------------------
+2017-02-09 - Version 1.3.0.0
+
+NEW FUNCTIONS
+=============
+* _OL_FolderSize: Returns information about the size and number of items of a folder and subfolders.
+
+CHANGED FUNCTIONS
+=================
+* _OL_StoreGet: The following quota values have been added to the returned array:
+  09 - Warning Threshold represented in kilobytes (in KB)
+  10 - The limit at which a user can no longer send messages represented in kilobytes (KB)
+  11 - The limit where receiving mail is prohibited (also the maximum size of the mailbox) in kilobytes (KB)
+  12 - Contains the sum of the sizes of all properties in the mailbox or mailbox root in kilobytes (KB)
+  13 - The free space in the mailbox represented in kilobytes (KB)
+  14 - The maximum size for a message that a user can send represented in kilobytes (KB)
+
+-------------------------------------------------------------------------------------------------------------------------------
+2017-02-04 - Version 1.2.4.0
+
+DOCUMENTATION
+=============
+* Added documentation as a single HTML file: "OutlookEx 1.2.4.0.htm"
+
+-------------------------------------------------------------------------------------------------------------------------------
+2017-01-31 - Version 1.2.3.0
+
+GENERAL
+=======
+* Enhanced error handling
+* Enhanced documentation for all _OL_MailSignature* functions. 
+  As you do not need to call _OL_Open before calling this functions you should at least call _OL_ErrorNotify(4) to get proper COM error handling.
+
+CHANGED FUNCTIONS
+=================
+* _OL_MailSignatureGet: Added error codes 3 to 7 for better error handling
+* _OL_MailSignatureSet: Added error codes 5 to 7 for better error handling. @extended is now set to the COM error code
+ 
+-------------------------------------------------------------------------------------------------------------------------------
+2016-12-04 - Version 1.2.2.0
+
+GENERAL
+=======
+* Enhanced error handling
+
+CHANGED FUNCTIONS
+=================
+* _OL_ItemRecurrenceGet: A new item gets returned in the array: The recurrence pattern object for the specified appointment or task item
+
+FIXED BUGS
+==========
+* _OL_TestEnvironmentCreate: The created folders were of type calendar, changed to Inbox type
+  
+-------------------------------------------------------------------------------------------------------------------------------
+2016-07-20 - Version 1.2.1.0
+
+GENERAL
+=======
+* Enhanced documentation, removed typos
+
+CHANGED FUNCTIONS
+=================
+* _OL_ItemMove: Added @error = 7 to handle situations where the specified item no longer exists
+
+FIXED BUGS
+==========
+* _OL_Open: Does not work correctly with AutoIt > 3.3.12.0. COM errors aren't handled so functions might crash
+* _OL_TestEnvironmentCreate: Crashed when creating a note. Note items only support the ItemProperties property
+  
+-------------------------------------------------------------------------------------------------------------------------------
+2016-05-09 - Version 1.2.0.0
+
+GENERAL
+=======
+* Enhanced documentation, removed typos
+* Enhanced error handling with more detailed error codes
+
+CHANGED FUNCTIONS
+=================
+* _OL_ItemRecipientCheck: If $bOnlyValid = True then @extended holds the number of unresolvable recipients
+* _OL_ItemSave: New $iFlags added:
+    8: Do not overwrite an existing item, return an error instead (@error = 11)
+   16: Do not overwrite an existing item, add a suffix to make it unique
+   32: Return full path of the saved item. If not set then $vItem object will be returned
+  
+-------------------------------------------------------------------------------------------------------------------------------
+2016-01-07 - Version 1.1.0.1
+
+GENERAL
+=======
+* Changed examples so they now work with the latest version of the Array UDF
+* Enhanced documentation, removed typos
+* Enhanced error handling with more detailed error codes
+
+FIXED BUGS
+==========
+* _OL_ItemRecipientAdd: When passing the recipient(s) as objects parameter $iType was ignored. This way you could't set CC or BCC recipients.
+  Thanks to NewProgger from the german forum for pointing me to this bug.
+
+CHANGED FUNCTIONS
+=================
+* _OL_ItemRecipientCheck: Now allows to pass up to 10 recipients to check as parameter or an array of recipients. 
+  All other functions already accept this form of parameters.
+  New parameter: $bOnlyValid - Only returns the resolved recipient objects in a one-dimensional zero based array.
+  Means that all unresolvable recipients passed as parameters have been dropped.
+* _OL_Wrapper_SendMail: The default for parameter $iBodyFormat has been changed from $olFormatUnspecified to $olFormatPlain (plain text)
+  
+-------------------------------------------------------------------------------------------------------------------------------
+2014-07-27 - Version 1.0.0.0
+
+GENERAL
+=======
+* Changed the version number to 1.0 because the UDF seems to have matured enough to become a production version.
+* Enhanced documentation, removed typos
+* Enhanced error handling with more detailed error codes
+
+FIXED BUGS
+==========
+* _OL_ItemFind crashed when $sReturnProperties was only set to return one property and $iFlags was set to 1 (process subfolders).
+  Thanks to ibigpapa for pointing me to this bug.
+* _OL_Wrapper_SendMail returned @error = 4000 when Outlook was not running and needed to be started by _OL_Open.
+  Thanks to asianqueen for pointing me to this bug.
+
+CHANGED FUNCTIONS
+=================
+* _OL_ItemDelete: New parameter $bPermanent. When set to true the item is not only moved to the trash folder but deleted completely.
+* _OL_Reply: If a reply has already been sent for an item you now get an error
+
+-------------------------------------------------------------------------------------------------------------------------------
+2013-11-10 - Version 0.10 - Downloads: 1492
+
+GENERAL
+=======
+* Enhanced documentation
+
+NEW FUNCTIONS
+=============
+* _OL_AddInGet: Returns all addins found in Outlook
+* _OL_FolderClassSet: Set the default form (message class) for a folder
+* _OL_NavigationFolderGet: Returns information about navigation folders in a group or all groups of a navigation module
+* _OL_UserpropertyAdd: Adds a user property to an item or folder
+* _OL_UserpropertyGet: Returns the names, values and types of all user properties for an item or folder
+* _OL_UserpropertyRemove: Removes a user property from a folder or item
+
+FIXED BUGS
+==========
+* _OL_ItemFind: Might crash if a new item is added to the collection while the collection is being processed by _OL_ItemFind.
+  Example: If you search for all mails in your inbox (this might take some seconds) and a new mail arrives while the function fills the resulting array the function crashes.
+  Thanks to Tjalve for pointing me to this bug!
+* _OL_ItemReply: parameter $bReplyAll doesn't work for mailitems.
+  Thanks to Kurto2021 for pointing me to this bug!
+* _OL_Open: $sWarningProgram returns @error = 6 and @extended is 1 if the path or filename contains spaces. Thanks to quinnj09 for pointing me to this bug!
+  Properly handles spaces in parameter $sWarningProgram now
+  Thanks to cookiemonster forrewporting this bug!
+
+CHANGED FUNCTIONS
+=================
+* _OL_Close: Code cleanup
+* _OL_ErrorNotify: $iDebug = 4 added. Enables debugging but creates no output
+* _OL_AccountGet: The object of the account is now returned as element #4. All returned elements for >= Outlook 2010 have been moved
+* _OL_DistListMemberGet: Now works for an Exchange Distribution List as well
+* _OL_ItemCreate: Error 1xx changed to 1nmm. n = 0 (property does not exist) or 1 (Property has invalid case). mm is the index of the property in error (zero based)
+* _OL_ItemFind: Error 1xx changed to 1nmm. n = 0 (property does not exist) or 1 (Property has invalid case). mm is the index of the property in error (zero based)
+* _OL_ItemModify: Error 1xx changed to 1nmm. n = 0 (property does not exist) or 1 (Property has invalid case). mm is the index of the property in error (zero based)
+* __OL_CheckProperties (Internal function): rewritten to handle item and user properties
+  No longer sets @extended to the index of the property in error but sets error to 1nmm. mm is the index of the property in error
+
+SCRIPT BREAKING CHANGES
+=======================
+* _OL_AccountGet: The object of the account is now returned as element #4. All returned elements for >= Outlook 2010 have been moved
+
+MISCELLANEOUS
+=============
+* Close(0) replaced with Save() for functions: _OL_DistListMemberAdd, _OL_DistListMemberDelete, _OL_ItemAttachmentAdd, _OL_ItemAttachmentDelete, _OL_ItemCopy, 
+  _OL_ItemCreate, _OL_ItemRecipientAdd, _OL_ItemRecipientDelete, _OL_ItemReply
+-------------------------------------------------------------------------------------------------------------------------------
+2012-10-07 - Version 0.9 - Downloads: 2975
+
+GENERAL
+=======
+* This version should (again) run with all production and beta versions of AutoIt.
+  The COM error handler is activated automatically when the AutoIt version is < 3.3.9.2
+ 
+NEW FUNCTIONS
+=============
+* _OL_DistListMemberOf: Returns information about all distribution lists the Exchange user is a member of
+* _OL_ItemSearch: Find items (extended search) using a DASL query returning an array of all specified properties
+
+-------------------------------------------------------------------------------------------------------------------------------
+2012-07-01 - Version 0.8.0.1 - Downloads: 188
+
+GENERAL
+=======
+* Needs AutoIt beta version 3.3.9.2 or later because of the new COM error handling. 
+  Will still run with earlier versions but will crash if a COM error occurres and _OL_ErrorNotify has not been called before
+* _OL_Open no longer initializes a COM error handler. Has to be done by _OL_ErrorNotify
+ 
+FIXED BUGS
+==========
+* _OL_FolderGet: When no folder is specified the current folder is used. Then _OL_FolderAccess is called (which is wrong) and returns an error.
+  Thanks to footswitch for reporting this bug!
+* _OL_ItemCopy: When the target folder is not specified the source folder is used. Then _OL_FolderAccess is called (which is wrong) and returns an error.
+  Thanks to footswitch for reporting this bug!
+* _OL_ItemFind: If you set $iOL_Flags to 1 (search subfolders) and $sOL_ReturnProperties to only one property then the script will crash with error 
+  "Array variable has incorrect numer of subscripts or subscript dimension range exceeded." on line 5102.
+  Thanks to jimnbene for reporting this bug!
+
+CHANGED FUNCTIONS
+=================
+* _OL_AccountGet: Returns more information for Outlook 2010 and newer versions
+* _OL_FolderAccess: Error 4 (folder not found) now sets @extended to the index of the (sub)folder not found
+* _OL_ItemAttachmentAdd: The separator for the attachment parameters $vOL_P1 to $vOL_P10 can now be specified as parameter $sOL_Delimiter.
+  Using this parameter you can now add attachments containing a comma in the filename
+* _OL_ItemMove: You can now pass the folder type so you can specify the target folder by name
+* _OL_ItemRecipientAdd: Parameter $bOL_AllowUnresolved (default = True) added. True doesn't return an error even when unresolvable SMTP addresses have been found (default = True).
+  Errors 3 and 4 have been changed to 3nn and 4nn where nn is the number of the recipient causing the error. Error 6nn has been added
+* _OL_Open: On success @extended now returns if Outlook was already running or not. Previous versions returned the COM error handler state.
+  No longer sets global variable $bOL_AlreadyRunning to True
+
+NEW FUNCTIONS
+=============
+* _OL_AppointmentGet: Returns appointments in a specified time frame plus (optional) recurrences
+* _OL_ErrorNotify: Sets or queries the debugging level and the output file. Replaces setting the global variables $iOL_Debug and $sOL_DebugFile by the user
+* _OL_ItemRecipientCheck: Checks one/more recipients to be valid
+* _OL_ItemRecipientSelect: Displays the Recipient Selection Dialog and returns the selected recipients
+
+MISCELLANEOUS
+=============
+* Internal variables, parameter names and functions have been renamed to adhere more to the standards
+* Enhanced documentation and error checking
+
+-------------------------------------------------------------------------------------------------------------------------------
+2012-04-19 - Version 0.7.1.1 - Downloads: 1028
+
+FIXED BUGS
+==========
+* Caused by the enhanced error checking for empty parameters some functions no longer worked when an object instead of a string
+  was passed. Thanks to SkoubyeWan for reporting this bug!
+
+-------------------------------------------------------------------------------------------------------------------------------
+2012-04-09 - Version 0.7.0 - Downloads: 78
+
+SCRIPT BREAKING CHANGES
+=======================
+* _OL_FolderAccess: The default value for parameters $iOL_FolderType and $iOL_ItemType has been changed from "" to keyword Default
+* _OL_ItemFind: The default value for parameter $iOL_ObjectClass has been changed from "" to keyword Default
+* Global variable $fOL_AlreadyRunning has been renamed to $bOL_AlreadyRunning to adhere to UDF standards (unlikely to affect users)
+ 
+FIXED BUGS
+==========
+* _OL_ItemCreate: Didn't access a default folder based on $iOL_ItemType when no folder was specified
+* _OL_ItemForward: Didn't return the correct object for a forwarded mail item. Thanks to user wokao98 for reporting this bug!
+* _OL_ItemImport: Parameter $vOL_Folder now accepts a folder name as all other functions do
+
+CHANGED FUNCTIONS
+=================
+* _OL_COMError: Now returns @AutoItVersion, @AutoItX64, @Compiled, @OSArch and @OSVersion for easier debugging
+* _OL_ItemAttachmentAdd: A file path can now be specified using a drive letter or as a UNC path. Thanks to user LOULOU for this hint
+* _OL_ItemFind: $sOL_ReturnProperties no longer supports "All" - in fact it never worked
+* _OL_FolderTree: A new parameter ($iOL_Level) allows to specify how many levels of the folder hierarchy should be listed
+* _OL_Open: Now returns an error when you specify a profile but Outlook is already running
+
+NEW FUNCTIONS
+=============
+* _OL_FolderArchiveGet: Returns the auto-archive properties of a folder
+* _OL_FolderArchiveSet: Sets the auto-archive properties of a folder and (optional) all subfolders
+* _OL_MailheaderGet: Get the headers of a mail item
+
+MISCELLANEOUS
+=============
+* All constants have been moved to a separate include file named OutlookExConstants.au3
+* Naming of variables now adheres more to AutoIt UDF standards
+* Enhanced documentation, removed documentation bugs
+
+-------------------------------------------------------------------------------------------------------------------------------
+2011-12-17 - Version 0.6.0 - Downloads: 776
+
+GENERAL
+=======
+* Setting the global variable $iOL_Debug writes debugging information to the console ($iOL_Debug=1), a MsgBox (=2) or a file (=3).
+  When set to 3 you now can set variable $sOL_DebugFile to specify the location and name of the debug file. 
+  Default: $sOL_DebugFile = @ScriptDir & "\OutlookDebug.txt"
+ 
+FIXED BUGS
+==========
+* _OL_ArrayConcatenate: (Internal) For a 2D array the index of the second dimension was not set
+
+CHANGED FUNCTIONS
+=================
+* _OL_ItemExport: Now parameter $sOL_Quote is checked and set correctly if empty
+* _OL_Open: You can now specify the password for the profile to be used for logon.
+   On success @extended is set to 0 or 1 to denote if a COM error handler was initialized
+
+NEW FUNCTIONS
+=============
+* _OL_AccountGet: Get information about the accounts available for the current profile
+* _OL_ApplicationGet: Get information about the Outlook application
+* _OL_FolderFind: Finds folders filtered by name and/or default item type
+* _OL_StoreGet: Get information about the Stores in the current profile
+
+MISCELLANEOUS
+=============
+* The COM error handler now returns the UDF version information
+
+-------------------------------------------------------------------------------------------------------------------------------
+2011-09-18 - Version 0.5.0 - Downloads: 511
+
+GENERAL
+=======
+* Some functions return the property "folderpath" e.g. "\\firstname.name@company.domain\Outlook-UDF-Test\TargetFolder\Contacts"
+  To let you pass this folderpath to function _OL_FolderAccess the way _OL_FolderAccess interprets this parameter has been changed.
+  Please check "Script Breaking Changes"
+ 
+FIXED BUGS
+==========
+* _OL_RuleExecute: Name of the rule to execute was not processed correctly
+
+SCRIPT BREAKING CHANGES:
+========================
+* _OL_FolderAccess: The way folderpaths specified by the user are interpreted has changed:
+    "\\firstname name\subfolder\...\subfolder" to access a subfolder of the default folder of another user (class specified by $iOL_FolderType)
+    "\\firstname name\\subfolder\..\subfolder" to access any subfolder of another user
+  has been changed to
+    "\\firstname name\\subfolder\...\subfolder" to access a subfolder of the default folder of another user (class specified by $iOL_FolderType)
+    "\\firstname name\subfolder\..\subfolder" to access any subfolder of another user
+  This was necessary so that folderpaths returned by Outlook could be passed to _OL_FolderAccess and processed correctly  
+  
+CHANGED FUNCTIONS
+=================
+* _OL_Open: You can now specify the name of the profile to be used for logon. The default profile will be used if none is specified (default = "")
+* _OL_Close: Now resets all global variables
+* _OL_FolderAccess: See "Script Breaking Changes"
+  The property "folderpath" is returned as 5th element in the array
+
+NEW FUNCTIONS
+=============
+* _OL_ItemAttachmentSave: Saves a single attachment of an item in the specified path.
+
+-------------------------------------------------------------------------------------------------------------------------------
+2011-08-07 - Version 0.4.0 - Downloads: 308
+
+GENERAL
+=======
+* Enhanced documentation and removed documentation bugs all over the UDF
+
+FIXED BUGS
+==========
+* _OL_ItemAttachmentAdd: Had a bug in line 1854. StringInStr had to be replaced by StringMid. Thanks to redman for reporting this bug!
+
+SCRIPT BREAKING CHANGES:
+========================
+* _OL_ItemSave: The default for parameter $fOL_Flags has changed from 0 to 1 (both saves the item without attachments)
+* _OL_Wrapper_SendMail: The default for parameter $iBodyFormat has been changed from $olFormatUnspecified to $olFormatPlain to prevent an error
+
+CHANGED FUNCTIONS
+=================
+* _OL_Open: Now passes the Outlook LanguageID as parameter 5 to the Outlook Warning Program ($sOL_WarningProgram)
+* _OL_FolderAccess: "\\firstname name" for the current user can be replaced by "*"
+* _OL_ItemReply: Now sets keyword "Default" for the StoreID if not specified by the user
+* _OL_ItemSave: If the target directory does not exist it is now created by the function.
+  Parameter $fOL_Flags now allows more values. The default has changed from 0 to 1 (both saves the item without attachments)
+  If a file for an attachment already exists the filename gets a trailing "_n" where n is a number between 1 and 99
+* _OL_MailSignatureSet: Accepts keyword "Default" for parameter $sOL_NewMessage and $sOL_ReplyMessage. "Default" leaves the signature untouched 
+* _OL_Wrapper_SendMail: The default for parameter $iBodyFormat has been changed from $olFormatUnspecified to $olFormatPlain to prevent an error
+
+NEW FUNCTIONS
+=============
+* _OL_OOFGet: Get information about the OOF (Out of Office) setting of the specified store
+* _OL_OOFSet: Sets the OOF (Out of Office) message for your or another users Exchange Store and/or activates/deactivates the OOF
+* _OL_RuleActionGet: Gets all actions for a specified rule
+* _OL_RuleActionSet: Adds a new or overwrites an existing action of an existing rule of the specified store
+* _OL_RuleAdd: Adds a new rule to the specified store
+* _OL_RuleConditionGet: Gets all conditions or condition exceptions for a specified rule
+* _OL_RuleConditionSet: Adds a new or overwrites an existing condition or condition exception to an existing rule of the specified store
+* _OL_RuleDelete: Deletes a rule from the specified store
+* _OL_RuleExecute: Applies a rule as an one-off operation
+* _OL_RuleGet: Returns a list of rules for the specified store
+* _OL_VersionInfo: Displays an array of information about the UDF. Based on _IE_VersionInfo()
+
+-------------------------------------------------------------------------------------------------------------------------------
+2011-06-23 - Version 0.3.0 - Downloads: 481
+
+KNOWN BUGS
+==========
+* _OL_ItemAttachmentAdd function: Line 1854
+    If StringInStr($aOL_Temp[1], 2, 1) <> ":" Then
+  is wrong and should be replaced with
+    If StringMid($aOL_Temp[1], 2, 1) <> ":" Then
+  Thanks to redman for reporting this bug!
+    
+FIXED BUGS
+==========
+* Some documentation bugs where fixed
+* _OL_Open: Returned wrong error code when the $sOL_WarningProgram doesn't exist. Was changed from 1 to 5
+
+CHANGED FUNCTIONS
+=================
+* _OL_Open: Now passes the Outlook Version Number as parameter 4 to the Outlook Warning Program ($sOL_WarningProgram)
+* _OL_ItemDisplay: Now returns the object of the Inspector used to display the item. Previous versions returned the object of the item itself
+* _OL_Itemget: Now allows to specify the properties to be returned as a comma separated list
+* _OL_TestEnvironmentCreate: Returncodes > 3 were multiplied by 100 to allow for better debugging
+* _OL_Warnings: Outlook Version Number is passed as parameter 4 (e.g. 14.0.0.4760). 
+  The window title ($sWindowTitle) is now set according to the passed Outlook version.
+  Improved performance as the Sleep statement is now executed after the first check
+
+NEW FUNCTIONS
+=============
+* _OL_FolderModify: Modifies the properties of a folder
+* _OL_MaiLSignatureCreate: Creates a new/modifies an existing e-mail signature
+* _OL_MaiLSignatureDelete: Deletes an existing e-mail signature
+* _OL_MaiLSignatureGet: Gets a list of e-mail signatures used when you create/edit e-mail messages and replies
+* _OL_MaiLSignatureSet: Sets the signature to be added to new email messages and/or when you reply to an email message
+* _OL_PSTAccess: Accesses a PST file so Outlook can access it as a folder
+* _OL_PSTClose: Closes a PST file and removes the Outlook folder
+* _OL_PSTCreate: Create a new (empty) PST file and access it in Outlook as a folder
+* _OL_PSTGet: Gets a list of currently accessed PST files
+
+-------------------------------------------------------------------------------------------------------------------------------
+2011-05-18 - Version 0.2.0 - Downloads: 211
+
+FIXED BUGS
+==========
+* Some documentation bugs where fixed
+
+CHANGED FUNCTIONS
+=================
+* _OL_BarShortcutAdd: Now allows to assign an Icon to the Shortcut
+* _OL_CategoryAdd: Checks if the specified category already exists and returnes a corresponding error code
+* _OL_CategoryDelete: Checks if the specified category already exists and returnes a corresponding error code
+* _OL_FolderAccess: You can specify the item type which then is used to select the default folder
+* _OL_FolderGet: Now returns more information (18 properties compared to 8 in the last version)
+* _OL_ReminderDismiss: Number and content of parameters changed!
+* _OL_ReminderGet: Content of element 1 in the resulting table changed, element 4 inserted (for details see the function in the UDF)
+
+NEW FUNCTIONS
+=============
+* _OL_ItemDisplay: Displays an item (contact, appointment ...) using the specified size and state
+* _OL_ItemExport: Exports items from an array to a file in CSV format
+* _OL_ItemImport: Import items from a file in CSV format
+* _OL_ItemPrint: Prints an item (contact, appointment ...) using all the default settings
+* _OL_ItemSendReceive: Initiates immediate delivery of all undelivered messages and immediate receipt of mail for all accounts in the current profile.
+
+-------------------------------------------------------------------------------------------------------------------------------
+2011-04-09 - Version 0.1.0 - Downloads: 225
+
+FIXED BUGS
+==========
+* _OL_Open: Now does a correct Logon to the default profile when Outlook isn't running at _OL_Open time. Works for all Outlook versions
+* Some documentation bugs where fixed as well
+
+CHANGED FUNCTIONS
+=================
+* _OL_Wrapper_MailSend: Renamed to _OL_Wrapper_SendMail so it corresponds to the function in the original Outlook UDF
+
+NEW FUNCTIONS
+=============
+* _OL_AddressListGet: Returns all Addresslists
+* _OL_AddressListMemberGet: Gets all members of an address list
+* _OL_CategoryAdd: Add a category
+* _OL_CategoryDelete: Deletes a category
+* _OL_CategoryGet: Returns all categories by which Outlook items can be grouped
+* _OL_Wrapper_CreateAppointment: A wrapper function to mimic the _OutlookCreateAppointment function of the original Outlook UDF
+
+-------------------------------------------------------------------------------------------------------------------------------
+2011-03-19 - Version 0.0.3 - Downloads: 133
+
+GENERAL
+=======
+The documentation for this UDF (aside from the docu in the UDF itself) will be placed in the AutoIt Wiki.
+So we can easily modify the docu without releasing a new version each time.
+There will be pages describing the UDF in general and pages for individual item types (like mail) with
+detailed information and a lot of tips & tricks.
+
+Starting point: http://www.autoitscript.com/wiki/OutlookEX_UDF_-_General
+
+FIXED BUGS
+==========
+* None
+
+CHANGED FUNCTIONS
+=================
+* _OL_Open: Allows to define an exe which is run separately and clicks away the Outlook Security Warnings
+
+NEW FUNCTIONS
+=============
+* _OL_Close: Close the connection to Microsoft Outlook
+* _OL_FolderGet: Get information about the current or any other folder (name, path, # of unread items, # of total items ...)
+* _OL_FolderSelectionGet: Gets all items selected in the active explorer (folder)
+* _OL_FolderSet: Sets a new folder as the current folder
+* _OL_ItemConflictGet: Get a list of items that are in conflict with the selected item (NOT RELIABLY WORKING AT THE MOMENT)
+* _OL_ItemSync: Starts synchronization for all Send/Receive groups set up for the user
+* _OL_Wrapper_MailSend: A wrapper function to mimic the _OutlookSendMail function of the original Outlook UDF
+
+-------------------------------------------------------------------------------------------------------------------------------
+2011-03-09 - Version 0.0.2 - Downloads: 63
+
+First alpha version. Has been released to early adopters on the forum
+
+-------------------------------------------------------------------------------------------------------------------------------
+2011-02-01 - Version 0.0.1
+
+First internal version. Has not been released to the public
