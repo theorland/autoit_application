@@ -1,4 +1,4 @@
-import ICS_Email_Tester, ICS_RDP_Tester, ICS_Config, ICS_Http_Tester
+import ICS_Email_Tester, ICS_RDP_Tester, ICS_Config, ICS_Http_Tester, Update_Sheet
 import unittest
 import os, sys
 import pyping3 as pyping
@@ -65,10 +65,24 @@ class ICS_Condition_Tester(unittest.TestCase):
         config.email_load()
         config.remote_load()
         config.sheet_load()
+
         config.run_file()
         config.sleep()
         config.timeout()
 
     def test_http(self):
-        ICS_Http_Tester
+        application_path = "."
+        if getattr(sys, 'frozen', False):
+            application_path = os.path.dirname(sys.executable)
+        elif __file__:
+            application_path = os.path.dirname(__file__)
+
+        ICS_Config.ICS_Config.Current_Setting_Path = os.path.join(application_path, "config.ini")
+        config = ICS_Config.ICS_Config()
+        config.http_load()
+        threads = [] # type: list[Thread]
+        for new_thread in Update_Sheet.ICS_Monitor_Http.PreparingTester():
+                threads.append(new_thread)
+                new_thread.start()
+
 

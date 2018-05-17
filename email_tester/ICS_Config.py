@@ -14,6 +14,7 @@ class ICS_Config:
                         "email": None, \
                         "sheet": None, \
                         "speedtest" : None, \
+                       "http" : None, \
                        "timeout" : None}
         self.ini_file = configparser.ConfigParser()
 
@@ -114,10 +115,33 @@ class ICS_Config:
             config_value = self.values["sheet"]
 
         return config_value
+		
+    def http_load(self):
+        config_value = None
+        if self.values["http"] is None:
+            config_value = []
+
+            counter = 0
+            section_name = "http" + str(counter)
+
+            while self.ini_file.has_section(section_name):
+                new_config = ICS_Http_Tester_Type.Config_Type( \
+                    url = self.ini_file.get(section_name, "url"), \
+                    browser =  self.ini_file.get(section_name, "browser"), \
+                    sheet = self.ini_file.get(section_name, "sheet"), \
+                    cond= self.ini_file.get(section_name, "condition"), \
+                )
+                config_value.append(new_config)
+                counter+=1
+                section_name = "http" + str(counter)
+        else :
+            config_value = self.values["http"]
+
+
+        return config_value
 
 
 class ICS_Email_Tester_Type:
-
     Config_Type = namedtuple('Email_Config', \
         ['host','username', 'password','port','port_ssl','cond'])
     Result_Type  = namedtuple('Email_Test_Result', \
@@ -129,5 +153,6 @@ class ICS_RDP_Tester_Type:
         ["host", "timeout", "count", "packet_size", "cond"])
 
 class ICS_Http_Tester_Type:
-    Config_Type = namedtuple("HTTP_config", \
-        [])
+    Config_Type = namedtuple(\
+        "HTTP_config", \
+        ["browser", "url", "cond","sheet"])

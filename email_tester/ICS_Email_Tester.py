@@ -4,37 +4,39 @@ import json, os
 from ICS_Shared_Config import ICS_Shared_Config
 from ICS_Config import ICS_Email_Tester_Type
 
-DELAY_GREAT = 1000
-DELAY_GOOD = 2000
-DELAY_AVERAGE = 4000
+
 
 class ICS_Email_Tester:
 
     Result_Type = collections.namedtuple('Email_Test_Result', \
         ['start', 'end', 'delay', 'num', 'cond', 'stat'])
+
     def __init__(self,_config:ICS_Email_Tester_Type.Config_Type):
         self.config = _config
         self.parse_cond(_config.cond)
 
+        self.DELAY_GREAT = 1000
+        self.DELAY_GOOD = 2000
+        self.DELAY_AVERAGE = 4000
+
     def parse_cond(self,_config : str):
-        global DELAY_GREAT, DELAY_GOOD, DELAY_AVERAGE
+
         if (len(_config)<=0):
             return None
         _config = json.loads(_config)
 
-        DELAY_GREAT = _config["great"]
-        DELAY_GOOD = _config["good"]
-        DELAY_AVERAGE = _config["average"]
+        self.DELAY_GREAT = _config["great"]
+        self.DELAY_GOOD = _config["good"]
+        self.DELAY_AVERAGE = _config["average"]
 
     def add_condition(self,Result : Result_Type):
-        global DELAY_GREAT, DELAY_GOOD, DELAY_AVERAGE
         status = "BAD"
         if Result.stat>0:
-            if Result.delay<=DELAY_GREAT:
+            if Result.delay<=self.DELAY_GREAT:
                     status = "GREAT"
-            elif Result.delay<=DELAY_GOOD:
+            elif Result.delay<=self.DELAY_GOOD:
                     status = "GOOD"
-            elif Result.delay<=DELAY_AVERAGE:
+            elif Result.delay<=self.DELAY_AVERAGE:
                     status = "AVERAGE"
         Result = Result._replace(cond=status)
         return Result

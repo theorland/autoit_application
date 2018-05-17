@@ -37,7 +37,6 @@ class ICS_Shared_Config:
                     ICS_Shared_Config.log("Refresh the token success")
                     success = True
                 except Exception as e:
-                    ICS_Shared_Config.log(os.path.basename(__file__) + " : " + str(e))
 
                     ICS_Shared_Config.log("Refresh the token failed will redo in next %d Seconds " %  ICS_Shared_Config.Client_Timeout )
                     time.sleep(ICS_Shared_Config.Client_Timeout)

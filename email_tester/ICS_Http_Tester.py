@@ -1,11 +1,12 @@
 from splinter import Browser
 from splinter.driver.webdriver.firefox import WebDriver
-from splinter.request_handler.status_code import StatusCode
+from splinter.exceptions import DriverNotFoundError, ElementDoesNotExist
 from datetime import datetime
 from ICS_Config import ICS_Http_Tester_Type
 from collections import namedtuple
 from ICS_Shared_Config import ICS_Shared_Config
 import json, os
+
 
 class ICS_Http_Tester:
     Result_Type = namedtuple('Email_Test_Result', \
@@ -43,8 +44,6 @@ class ICS_Http_Tester:
 
     def test(self) -> "ICS_Http_Tester.Result_Type" :
 
-
-
         code_result = ""
         start_time = datetime.now()
         result = self.Result_Type(
@@ -52,17 +51,21 @@ class ICS_Http_Tester:
             0, 0, "BAD", "None")
 
         code_result = "None"
+        ICS_Shared_Config.log(str(self.config))
 
         try:
-            with Browser(self.config.browser) as firefox:  # type: WebDriver
+            with Browser(self.config.browser) as webdriver:  # type: WebDriver
                 start_time = datetime.now()
-                firefox.visit(self.config.url)
-                status_code = firefox.status_code  # type: StatusCode
-                code_result = str(status_code.code) + " : " + status_code.reason
-                firefox.quit()
+                webdriver.visit(self.config.url)
+                webdriver.quit()
+                code_result = "HARUSNYA 200: OK"
+        except DriverNotFoundError as e:
+            ICS_Shared_Config.log(os.path.basename(__file__) + " : NOT FOUND DRIVER :  " + str(e))
+        except ElementDoesNotExist as e:
+            ICS_Shared_Config.log(os.path.basename(__file__) + " : ELEMENT NOT EXISTS :  " + str(e))
         except Exception as e:
             ICS_Shared_Config.log(os.path.basename(__file__) + " : " + str(e))
-            ICS_Shared_Config.log("HTTP Error " + str(self.config.url) + ":" + str(self.config.browser))
+            ICS_Shared_Config.log("HTTP Error " + str(self.config.url) + " USING " + str(self.config.browser))
 
         end_time = datetime.now()
         diff = (end_time - start_time).total_seconds()* 1000
